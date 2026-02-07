@@ -12,39 +12,25 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <OutputPath>..\ModFolder\$(Version)\Assemblies</OutputPath>
+        <OutputPath>..\$(Version)\Assemblies</OutputPath>
         <DefineConstants>TRACE;NDEBUG</DefineConstants>
         <WarningLevel>4</WarningLevel>
         <DebugSymbols>false</DebugSymbols>
         <DebugType>None</DebugType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <OutputPath>..\ModFolder\$(Version)\Assemblies</OutputPath>
+        <OutputPath>..\$(Version)\Assemblies</OutputPath>
         <DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NET48;</DefineConstants>
     </PropertyGroup>
-
-    <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
-        <ItemGroup>
-            <ModFolder Include="..\ModFolder\**\*"/>
-        </ItemGroup>
-
-        <!--Destination folder should your Rimworld mod folder (by default, will use \Program Files (x86)\Steam\steamapps\common\RimWorld\Mods)-->
-        <Copy SourceFiles="@(ModFolder)" DestinationFolder="$(MSBuildProgramFiles32)\Steam\steamapps\common\RimWorld\Mods\$(Product)\%(RecursiveDir)"/>
-    </Target>
-
     <ItemGroup>
         <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Lib.Harmony" Version="2.*" ExcludeAssets="runtime"/>
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4519-beta" />
+        <PackageReference Include="Lib.Harmony" Version="2.*" ExcludeAssets="runtime" />
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
     </ItemGroup>
     <ItemGroup>
-        <Publicize Include="Assembly-CSharp;UnityEngine.IMGUIModule;UnityEngine.CoreModule"/>
+        <Publicize Include="Assembly-CSharp;UnityEngine.IMGUIModule;UnityEngine.CoreModule" />
     </ItemGroup>
 </Project>
