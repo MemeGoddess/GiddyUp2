@@ -12,7 +12,9 @@ namespace GiddyUp;
 public static class Setup
 {
     public static readonly List<ThingDef?> AllAnimals = []; //Only used during setup and for the mod options UI
-    
+
+    public static readonly List<ThingDef?> AllMechs = [];
+
     private static readonly HashSet<ushort> DefEditLedger = [];
     private static readonly HashSet<int> PatchLedger = [];
 
@@ -72,6 +74,7 @@ public static class Setup
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
     private static void BuildMountCache()
     {
+        Log.Warning("Got to Mount");
         //Setup collections
         ModSettings_GiddyUp.invertMountingRules ??= [];
         ModSettings_GiddyUp.invertDrawRules ??= [];
@@ -110,6 +113,20 @@ public static class Setup
 
         animalDefs.SortBy(x => x.label);
         AllAnimals.AddRange(animalDefs);
+
+        AllMechs.AddRange(DefDatabase<ThingDef>.AllDefs.Where(x => x.race is { IsMechanoid: true } && !x.IsCorpse));
+
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        ModSettings_GiddyUp.mechSelector ??= [];
+        foreach (var mech in AllMechs)
+        {
+            ModSettings_GiddyUp.mechSelector.TryAdd(mech.defName, true);
+        }
+
+        ModSettings_GiddyUp.MechSelectedCache.Clear();
+        ModSettings_GiddyUp.MechSelectedCache.AddRange(Setup.AllMechs
+            .Where(x => ModSettings_GiddyUp.mechSelector.TryGetValue(x.defName, out var val) && val)
+            .Select(x => x.shortHash));
     }
 
     //Responsible for setting up the draw offsets and custom stat overrides
@@ -213,6 +230,12 @@ public static class Setup
 
             if (drawFront && !ModSettings_GiddyUp.DrawRulesCache.Contains(hash) || !drawFront && ModSettings_GiddyUp.DrawRulesCache.Contains(hash))
                 ModSettings_GiddyUp.invertDrawRules.Add(animalDef.defName);
+        }
+
+        foreach (var mech in AllMechs)
+        {
+            ModSettings_GiddyUp.mechSelector[mech.defName] =
+                ModSettings_GiddyUp.MechSelectedCache.Contains(mech.shortHash);
         }
     }
 

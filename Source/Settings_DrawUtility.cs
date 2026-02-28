@@ -1,43 +1,39 @@
+using System.Collections.Generic;
 using Verse;
 using UnityEngine;
 using RimWorld;
 using static GiddyUp.ModSettings_GiddyUp;
-using static GiddyUp.Setup;
 
 namespace GiddyUp;
 
 public static class OptionsDrawUtility
 {
-    public static int lineNumber, cellPosition;
+    public static int cellPosition;
     private const int LineHeight = 22; //Text.LineHeight + options.verticalSpacing;
 
-    public static void DrawList(this Listing_Standard options)
+    public static void DrawList(this Listing_Standard options, List<ThingDef?> defs, HashSet<ushort> cache, out int lineNumber)
     {
         lineNumber = cellPosition = 0; //Reset
         //List out all the unremoved defs from the compiled database
-        for (var i = 0; i < AllAnimals.Count; i++)
+        for (var i = 0; i < defs.Count; i++)
         {
-            var def = AllAnimals[i];
+            var def = defs[i];
             if (def == null)
                 continue;
             if (selectedTab == SelectedTab.BodySize && def.race.baseBodySize < bodySizeFilter)
                 continue;
 
-            DrawListItem(options, def);
+            DrawListItem(options, def, cache, lineNumber % 2 != 0);
             cellPosition += LineHeight;
             ++lineNumber;
         }
     }
 
-    public static void DrawListItem(Listing_Standard options, ThingDef def)
+    public static void DrawListItem(Listing_Standard options, ThingDef def, HashSet<ushort> cache, bool doHighlight)
     {
         //Determine checkbox status...
-        bool checkOn;
         var hash = def.shortHash;
-        if (selectedTab == SelectedTab.BodySize)
-            checkOn = MountableCache.Contains(hash);
-        else
-            checkOn = DrawRulesCache.Contains(hash);
+        bool checkOn = cache.Contains(hash);
 
         //Fetch bounding rect
         var rect = options.GetRect(LineHeight);
@@ -51,24 +47,14 @@ public static class OptionsDrawUtility
             CheckboxLabeled(rect, dataString, def.label, ref checkOn, def);
 
         //Handle row coloring and spacing
-        if (lineNumber % 2 != 0)
+        if (doHighlight)
             Widgets.DrawLightHighlight(rect);
         Widgets.DrawHighlightIfMouseover(rect);
 
-        if (selectedTab == SelectedTab.BodySize)
-        {
-            if (checkOn && !MountableCache.Contains(hash))
-                MountableCache.Add(hash);
-            else if (!checkOn && MountableCache.Contains(hash))
-                MountableCache.Remove(hash);
-        }
-        else
-        {
-            if (checkOn && !DrawRulesCache.Contains(hash))
-                DrawRulesCache.Add(hash);
-            else if (!checkOn && DrawRulesCache.Contains(hash))
-                DrawRulesCache.Remove(hash);
-        }
+        if (checkOn && !cache.Contains(hash))
+            cache.Add(hash);
+        else if (!checkOn && cache.Contains(hash))
+            cache.Remove(hash);
     }
 
     private static void CheckboxLabeled(Rect rect, string data, string label, ref bool checkOn, ThingDef def)

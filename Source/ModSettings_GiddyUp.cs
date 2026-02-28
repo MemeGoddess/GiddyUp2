@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -50,10 +52,12 @@ public class ModSettings_GiddyUp : ModSettings
     public static string mountChanceBuffer;
     public static bool disregardCarryingCapacity = false;
     public static Dictionary<string, bool> mechSelector = new();
+    public static HashSet<ushort> MechSelectedCache = new();
 
     //UI State
     private static string? _tabsHandler;
-    public static Vector2 scrollPos;
+    public static Vector2 coreScrollPos;
+    public static Vector2 mechScrollPos;
     public static SelectedTab selectedTab = SelectedTab.BodySize;
 
     public enum SelectedTab
@@ -63,7 +67,8 @@ public class ModSettings_GiddyUp : ModSettings
         Core,
         Rnr,
         BattleMounts,
-        Caravans
+        Caravans,
+        Mechanoids
     };
 
     public override void ExposeData()
@@ -113,4 +118,15 @@ public class ModSettings_GiddyUp : ModSettings
 
         base.ExposeData();
     }
+
+#if DEBUG
+    [HarmonyPatch(typeof(MainMenuDrawer), nameof(MainMenuDrawer.Init))]
+    public static class OpenSettings
+    {
+        static void Postfix()
+        {
+            Find.WindowStack.Add(new Dialog_ModSettings(Mod_GiddyUp.Instance));
+        }
+    }
+#endif
 }

@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GiddyUpCore.RideAndRoll;
 using Verse;
 using UnityEngine;
@@ -11,9 +12,16 @@ namespace GiddyUp;
 
 public class Mod_GiddyUp : Mod
 {
+#if DEBUG
+    public static Mod_GiddyUp Instance;
+#endif
+    private static int coreLineNumber, mechLineNumber;
     public Mod_GiddyUp(ModContentPack content) : base(content)
     {
         GetSettings<ModSettings_GiddyUp>();
+#if DEBUG
+        Instance = this;
+#endif
     }
 
     public override void DoSettingsWindowContents(Rect inRect)
@@ -30,6 +38,8 @@ public class Mod_GiddyUp : Mod
             selectedTab == SelectedTab.BattleMounts));
         tabs.Add(new TabRecord("GUC_Caravans_Tab".Translate(), delegate { selectedTab = SelectedTab.Caravans; },
             selectedTab == SelectedTab.Caravans));
+        tabs.Add(new TabRecord("GU_Mechanoids_Tab".Translate(), delegate { selectedTab = SelectedTab.Mechanoids; },
+            selectedTab == SelectedTab.Mechanoids));
 
         var rect = new Rect(0f, 32f, inRect.width, inRect.height - 32f);
         Widgets.DrawMenuSection(rect);
@@ -48,8 +58,11 @@ public class Mod_GiddyUp : Mod
             case SelectedTab.BattleMounts:
                 DrawBattleMounts(rect);
                 break;
-            default:
+            case SelectedTab.Caravans:
                 DrawCaravan(rect);
+                break;
+            case SelectedTab.Mechanoids:
+                DrawMechanoid(rect);
                 break;
         }
 
@@ -122,10 +135,10 @@ public class Mod_GiddyUp : Mod
         mountableFilterRect.y += 60f;
         mountableFilterRect.yMax -= 60f;
         var mountableFilterInnerRect = new Rect(0f, 0f, mountableFilterRect.width - 30f,
-            (OptionsDrawUtility.lineNumber + 2) * 22f);
-        Widgets.BeginScrollView(mountableFilterRect, ref scrollPos, mountableFilterInnerRect, true);
+            (coreLineNumber + 2) * 22f);
+        Widgets.BeginScrollView(mountableFilterRect, ref coreScrollPos, mountableFilterInnerRect, true);
         options.Begin(mountableFilterInnerRect);
-        options.DrawList();
+        options.DrawList(Setup.AllAnimals, selectedTab == SelectedTab.BodySize ? MountableCache : DrawRulesCache, out coreLineNumber);
         options.End();
         Widgets.EndScrollView();
     }
@@ -255,22 +268,44 @@ public class Mod_GiddyUp : Mod
     private void DrawMechanoid(Rect rect)
     {
         var options = new Listing_Standard();
-        options.Begin(rect.ContractedBy(15f));
+        var display = rect.ContractedBy(15f);
+        options.Begin(display);
 
         options.CheckboxLabeled("GU_Enable_Mechanoids".Translate(), ref mechanoidsEnabled, "GU_Enable_Mechanoids_Description".Translate());
 
-        if (mechanoidsEnabled)
+        if (!mechanoidsEnabled)
         {
-            options.Gap();
-            options.GapLine(); //=============================
-            options.Gap();
-
-            options.Label("GU_BME_MountChance_Title".Translate("0", "100", "40", mountChance.ToString()),
-                tooltip: "GU_BME_MountChance_Description".Translate());
-            mountChance = (int)options.Slider(mountChance, 0f, 100f);
-
-            options.CheckboxLabeled("GUM_DisCarCap".Translate(), ref disregardCarryingCapacity, "GUM_DisCarCapText".Translate());
+            options.End();
+            return;
         }
+
+        options.Gap();
+        options.GapLine(); //=============================
+        options.Gap();
+
+        options.Label("GU_BME_MountChance_Title".Translate("0", "100", "40", mountChance.ToString()),
+            tooltip: "GU_BME_MountChance_Description".Translate());
+        mountChance = (int)options.Slider(mountChance, 0f, 100f);
+
+        options.CheckboxLabeled("GUM_DisCarCap".Translate(), ref disregardCarryingCapacity,
+            "GUM_DisCarCapText".Translate());
+
+        options.GapLine();
+        options.Gap();
+        options.Label("GUM_AllowedMechs".Translate());
+
+        var previousControls = options.CurHeight;
+        
+        options.End();
+
+        var scrollView = display.BottomPartPixels(display.height - previousControls);
+        var innerRect = new Rect(0f, 0f, scrollView.width - 30f, (mechLineNumber) * 22f);
+
+        Widgets.BeginScrollView(scrollView, ref mechScrollPos, innerRect);
+        options.Begin(innerRect);
+        options.DrawList(Setup.AllMechs, MechSelectedCache, out mechLineNumber);
+        options.End();
+        Widgets.EndScrollView();
     }
 
     public override string SettingsCategory() => "Giddy-Up";
