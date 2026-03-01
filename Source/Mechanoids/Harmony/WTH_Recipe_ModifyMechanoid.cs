@@ -1,30 +1,21 @@
-﻿using HarmonyLib;
+﻿using GiddyUp;
+using GiddyUpCore.Mechanoids;
+using HarmonyLib;
 using Verse;
-using WhatTheHack.Recipes;
 
 namespace GiddyUpMechanoids
 {
-    [HarmonyPatch(typeof(Recipe_ModifyMechanoid), "CanApplyOn")]
-    class WTH_Recipe_ModifyMechanoid_CanApplyOn
+    [HarmonyPatch("WhatTheHack.Recipes.Recipe_ModifyMechanoid", "CanApplyOn")]
+    static class WTH_Recipe_ModifyMechanoid_CanApplyOn
     {
-        static void Postfix(Recipe_ModifyMechanoid __instance, Pawn pawn, ref string reason, ref bool __result)
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
+        static void Postfix(RecipeWorker __instance, Pawn pawn, ref string reason, ref bool __result)
         {
-            if (__instance.recipe == GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule && !GiddyUpMechanoidsMod.IsAllowedInModOptions(pawn.def.defName))
-            {
-                reason = "GU_BME_Reason_NotAllowed".Translate();
-                __result = false;
-            }
-        }
-    }
-    [HarmonyPatch(typeof(Recipe_ModifyMechanoid), "IsValidPawn")]
-    class WTH_Recipe_ModifyMechanoid_IsValidPawn
-    {
-        static void Postfix(Recipe_ModifyMechanoid __instance, Pawn pawn, ref bool __result)
-        {
-            if (!__result)
-            {
-                Log.Message("IsValidPawn is false");
-            }
+            if (__instance.recipe != GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule ||
+                ModSettings_GiddyUp.MechSelectedCache.Contains(pawn.def.shortHash)) return;
+
+            reason = "GU_BME_Reason_NotAllowed".Translate();
+            __result = false;
         }
     }
 }

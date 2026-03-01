@@ -1,18 +1,19 @@
-﻿using RimWorld;
+﻿using GiddyUpCore.Mechanoids;
+using RimWorld;
 using System.Collections.Generic;
+using GiddyUp;
 using Verse;
-using WhatTheHack;
 
 namespace GiddyUpMechanoids
 {
     public class GiddyUpMechanoids_MountingProvider : FloatMenuOptionProvider
     {
-        protected override bool Drafted => true;
-        protected override bool Undrafted => false;
-        protected override bool Multiselect => false;
-        protected override bool CanSelfTarget => false;
-        protected override bool RequiresManipulation => true;
-        protected override bool MechanoidCanDo => true;
+        public override bool Drafted => true;
+        public override bool Undrafted => true;
+        public override bool Multiselect => false;
+        public override bool CanSelfTarget => false;
+        public override bool RequiresManipulation => true;
+        public override bool MechanoidCanDo => true;
 
 
 
@@ -21,10 +22,10 @@ namespace GiddyUpMechanoids
             if (!base.TargetPawnValid(targetPawn, context))
                  return false;
 
-            if (!targetPawn.IsMechanoid())
+            if (!targetPawn.RaceProps.IsMechanoid)
                 return false;
 
-            if (!targetPawn.IsHacked())
+            if (!targetPawn.IsHacked() && targetPawn.Faction != Faction.OfPlayer)
                 return false;
 
             //Log.Message("TargetPawnValid");
@@ -64,14 +65,14 @@ namespace GiddyUpMechanoids
                 //Log.Message("[GiddyUp-Mechs] Found target Pawn: " + target);
 
                 // 1 — Is mechanoid?
-                if (!target.IsMechanoid())
+                if (!target.RaceProps.IsMechanoid)
                 {
                     //Log.Message("[GiddyUp-Mechs] Reject target — not a mechanoid.");
                     continue;
                 }
 
                 // 2 — Hacked?
-                if (!target.IsHacked())
+                if (!target.IsHacked(pawn) && target.Faction != Faction.OfPlayer)
                 {
                     //Log.Message("[GiddyUp-Mechs] Reject target — mech is NOT hacked.");
                     continue;
@@ -80,7 +81,7 @@ namespace GiddyUpMechanoids
                 //Log.Message("[GiddyUp-Mechs] Target pawn IS a hacked mechanoid.");               
 
                 // 3 — Mounted turret?
-                bool hasMountedTurret = target.health.hediffSet.HasHediff(WTH_DefOf.WTH_MountedTurret);
+                bool hasMountedTurret = target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_MountedTurret);
                 //Log.Message("[GiddyUp-Mechs] Target has MountedTurret hediff? " + hasMountedTurret);
 
                 if (hasMountedTurret)
@@ -91,7 +92,7 @@ namespace GiddyUpMechanoids
                 }
 
                 // 4 — Has GiddyUp module?
-                bool hasGiddyUpModule = target.health.hediffSet.HasHediff(GU_Mech_DefOf.GU_Mech_GiddyUpModule);
+                bool hasGiddyUpModule = (target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_TargetingHacked) || target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_TargetingHackedPoorly) == target.health.hediffSet.HasHediff(GU_Mech_DefOf.GU_Mech_GiddyUpModule));
                 //Log.Message("[GiddyUp-Mechs] Target has GiddyUp module? " + hasGiddyUpModule);
 
                 if (!hasGiddyUpModule)
@@ -102,7 +103,7 @@ namespace GiddyUpMechanoids
                 }
 
                 // 5 — Check "mountable in mod options" for the target mech
-                bool allowedMount = GiddyUpMechanoidsMod.IsAllowedInModOptions(target.def.defName);
+                bool allowedMount = ModSettings_GiddyUp.MechSelectedCache.Contains(target.def.shortHash);
                 //Log.Message("[GiddyUp-Mechs] Target mech allowed in mod options? " + allowedMount);
 
                 if (!allowedMount)

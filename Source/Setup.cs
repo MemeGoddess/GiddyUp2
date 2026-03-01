@@ -2,6 +2,7 @@
 using System.Linq;
 using GiddyUp.Jobs;
 using GiddyUpCaravan;
+using GiddyUpCore.Mechanoids;
 using GiddyUpRideAndRoll;
 using RimWorld;
 using Verse;
@@ -69,12 +70,12 @@ public static class Setup
         if (type != null)
             ExtendedDataStorage.noFleeingAnimals = HarmonyLib.Traverse.Create(type).Field("nofleeing_animals")
                 ?.GetValue<HashSet<Thing>>();
+        WhatTheHackCompatibility.Setup();
     }
 
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
     private static void BuildMountCache()
     {
-        Log.Warning("Got to Mount");
         //Setup collections
         ModSettings_GiddyUp.invertMountingRules ??= [];
         ModSettings_GiddyUp.invertDrawRules ??= [];

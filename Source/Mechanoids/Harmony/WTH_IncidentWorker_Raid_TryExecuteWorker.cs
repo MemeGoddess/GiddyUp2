@@ -4,8 +4,8 @@ using Verse;
 using Verse.AI;
 using System.Collections.Generic;
 using System.Linq;
-using WhatTheHack;
 using GiddyUp;
+using GiddyUpCore.Mechanoids;
 
 namespace GiddyUpMechanoids
 {
@@ -13,6 +13,8 @@ namespace GiddyUpMechanoids
     public static class Patch_Raid_PostProcessSpawned
     {
         private const string LOG_POSTFIX = "[GiddyUpMechanoids] ";
+
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
 
         public static void Postfix(IncidentWorker_Raid __instance, IncidentParms parms, List<Pawn> pawns)
         {
@@ -55,14 +57,14 @@ namespace GiddyUpMechanoids
                 return;
             }
 
-            var mechs = pawns.Where(p => p.IsHacked()).ToList();
+            var mechs = pawns.Where(p => WhatTheHackCompatibility.IsHacked(p)).ToList();
             Log.Message(LOG_POSTFIX + $"Hacked mechs found: {mechs.Count}");
 
             var humanlikes = pawns
                 .Where(h =>
                 {
-                    var pdata = Utility.GetGUData_Reflect(h);
-                    bool hasMount = pdata?.mount != null;
+                    var pdata = h.GetExtendedPawnData();
+                    bool hasMount = pdata?.Mount != null;
 
                     Log.Message(LOG_POSTFIX +
                         $"Checking humanlike: {h.LabelShort} | Humanlike={h.RaceProps.Humanlike} | AlreadyMounted={hasMount}");
@@ -77,9 +79,9 @@ namespace GiddyUpMechanoids
             {
                 Log.Message(LOG_POSTFIX + $"Evaluating mech: {mech.LabelShort}");
 
-                float chance = GiddyUpMechanoidsMod.Settings.mountChance / 100f;
+                float chance = ModSettings_GiddyUp.mountChance / 100f;
                 bool roll = Rand.Chance(chance);
-                bool allowed = GiddyUpMechanoidsMod.IsAllowedInModOptions(mech.def.defName);               
+                bool allowed = ModSettings_GiddyUp.MechSelectedCache.Contains(mech.def.shortHash);               
 
                 Log.Message(LOG_POSTFIX +
                     $"Mount roll={roll} (chance={chance}) | AllowedInSettings={allowed}");
@@ -114,8 +116,8 @@ namespace GiddyUpMechanoids
 
             Log.Message(LOG_POSTFIX + $"AssignRider start: {rider.LabelShort} -> {mech.LabelShort}");
 
-            var riderData = Utility.GetGUData_Reflect(rider);
-            var mechData = Utility.GetGUData_Reflect(mech);
+            var riderData = rider.GetExtendedPawnData();
+            var mechData = mech.GetExtendedPawnData();
 
             if (riderData == null || mechData == null)
             {
@@ -124,22 +126,22 @@ namespace GiddyUpMechanoids
             }
 
             // Safety checks
-            if (riderData.mount != null)
+            if (riderData.Mount != null)
             {
                 Log.Message(LOG_POSTFIX + $"{rider.LabelShort} already mounted. Skipping.");
                 return;
             }
 
-            if (mechData.reservedBy != null)
+            if (mechData.ReservedBy != null)
             {
                 Log.Message(LOG_POSTFIX + $"{mech.LabelShort} already reserved. Skipping.");
                 return;
             }
 
             // Link both sides
-            riderData.mount = mech;
-            riderData.reservedMount = mech;
-            mechData.reservedBy = rider;
+            riderData.Mount = mech;
+            riderData.ReservedMount = mech;
+            mechData.ReservedBy = rider;
 
             Log.Message(LOG_POSTFIX + "Linked ExtendedPawnData mount fields.");
 
@@ -181,7 +183,7 @@ namespace GiddyUpMechanoids
             //    - The correct time to set this is right after jobs are issued.
             //    - Required so JobDriver_Mount sees consistent mount state.
             // ------------------------------------------------------------------
-            riderData.mount = mech;
+            riderData.Mount = mech;
 
             Log.Message(LOG_POSTFIX + "Started Mounted job.");
 

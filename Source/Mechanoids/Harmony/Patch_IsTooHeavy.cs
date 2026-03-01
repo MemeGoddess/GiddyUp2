@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using GiddyUp;
+using GiddyUpCore.Mechanoids;
+using HarmonyLib;
 using Verse;
 
 
@@ -8,6 +10,8 @@ namespace GiddyUpMechanoids
     public static class Patch_IsTooHeavy
     {
         private const string LOG_PREFIX = "[GiddyUpMechanoids] ";
+
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled;
 
         public static bool Prefix(Pawn rider, Pawn animal, ref bool __result)
         {
@@ -21,7 +25,7 @@ namespace GiddyUpMechanoids
             }
 
             // It is a mech
-            if (GiddyUpMechanoidsMod.Settings.disregardCarryingCapacity)
+            if (ModSettings_GiddyUp.disregardCarryingCapacity)
             {
                 Log.Message(LOG_PREFIX +
                     $"Bypassing carrying capacity check for mech {animal.LabelShort} and rider {rider.LabelShort}");

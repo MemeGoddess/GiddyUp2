@@ -23,38 +23,6 @@ namespace GiddyUpMechanoids
             JobDefOf.Wait_Downed
         };
 
-        #region Reflection Helpers
-
-        private static MethodInfo getGUDataMethod;
-        private static readonly Type MountUtilityType = AccessTools.TypeByName("MountUtility");
-
-        public static ExtendedPawnData GetGUData_Reflect(Pawn pawn)
-        {
-            if (pawn == null) return null;
-
-            if (getGUDataMethod == null)
-            {
-                var storageUtilType = AccessTools.TypeByName("GiddyUp.StorageUtility");
-                if (storageUtilType == null)
-                {
-                    Log.Error("[GiddyUpMechanoids] Could not find GiddyUp.StorageUtility");
-                    return null;
-                }
-
-                getGUDataMethod = AccessTools.Method(storageUtilType, "GetGUData", new[] { typeof(Pawn) });
-                if (getGUDataMethod == null)
-                {
-                    Log.Error("[GiddyUpMechanoids] Could not reflect GetGUData(Pawn)");
-                    return null;
-                }
-            }
-
-            return getGUDataMethod.Invoke(null, new object[] { pawn }) as ExtendedPawnData;
-        }
-                
-
-        #endregion
-
         #region Mounting Checks
 
         public static bool IsMountableMech(this Pawn mech, out Reason reason, Pawn rider, bool checkState = true, bool checkFaction = false)
@@ -75,8 +43,8 @@ namespace GiddyUpMechanoids
                     return false;
                 }
 
-                var mechData = GetGUData_Reflect(mech);
-                if (mechData.reservedBy != null && (mechData.reservedBy.CurJobDef != ResourceBank.JobDefOf.Mount || GetGUData_Reflect(mechData.reservedBy)?.reservedMount != mech))
+                var mechData = mech.GetExtendedPawnData();
+                if (mechData.ReservedBy != null && (mechData.ReservedBy.CurJobDef != ResourceBank.JobDefOf.Mount || mechData.ReservedBy.GetExtendedPawnData()?.ReservedMount != mech))
                 {
                     reason = Reason.MountedByAnother;
                     return false;
@@ -89,7 +57,7 @@ namespace GiddyUpMechanoids
                 }
 
                 var lord = mech.GetLord();
-                if (lord != null && lord.LordJob is LordJob_FormAndSendCaravan && mechData.reservedBy != rider)
+                if (lord != null && lord.LordJob is LordJob_FormAndSendCaravan && mechData.ReservedBy != rider)
                 {
                     reason = Reason.IsBusyWithCaravan;
                     return false;
@@ -123,13 +91,13 @@ namespace GiddyUpMechanoids
         {
             if (mech == null || rider == null || opts == null) return false;
 
-            var riderData = GetGUData_Reflect(rider);
-            var mechData = GetGUData_Reflect(mech);
+            var riderData = rider.GetExtendedPawnData();
+            var mechData = mech.GetExtendedPawnData();
 
             if (riderData == null || mechData == null) return false;
 
             // Already mounted → provide dismount option
-            if (mech == riderData.mount)
+            if (mech == riderData.Mount)
             {
                 return opts.GenerateFloatMenuOption("GUC_Dismount".Translate(), true, () =>
                 {
@@ -158,14 +126,14 @@ namespace GiddyUpMechanoids
                 return opts.GenerateFloatMenuOption(reasonText, true, () => { });
             }
 
-            string menuText = riderData.mount == null ? "GUC_Mount".Translate() : "GUC_SwitchMount".Translate();
+            string menuText = riderData.Mount == null ? "GUC_Mount".Translate() : "GUC_SwitchMount".Translate();
 
             return opts.GenerateFloatMenuOption(menuText, true, () =>
             {
                 // Dismount old mount if present
-                if (riderData.mount != null)
+                if (riderData.Mount != null)
                 {
-                    DismountMech(rider, riderData.mount, riderData);
+                    DismountMech(rider, riderData.Mount, riderData);
                 }
 
                 // Force mount new mech
@@ -195,7 +163,7 @@ namespace GiddyUpMechanoids
             if (rider.Map != mech.Map)
                 return;
 
-            var mechData = GetGUData_Reflect(mech);
+            var mechData = mech.GetExtendedPawnData();
             if (mechData == null)
             {
                 Log.Error("[GiddyUpMechanoids] mechData null");
@@ -212,8 +180,8 @@ namespace GiddyUpMechanoids
             // ------------------------------------------------------------
             // 2. Reserve relationship (like GU core)
             // ------------------------------------------------------------
-            riderData.reservedMount = mech;
-            mechData.reservedBy = rider;
+            riderData.ReservedMount = mech;
+            mechData.ReservedBy = rider;
 
             // ------------------------------------------------------------
             // 3. Stop mech movement only (do NOT give Mounted job)
@@ -261,19 +229,19 @@ namespace GiddyUpMechanoids
             //Log.Message($"[Giddy-Up] DismountMech invoked: {rider} → {mech}");
             //Log.Message($"[Giddy-Up] MissingJoy BEFORE dismount: {CountPawnsMissingJoy()}");
 
-            var mechData = GetGUData_Reflect(mech);
+            var mechData = mech.GetExtendedPawnData();
 
             // ------------------------------------------------------------------
             // 1. Authoritative unmount state changes (mirrors Giddy-Up Dismount)
             // ------------------------------------------------------------------
-            riderData.mount = null;
+            riderData.Mount = null;
             if (mechData != null)
-                mechData.mount = null;
+                mechData.Mount = null;
 
             // Reservation pair reset
-            riderData.reservedMount = null;
+            riderData.ReservedMount = null;
             if (mechData != null)
-                mechData.reservedBy = null;
+                mechData.ReservedBy = null;
 
             // Remove from isMounted list exactly as Giddy-Up does
             try
@@ -379,7 +347,7 @@ namespace GiddyUpMechanoids
 
         public static bool IsTooHeavy(Pawn rider, Pawn mech)
         {
-            if (GiddyUpMechanoidsMod.Settings.disregardCarryingCapacity)
+            if (ModSettings_GiddyUp.disregardCarryingCapacity)
             {
                 return false;
             }

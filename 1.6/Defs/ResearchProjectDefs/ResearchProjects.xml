@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ResearchProjectDef MayRequire="zal.whatthehack">
+	<defName>GU_Mech_GiddyUpModule</defName>
+	<label>Giddy-up! module</label>
+	<tab>WTH_ResearchTab</tab>
+	<techLevel>Spacer</techLevel>
+	<description>This module functions as both a saddle and an interface to the mechanoid on which it is installed, allowing colonists to ride it to battle, given that there isn't already a turret mounted to the mechanoid. Can only be installed on mechanoids allowed to be used as mount in the mod options of Giddy-up! Battle Mechs.</description>
+	<baseCost>2000</baseCost>
+	<prerequisites>
+	  <li>WTH_MechanoidWorkshop</li>
+	</prerequisites>
+	<researchViewX>1</researchViewX>
+	<researchViewY>2</researchViewY>
+	</ResearchProjectDef>
+</Defs>
