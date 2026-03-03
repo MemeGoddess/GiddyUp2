@@ -36,7 +36,7 @@ public class FloatMenuOptionProvider_RidingOptions : FloatMenuOptionProvider
     }
 }
 
-internal static class FloatMenuUtility
+public static class FloatMenuUtility
 {
     public static bool AddMountingOptions(Pawn animal, Pawn pawn, List<FloatMenuOption> opts)
     {

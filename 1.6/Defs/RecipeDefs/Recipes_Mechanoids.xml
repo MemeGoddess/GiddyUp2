@@ -1,76 +1,76 @@
 <Defs>
-  <RecipeDef MayRequire="zal.whatthehack">
-	<defName>GU_Mech_CraftGiddyUpModule</defName>
-	<label>craft Giddy-Up! module</label>
-	<description>Craft a Giddy-Up! module</description>
-	<jobString>Crafting</jobString>
-	<workSpeedStat>WTH_HackingMaintenanceSpeed</workSpeedStat>
-	<effectWorking>Repair</effectWorking>
-	<soundWorking>Recipe_Machining</soundWorking>
-	<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
-	<ingredients>
-		<li>
-			<filter>
-			  <thingDefs>
-				<li>WTH_MechanoidChip</li>
-			  </thingDefs>
-			</filter>
-			<count>2</count>
-		</li>
-		<li>
-			<filter>
-				<thingDefs>
-					<li>WTH_MechanoidParts</li>
-				</thingDefs>
-			</filter>
-			<count>10</count>
-		</li>
-		<li>
-			<filter>
-				<thingDefs>
-					<li>ComponentIndustrial</li>
-				</thingDefs>
-			</filter>
-			<count>2</count>
-		</li>
-		<li>
-			<filter>
-				<thingDefs>
-					<li>Plasteel</li>
-				</thingDefs>
-			</filter>
-			<count>20</count>
-		</li>
-  		<li>
-			<filter>
-				<thingDefs>
-					<li>DevilstrandCloth</li>
-				</thingDefs>
-			</filter>
-			<count>40</count>
-		</li>
-	</ingredients>
-	<fixedIngredientFilter>
+	<RecipeDef MayRequire="zal.whatthehack">
+		<defName>GU_Mech_CraftGiddyUpModule</defName>
+		<label>craft Giddy-Up! module</label>
+		<description>Craft a Giddy-Up! module</description>
+		<jobString>Crafting</jobString>
+		<workSpeedStat>WTH_HackingMaintenanceSpeed</workSpeedStat>
+		<effectWorking>Repair</effectWorking>
+		<soundWorking>Recipe_Machining</soundWorking>
+		<unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>WTH_MechanoidChip</li>
+					</thingDefs>
+				</filter>
+				<count>2</count>
+			</li>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>WTH_MechanoidParts</li>
+					</thingDefs>
+				</filter>
+				<count>10</count>
+			</li>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>ComponentIndustrial</li>
+					</thingDefs>
+				</filter>
+				<count>2</count>
+			</li>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>Plasteel</li>
+					</thingDefs>
+				</filter>
+				<count>20</count>
+			</li>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>DevilstrandCloth</li>
+					</thingDefs>
+				</filter>
+				<count>40</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
 			<thingDefs>
 				<li>WTH_MechanoidChip</li>
 				<li>WTH_MechanoidParts</li>
 				<li>ComponentIndustrial</li>
 				<li>Plasteel</li>
-				<li>DevilstrandCloth</li>			
+				<li>DevilstrandCloth</li>
 			</thingDefs>
 		</fixedIngredientFilter>
-	<products>
-	  <GU_Mech_GiddyUpModule>1</GU_Mech_GiddyUpModule>
-	</products>
+		<products>
+			<GU_Mech_GiddyUpModule>1</GU_Mech_GiddyUpModule>
+		</products>
 		<skillRequirements>
 			<Crafting>8</Crafting>
 		</skillRequirements>
-	<workSkill>Crafting</workSkill>
-	<researchPrerequisite>GU_Mech_GiddyUpModule</researchPrerequisite>
-  </RecipeDef>
-	
-	
-	<RecipeDef>
+		<workSkill>Crafting</workSkill>
+		<researchPrerequisite>GU_Mech_GiddyUpModule</researchPrerequisite>
+	</RecipeDef>
+
+
+	<RecipeDef MayRequire="zal.whatthehack">
 		<defName>GU_Mech_InstallGiddyUpModule</defName>
 		<label>install Giddy-Up! module</label>
 		<description>Allows the mechanoid to be mounted by your colonists.</description>
@@ -78,7 +78,7 @@
 		<jobString>Modifying mechanoid</jobString>
 		<workAmount>3500</workAmount>
 		<surgerySuccessChanceFactor>1.3</surgerySuccessChanceFactor>
-		<deathOnFailedSurgeryChance>0.2</deathOnFailedSurgeryChance>		
+		<deathOnFailedSurgeryChance>0.2</deathOnFailedSurgeryChance>
 		<skillRequirements>
 			<Crafting>5</Crafting>
 			<Intellectual>5</Intellectual>
@@ -105,5 +105,5 @@
 			</li>
 		</modExtensions>
 	</RecipeDef>
-	
+
 </Defs>

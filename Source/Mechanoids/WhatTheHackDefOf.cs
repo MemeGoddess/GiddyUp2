@@ -19,8 +19,5 @@ namespace GiddyUpCore.Mechanoids
 
         [MayRequire(WhatTheHackCompatibility.WhatTheHackModId)]
         public static HediffDef WTH_TargetingHackedPoorly;
-
-        public static RecipeDef GU_Mech_CraftGiddyUpModule;
-        public static RecipeDef GU_Mech_InstallGiddyUpModule;
     }
 }
