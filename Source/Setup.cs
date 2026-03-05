@@ -3,6 +3,7 @@ using System.Linq;
 using GiddyUp.Jobs;
 using GiddyUpCaravan;
 using GiddyUpCore.Mechanoids;
+using GiddyUpMechanoids;
 using GiddyUpRideAndRoll;
 using RimWorld;
 using Verse;
@@ -60,6 +61,8 @@ public static class Setup
             RemoveRideAndRoll();
         if (!ModSettings_GiddyUp.caravansEnabled)
             RemoveCaravans();
+        if(!ModSettings_GiddyUp.mechanoidsEnabled)
+            RemoveMechanoids();
 
         ProcessPawnKinds(harmony);
         if (ModSettings_GiddyUp.disableSlavePawnColumn)
@@ -279,6 +282,23 @@ public static class Setup
             if (designator is Designator_GU_DropAnimal_NPC_Clear ||
                 designator is Designator_GU_DropAnimal_NPC_Expand)
                 designationCategoryDef.resolvedDesignators.Remove(designator);
+    }
+
+    private static void RemoveMechanoids()
+    {
+        if (WhatTheHackCompatibility.WhatTheHackEnabled)
+        {
+
+            DefDatabase<RecipeDef>.Remove(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule);
+
+            DefDatabase<HediffDef>.Remove(GU_Mech_DefOf.GU_Mech_GiddyUpModule);
+            DefDatabase<ResearchProjectDef>.Remove(
+                DefDatabase<ResearchProjectDef>.GetNamedSilentFail(nameof(GU_Mech_DefOf.GU_Mech_GiddyUpModule)
+                ));
+            DefDatabase<ThingDef>.Remove(
+                DefDatabase<ThingDef>.GetNamedSilentFail(nameof(GU_Mech_DefOf.GU_Mech_GiddyUpModule)
+                ));
+        }
     }
 
     public static void CalculateCaravanSpeed(ThingDef def, bool check = false)
