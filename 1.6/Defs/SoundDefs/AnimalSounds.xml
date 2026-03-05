@@ -23,8 +23,7 @@
 				<repeatMode>NeverTwice</repeatMode>
 				<sustainLoop>False</sustainLoop>
 				<onCamera>True</onCamera>
-		</li>
-			
+			</li>
 		</subSounds>
 	</SoundDef>
 </Defs>
