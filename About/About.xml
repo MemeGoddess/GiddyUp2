@@ -21,6 +21,7 @@
 	</modDependencies>
 	<loadBefore>
 		<li>dylan.animalgear</li>
+		<li>com.yayo.yayoAni.continued</li>
 	</loadBefore>
 	<loadAfter>
 		<li>Owlchemist.ToggleableOverlays</li>

@@ -10,7 +10,11 @@ public class ExtendedPawnData : IExposable
     public Pawn? Pawn => _pawn;
     
     private Pawn? _mount;
-    public Pawn? Mount { get; set; }
+    public Pawn? Mount
+    {
+        get => _mount;
+        set => _mount = value;
+    }
 
     public int ID;
 

@@ -32,10 +32,10 @@ namespace GiddyUpCore
                 if (pawn.Map != map)
                     continue;
 
-                if (data.ReservedMount == null)
+                if (data.Mount == null)
                     continue;
 
-                var mount = data.ReservedMount;
+                var mount = data.Mount;
                 if (mount.Dead || !mount.Spawned || mount.Faction != pawn.Faction || !pawn.CanReserve(mount))
                     continue;
 
