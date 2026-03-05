@@ -121,7 +121,7 @@ public class Mod_GiddyUp : Mod
             mountableFilterRect.width - 10f, mountableFilterRect.height - 10f));
         if (selectedTab == SelectedTab.BodySize)
         {
-            options.Label("GUC_BodySizeFilter_Title".Translate("0", "5", "1.2", bodySizeFilter.ToString()), -1f,
+            options.Label("GUC_BodySizeFilter_Title".Translate("0", "5", "0.2", bodySizeFilter.ToString()), -1f,
                 "GUC_BodySizeFilter_Description".Translate());
             bodySizeFilter = options.Slider((float)Math.Round(bodySizeFilter, 1), 0f, 5f);
         }
