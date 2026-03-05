@@ -95,6 +95,9 @@ namespace GiddyUpMechanoids
 
         public static bool AddMountingOptionsMech(Pawn mech, Pawn rider, List<FloatMenuOption> opts)
         {
+            if (!ModSettings_GiddyUp.mechanoidsEnabled)
+                return false;
+
             if (mech == null || rider == null || opts == null) return false;
 
             var riderData = rider.GetExtendedPawnData();

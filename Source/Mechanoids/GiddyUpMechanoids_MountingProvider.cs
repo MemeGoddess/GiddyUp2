@@ -20,6 +20,9 @@ namespace GiddyUpMechanoids
 
         public override bool TargetPawnValid(Pawn targetPawn, FloatMenuContext context)
         {
+            if (!ModSettings_GiddyUp.mechanoidsEnabled)
+                return false;
+
             if (!base.TargetPawnValid(targetPawn, context))
                  return false;
 
@@ -35,6 +38,9 @@ namespace GiddyUpMechanoids
 
         public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn target, FloatMenuContext context)
         {
+            if (!ModSettings_GiddyUp.mechanoidsEnabled)
+                return [];
+
             var pawn = context.FirstSelectedPawn;
             if (pawn == null)
                 return [];
