@@ -56,6 +56,9 @@
 	<GU_Enable_Mechanoids>Enable Mechanoids module</GU_Enable_Mechanoids>
 	<GU_Enable_Mechanoids_Description>Disabling this module will remove functionality related to pawns (both colonists and enemies) using mechanoids as mounts. Changing this setting requires a restart.</GU_Enable_Mechanoids_Description>
 
+	<GU_Enable_SaddleUp>Enable Saddle Up module</GU_Enable_SaddleUp>
+	<GU_Enable_SaddleUp_Description>Disabling this module will remove the gizmo to go and mount a nearby animal or mech.</GU_Enable_SaddleUp_Description>
+	
 	<GU_Reset_Cache>Reset offset cache</GU_Reset_Cache>
 	
 	<GU_Car_TooYoung>Too young</GU_Car_TooYoung>

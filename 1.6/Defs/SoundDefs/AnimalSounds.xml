@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<SoundDef>
+		<defName>horsesnore</defName>
+		<context>MapOnly</context>
+		<maxSimultaneous>1</maxSimultaneous>
+		<eventNames />
+		<subSounds>
+			<li>
+				<grains>
+					<li Class="AudioGrain_Clip">
+						<clipPath>horse/snore</clipPath>
+					</li>
+				</grains>
+				<volumeRange>
+					<min>20</min>
+					<max>40</max>
+				</volumeRange>
+				<pitchRange>
+					<min>1.0</min>
+					<max>1.0</max>
+				</pitchRange>
+				<repeatMode>NeverTwice</repeatMode>
+				<sustainLoop>False</sustainLoop>
+				<onCamera>True</onCamera>
+		</li>
+			
+		</subSounds>
+	</SoundDef>
+</Defs>

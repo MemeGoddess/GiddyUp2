@@ -54,6 +54,9 @@ public class ModSettings_GiddyUp : ModSettings
     public static Dictionary<string, bool> mechSelector = new();
     public static HashSet<ushort> MechSelectedCache = new();
 
+    //SaddleUp
+    public static bool saddleUpEnabled = true;
+
     //UI State
     private static string? _tabsHandler;
     public static Vector2 coreScrollPos;
@@ -112,6 +115,9 @@ public class ModSettings_GiddyUp : ModSettings
         Scribe_Values.Look(ref mountChance, "mountChance", 40);
         Scribe_Values.Look(ref disregardCarryingCapacity, "disregardCarryingCapacity");
         Scribe_Collections.Look(ref mechSelector, "mechSelector", LookMode.Value, LookMode.Value);
+
+        //SaddleUp
+        Scribe_Values.Look(ref saddleUpEnabled, "saddleUpEnabled", true);
 
         //UI State
         Scribe_Values.Look(ref _tabsHandler, "tabsHandler");

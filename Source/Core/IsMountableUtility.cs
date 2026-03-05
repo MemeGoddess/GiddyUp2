@@ -3,7 +3,7 @@ using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 using System.Collections.Generic;
-using Settings = GiddyUp.ModSettings_GiddyUp;
+using static GiddyUp.ModSettings_GiddyUp;
 
 namespace GiddyUp;
 
@@ -76,9 +76,8 @@ public static class IsMountableUtility
             reason = Reason.NotInModOptions;
             return false;
         }
-        
-        //Is even an animal?
-        if (!animal.RaceProps.Animal || animal == rider)
+
+        if (!animal.RaceProps.Animal && !(mechanoidsEnabled && animal.RaceProps.IsMechanoid) || animal == rider)
         {
             reason = Reason.NotAnimal;
             return false;
@@ -92,7 +91,7 @@ public static class IsMountableUtility
         }
 
         //Check mod options
-        if (!Settings.MountableCache.Contains(animal.def.shortHash))
+        if (!MountableCache.Contains(animal.def.shortHash) && !(mechanoidsEnabled && MechSelectedCache.Contains(animal.def.shortHash)))
         {
             reason = Reason.NotInModOptions;
             return false;
@@ -151,7 +150,7 @@ public static class IsMountableUtility
             //Check health
             if (animal.Dead || animal.Downed || animal.InMentalState || !animal.Spawned ||
                 (animal.health != null &&
-                 animal.health.summaryHealth.SummaryHealthPercent < Settings.injuredThreshold) ||
+                 animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold) ||
                 animal.health.HasHediffsNeedingTend() ||
                 animal.HasAttachment(ThingDefOf.Fire) ||
                 (animal.Faction.def
@@ -175,7 +174,7 @@ public static class IsMountableUtility
         }
 
         //Check age
-        if (!animal.ageTracker.Adult)
+        if (!animal.ageTracker.Adult && !animal.RaceProps.IsMechanoid)
         {
             var customLifeStages = animal.def.GetModExtension<AllowedLifeStages>();
             if (customLifeStages == null || !customLifeStages.IsAllowedAge(animal.ageTracker.CurLifeStageIndex))

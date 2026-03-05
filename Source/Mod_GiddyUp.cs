@@ -203,6 +203,8 @@ public class Mod_GiddyUp : Mod
             options.GapLine(); //=============================
             options.Gap();
 
+            options.CheckboxLabeled("GU_Enable_SaddleUp".Translate(), ref saddleUpEnabled, "GU_Enable_SaddleUp_Description".Translate());
+
             options.Label("BM_MinHandlingLevel_Title".Translate("0", "20", "3", minHandlingLevel.ToString()), -1f,
                 "BM_MinHandlingLevel_Description".Translate());
             minHandlingLevel = (int)options.Slider(minHandlingLevel, 0f, 20f);
