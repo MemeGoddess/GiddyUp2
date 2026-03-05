@@ -121,7 +121,7 @@ public static class Setup
         ModSettings_GiddyUp.mechSelector ??= [];
         foreach (var mech in AllMechs)
         {
-            ModSettings_GiddyUp.mechSelector.TryAdd(mech.defName, true);
+            ModSettings_GiddyUp.mechSelector.TryAdd(mech.defName, !mech.race.IsWorkMech && mech.race.baseBodySize >= 1);
         }
 
         ModSettings_GiddyUp.MechSelectedCache.Clear();

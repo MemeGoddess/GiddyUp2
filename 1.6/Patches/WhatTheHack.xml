@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
 
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[@ParentName="BaseMechanoid" or (race/fleshType = "Mechanoid" and not (@ParentName="BaseMechanoid") and not (@Name="BaseMechanoid")) and not (recipes)]</xpath>
+		<value>
+			<modExtensions>
+				<li Class="GiddyUp.DrawingOffset">
+					<northOffset>(0,0,1.0)</northOffset>
+					<southOffset>(0,0,1.0)</southOffset>
+					<eastOffset>(0,0,1.0)</eastOffset>
+					<westOffset>(0,0,1.0)</westOffset>
+				</li>
+			</modExtensions>
+		</value>
+	</Operation>
+
 	<Operation Class="PatchOperationFindMod">
 		<mods>
 			<li>What the Hack?! (Continued)</li>
@@ -9,22 +23,6 @@
 			<success>Always</success>
 			<operations>
 
-				<li Class="PatchOperationAdd">
-					<xpath>Defs/ThingDef[@ParentName="BaseMechanoid" or (race/fleshType = "Mechanoid" and not (@ParentName="BaseMechanoid") and not (@Name="BaseMechanoid")) and not (recipes)]</xpath>
-					<value>
-						<recipes>
-							<li>GU_Mech_InstallGiddyUpModule</li>
-						</recipes>
-						<modExtensions>
-							<li Class="GiddyUp.DrawingOffset">
-								<northOffset>(0,0,1.0)</northOffset>
-								<southOffset>(0,0,1.0)</southOffset>
-								<eastOffset>(0,0,1.0)</eastOffset>
-								<westOffset>(0,0,1.0)</westOffset>
-							</li>
-						</modExtensions>
-					</value>
-				</li>
 
 				<li Class="PatchOperationAdd">
 					<xpath>*/ThingDef[defName = "WTH_TableMechanoidWorkshop"]/recipes</xpath>

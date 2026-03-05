@@ -34,16 +34,8 @@ namespace GiddyUpCore.Mechanoids
 
             foreach (var mech in GiddyUp.Setup.AllMechs)
             {
-                if(!mech.recipes.Contains(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule))
+                if (!mech.recipes.Contains(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule))
                     mech.recipes.Add(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule);
-                var offset = new Vector3(0, 0, 1.0f);
-                mech.modExtensions.Add(new DrawingOffset()
-                {
-                    eastOffset = offset,
-                    northOffset = offset,
-                    southOffset = offset,
-                    westOffset = offset
-                });
             }
         }
     }

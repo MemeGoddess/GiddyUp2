@@ -2,6 +2,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using GiddyUp;
+using GiddyUp.Harmony;
 using Verse;
 
 namespace GiddyUpMechanoids
@@ -28,131 +29,64 @@ namespace GiddyUpMechanoids
             if (!targetPawn.IsHacked() && targetPawn.Faction != Faction.OfPlayer)
                 return false;
 
-            //Log.Message("TargetPawnValid");
             return true;
           
         }
 
-        public override IEnumerable<FloatMenuOption> GetOptions(FloatMenuContext context)
+        public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn target, FloatMenuContext context)
         {
-            //Log.Message("[GiddyUp-Mechs] GetOptions fired. ClickedCell=" + context.ClickedCell);
-
-            Pawn pawn = context.FirstSelectedPawn;
+            var pawn = context.FirstSelectedPawn;
             if (pawn == null)
+                return [];
+
+            // 1 — Is mechanoid?
+            if (!target.RaceProps.IsMechanoid)
+                return [];
+
+            // 2 — Hacked?
+            if (!target.IsHacked(pawn) && target.Faction != Faction.OfPlayer)
+                return [];
+
+            // 3 — Mounted turret?
+            var hasMountedTurret = target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_MountedTurret);
+            if (hasMountedTurret)
+                return [ new FloatMenuOption("GU_BME_Reason_Turret".Translate(), null) ];
+
+            // 4 — Has GiddyUp module?
+            var hasGiddyUpModule = (target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_TargetingHacked) ||
+                                    target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_TargetingHackedPoorly)) ==
+                                    target.health.hediffSet.HasHediff(GU_Mech_DefOf.GU_Mech_GiddyUpModule);
+
+            if (!hasGiddyUpModule)
+                return [ new FloatMenuOption("GU_BME_Reason_NoModule".Translate(), null)];
+
+            // 5 — Check "mountable in mod options" for the target mech
+            var allowedMount = ModSettings_GiddyUp.MechSelectedCache.Contains(target.def.shortHash);
+            if (!allowedMount)
             {
-                //Log.Message("[GiddyUp-Mechs] ERROR: FirstSelectedPawn is NULL.");
-                yield break;
+                var notInOptionsList = new List<FloatMenuOption>();
+                notInOptionsList.GenerateFloatMenuOption("GUC_NotInModOptions".Translate());
+                return notInOptionsList;
             }
 
-            //Log.Message("[GiddyUp-Mechs] FirstSelectedPawn = " + pawn + " (Drafted=" + pawn.Drafted + ")");
+            // 6 — Activated?
+            var activated = target.IsActivated();
+            if (!activated)
+                return [new FloatMenuOption("GU_BME_Reason_NotActivated".Translate(), null)];
 
-            IEnumerable<LocalTargetInfo> targets = GenUI.TargetsAt(
-                context.ClickedCell.ToVector3Shifted(),
-                TargetingParameters.ForAttackAny(),
-                true
-            );
 
-            //Log.Message("[GiddyUp-Mechs] Searching targets at cell. targets.Count()=" + targets.Count());
-
-            foreach (var t in targets)
+            // 7 — Build float menu options via our utility
+            var list = new List<FloatMenuOption>();
+            try
             {
-                if (t.Thing is not Pawn target)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Skipping target because it is not a Pawn: " + t.Thing);
-                    continue;
-                }
-
-                //Log.Message("[GiddyUp-Mechs] Found target Pawn: " + target);
-
-                // 1 — Is mechanoid?
-                if (!target.RaceProps.IsMechanoid)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Reject target — not a mechanoid.");
-                    continue;
-                }
-
-                // 2 — Hacked?
-                if (!target.IsHacked(pawn) && target.Faction != Faction.OfPlayer)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Reject target — mech is NOT hacked.");
-                    continue;
-                }
-
-                //Log.Message("[GiddyUp-Mechs] Target pawn IS a hacked mechanoid.");               
-
-                // 3 — Mounted turret?
-                bool hasMountedTurret = target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_MountedTurret);
-                //Log.Message("[GiddyUp-Mechs] Target has MountedTurret hediff? " + hasMountedTurret);
-
-                if (hasMountedTurret)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Reject — mech has a mounted turret.");
-                    yield return new FloatMenuOption("GU_BME_Reason_Turret".Translate(), null);
-                    yield break;
-                }
-
-                // 4 — Has GiddyUp module?
-                bool hasGiddyUpModule = (target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_TargetingHacked) || target.health.hediffSet.HasHediff(WhatTheHackDefOf.WTH_TargetingHackedPoorly) == target.health.hediffSet.HasHediff(GU_Mech_DefOf.GU_Mech_GiddyUpModule));
-                //Log.Message("[GiddyUp-Mechs] Target has GiddyUp module? " + hasGiddyUpModule);
-
-                if (!hasGiddyUpModule)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Reject — mech lacks GiddyUpModule.");
-                    yield return new FloatMenuOption("GU_BME_Reason_NoModule".Translate(), null);
-                    yield break;
-                }
-
-                // 5 — Check "mountable in mod options" for the target mech
-                bool allowedMount = ModSettings_GiddyUp.MechSelectedCache.Contains(target.def.shortHash);
-                //Log.Message("[GiddyUp-Mechs] Target mech allowed in mod options? " + allowedMount);
-
-                if (!allowedMount)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Reject — mech not allowed in mod options.");
-                    yield return new FloatMenuOption("GUC_NotInModOptions".Translate(), null);
-                    yield break;
-                }
-
-                // 6 — Activated?
-                bool activated = target.IsActivated();
-                //Log.Message("[GiddyUp-Mechs] Target mech IsActivated? " + activated);
-
-                if (!activated)
-                {
-
-                    //Log.Message("[GiddyUp-Mechs] Reject — mech is NOT activated.");
-                    yield return new FloatMenuOption("GU_BME_Reason_NotActivated".Translate(), null);
-                    yield break;
-                }
-
-                //Log.Message("[GiddyUp-Mechs] All preliminary conditions PASSED. Attempting to add mount options.");
-
-                // 7 — Build float menu options via our utility
-                var list = new List<FloatMenuOption>();
-
-                try
-                {
-                    //Log.Message("[GiddyUp-Mechs] Calling Utility.AddMountingOptionsMech...");
-                    Utility.AddMountingOptionsMech(target, pawn, list);
-                    //Log.Message("[GiddyUp-Mechs] Utility.AddMountingOptionsMech returned list count = " + list.Count);
-                }
-                catch (System.Exception ex)
-                {
-                    Log.Error("[GiddyUp-Mechs] ERROR inside AddMountingOptionsMech: " + ex);
-                }
-
-                // 8 — Yield results
-                if (list.Count == 0)
-                {
-                    //Log.Message("[GiddyUp-Mechs] WARNING — AddMountingOptionsMech produced ZERO menu options.");
-                }
-
-                foreach (var o in list)
-                {
-                    //Log.Message("[GiddyUp-Mechs] Yielding FloatMenuOption: " + o.Label);
-                    yield return o;
-                }
+                Utility.AddMountingOptionsMech(target, pawn, list);
             }
+            catch (System.Exception ex)
+            {
+                Log.Error("[GiddyUp-Mechs] ERROR inside AddMountingOptionsMech: " + ex);
+            }
+
+            return list;
         }
 
     }

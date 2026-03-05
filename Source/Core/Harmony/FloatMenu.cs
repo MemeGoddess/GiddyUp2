@@ -45,9 +45,9 @@ public static class FloatMenuUtility
         if (animal == pawnData.Mount)
         {
             if (animal.RaceProps.Roamer && AnimalPenUtility.GetCurrentPenOf(animal, true) == null)
-                opts.GenerateFloatMenuOption("GUC_DismountWithoutHitching".Translate(), true,
+                opts.GenerateFloatMenuOption("GUC_DismountWithoutHitching".Translate(),
                     () => pawn.Dismount(animal, pawnData, true, ropeIfNeeded: false));
-            return opts.GenerateFloatMenuOption("GUC_Dismount".Translate(), true,
+            return opts.GenerateFloatMenuOption("GUC_Dismount".Translate(),
                 () => pawn.Dismount(animal, pawnData, true));
         }
         //Right click to mount...
@@ -58,21 +58,16 @@ public static class FloatMenuUtility
             {
                 //New mount
                 if (pawnData.Mount == null)
-                    return opts.GenerateFloatMenuOption("GUC_Mount".Translate(), true,
+                    return opts.GenerateFloatMenuOption("GUC_Mount".Translate(),
                         () => pawn.GoMount(animal, MountUtility.GiveJobMethod.Try));
                 //Switch mount
                 else
-                    return opts.GenerateFloatMenuOption("GUC_SwitchMount".Translate(), true, delegate
+                    return opts.GenerateFloatMenuOption("GUC_SwitchMount".Translate(), delegate
                     {
                         pawn.Dismount(pawnData.Mount, pawnData, true);
                         pawn.GoMount(animal, MountUtility.GiveJobMethod.Try);
                     });
             }
-            /*
-            else if (DebugSettings.godMode)
-            {
-                return opts.GenerateFloatMenuOption("GUC_Mount_GodMode".Translate(), true, () => pawn.GoMount(animal, MountUtility.GiveJobMethod.Try));
-            }*/
             else
             {
                 if (Settings.logging)
@@ -98,24 +93,29 @@ public static class FloatMenuUtility
                         return opts.GenerateFloatMenuOption("GUC_IsPoorCondition".Translate());
                     case Reason.TooHeavy:
                         return opts.GenerateFloatMenuOption("GUC_TooHeavy".Translate());
+                    case Reason.TooYoung:
+                        return opts.GenerateFloatMenuOption("GU_Car_TooYoung".Translate());
+                    case Reason.IncompatibleEquipment:
+                        return opts.GenerateFloatMenuOption("GU_IncompatibleEquipment".Translate());
                     default:
-                    {
-                        if (riderReason == Reason.TooYoung)
-                            return opts.GenerateFloatMenuOption("GU_Car_TooYoung".Translate());
-                        else if (riderReason == Reason.IncompatibleEquipment)
-                            return opts.GenerateFloatMenuOption("GU_IncompatibleEquipment".Translate());
                         return false;
-                    }
                 }
             }
         }
     }
 
-    private static bool GenerateFloatMenuOption(this List<FloatMenuOption> list, string text, bool prefixType = false,
-        Action action = null)
+    internal static bool GenerateFloatMenuOption(this List<FloatMenuOption> list, string text,
+        Action? action = null)
     {
-        if (!prefixType)
-            text = "GUC_CannotMount".Translate() + text;
+        switch (action)
+        {
+            case null when string.IsNullOrWhiteSpace(text):
+                return false;
+            case null:
+                text = "GUC_CannotMount".Translate() + text;
+                break;
+        }
+
         list.Add(new FloatMenuOption(text, action, MenuOptionPriority.Low));
         return true;
     }

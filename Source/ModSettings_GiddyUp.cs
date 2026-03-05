@@ -125,7 +125,7 @@ public class ModSettings_GiddyUp : ModSettings
     {
         static void Postfix()
         {
-            Find.WindowStack.Add(new Dialog_ModSettings(Mod_GiddyUp.Instance));
+            //Find.WindowStack.Add(new Dialog_ModSettings(Mod_GiddyUp.Instance));
         }
     }
 #endif

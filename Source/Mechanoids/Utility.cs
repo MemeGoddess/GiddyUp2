@@ -4,6 +4,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using GiddyUp.Harmony;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
@@ -44,7 +45,12 @@ namespace GiddyUpMechanoids
                 }
 
                 var mechData = mech.GetExtendedPawnData();
-                if (mechData.ReservedBy != null && (mechData.ReservedBy.CurJobDef != ResourceBank.JobDefOf.Mount || mechData.ReservedBy.GetExtendedPawnData()?.ReservedMount != mech))
+                if(mechData.ReservedBy != null && mech.CurJobDef != ResourceBank.JobDefOf.WaitForRider)
+                {
+                    Log.Warning("[GiddyUp2] Found reserved mech not waiting for rider, this should not happen.");
+                    mechData.ReservedBy = null;
+                }
+                if (mechData.ReservedBy != null && mechData.ReservedBy != rider && (mechData.ReservedBy.CurJobDef != ResourceBank.JobDefOf.Mount || mechData.ReservedBy.GetExtendedPawnData()?.ReservedMount != mech))
                 {
                     reason = Reason.MountedByAnother;
                     return false;
@@ -99,7 +105,7 @@ namespace GiddyUpMechanoids
             // Already mounted → provide dismount option
             if (mech == riderData.Mount)
             {
-                return opts.GenerateFloatMenuOption("GUC_Dismount".Translate(), true, () =>
+                return opts.GenerateFloatMenuOption("GUC_Dismount".Translate(), () =>
                 {
                     DismountMech(rider, mech, riderData);
                 });
@@ -107,7 +113,12 @@ namespace GiddyUpMechanoids
 
             if (!rider.IsCapableOfRiding(out var riderReason))
             {
-                return opts.GenerateFloatMenuOption("GUC_RiderCannotMount".Translate(), true, () => { });
+                var text = riderReason switch
+                {
+                    Reason.TooYoung => "GU_TooYoung".Translate(),
+                    _ => "GU_CannotRide".Translate()
+                };
+                return opts.GenerateFloatMenuOption(text);
             }
 
             bool isMountable = mech.IsMountableMech(out var mechReason, rider, true, true);
@@ -120,15 +131,15 @@ namespace GiddyUpMechanoids
                     Reason.IsRoped => "GUC_IsRoped".Translate(),
                     Reason.IsPoorCondition => "GUC_IsPoorCondition".Translate(),
                     Reason.TooHeavy => "GUC_TooHeavy".Translate(),
-                    _ => "GUC_CannotMount".Translate()
+                    _ => ""
                 };
 
-                return opts.GenerateFloatMenuOption(reasonText, true, () => { });
+                return opts.GenerateFloatMenuOption(reasonText);
             }
 
             string menuText = riderData.Mount == null ? "GUC_Mount".Translate() : "GUC_SwitchMount".Translate();
-
-            return opts.GenerateFloatMenuOption(menuText, true, () =>
+            
+            return opts.GenerateFloatMenuOption(menuText, () =>
             {
                 // Dismount old mount if present
                 if (riderData.Mount != null)
@@ -139,14 +150,6 @@ namespace GiddyUpMechanoids
                 // Force mount new mech
                 ForceMountMech(rider, mech, riderData);
             });
-        }
-
-        private static bool GenerateFloatMenuOption(this List<FloatMenuOption> list, string text, bool prefixType = false, Action action = null)
-        {
-            if (!prefixType) text = "GUC_CannotMount".Translate() + ": " + text;
-            if (action == null) action = () => { }; // safe no-op
-            list.Add(new FloatMenuOption(text, action, MenuOptionPriority.Low));
-            return true;
         }
 
 
