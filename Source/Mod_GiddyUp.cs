@@ -16,6 +16,8 @@ public class Mod_GiddyUp : Mod
     public static Mod_GiddyUp Instance;
 #endif
     private static int coreLineNumber, mechLineNumber;
+    private readonly QuickSearchWidget searchAnimals = new QuickSearchWidget();
+    private readonly QuickSearchWidget searchMechs = new QuickSearchWidget();
     public Mod_GiddyUp(ModContentPack content) : base(content)
     {
         GetSettings<ModSettings_GiddyUp>();
@@ -136,12 +138,10 @@ public class Mod_GiddyUp : Mod
         options.End();
         
         //========Search widget=========
-        QuickSearchWidget search = new QuickSearchWidget();
-        List<ThingDef?> animalsForViewing = Setup.AllAnimals;
-        animalsForViewing = animalsForViewing.Where(animal => search.filter.Matches(animal?.LabelCap)).ToList();
-        Rect searchRect = new Rect(mountableFilterRect.x + 5f, mountableFilterRect.y,
-            mountableFilterRect.width / 2, 20f);
-        search.OnGUI(searchRect);
+        Rect searchRect = new Rect(mountableFilterRect.x + 5f, mountableFilterRect.y, mountableFilterRect.width / 2, 20f);
+        searchAnimals.OnGUI(searchRect);
+        List<ThingDef?> animalsForViewing = Setup.AllAnimals.Where(animal =>
+            searchAnimals.filter.Matches(animal?.LabelCap) || searchAnimals.filter.Matches(animal?.defName)).ToList();
 
         //========Scroll area=========
         mountableFilterRect.y += 30f;
@@ -313,11 +313,10 @@ public class Mod_GiddyUp : Mod
 
         
         //========Search widget=========
-        QuickSearchWidget search = new QuickSearchWidget();
-        List<ThingDef?> mechsForViewing = Setup.AllMechs;
-        mechsForViewing = mechsForViewing.Where(mech => search.filter.Matches(mech?.LabelCap)).ToList();
         Rect searchRect = new Rect(15f, previousControls + 50f, display.width / 2, 20f);
-        search.OnGUI(searchRect);
+        searchMechs.OnGUI(searchRect);
+        List<ThingDef?> mechsForViewing = Setup.AllMechs.Where(mech =>
+            searchMechs.filter.Matches(mech?.LabelCap) || searchMechs.filter.Matches(mech?.defName)).ToList();
         previousControls += 30f;
         
         var scrollView = display.BottomPartPixels(display.height - previousControls);
