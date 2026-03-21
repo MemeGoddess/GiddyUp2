@@ -118,39 +118,37 @@ public class Mod_GiddyUp : Mod
             tabs);
 
         //========Between tabs and scroll body=========
-        options.Begin(new Rect(mountableFilterRect.x + 10, mountableFilterRect.y + 10,
-            mountableFilterRect.width - 10f, mountableFilterRect.height - 10f));
+        var tabView = mountableFilterRect.ContractedBy(10f);
+        options.Begin(tabView);
         if (selectedTab == SelectedTab.BodySize)
         {
             options.Label("GUC_BodySizeFilter_Title".Translate("0", "5", "0.2", bodySizeFilter.ToString()), -1f,
                 "GUC_BodySizeFilter_Description".Translate());
             bodySizeFilter = options.Slider((float)Math.Round(bodySizeFilter, 1), 0f, 5f);
-            mountableFilterRect.y += 55f;
-            mountableFilterRect.yMax -= 87f;
         }
         else
         {
             options.Label("GUC_DrawBehavior_Description".Translate());
-            mountableFilterRect.y += 42f;
-            mountableFilterRect.yMax -= 75f;
         }
-        options.End();
-        
         //========Search widget=========
-        Rect searchRect = new Rect(mountableFilterRect.x + 5f, mountableFilterRect.y, mountableFilterRect.width - 35f, 20f);
+        var searchRect = options.GetRect(Text.LineHeight);
+        searchRect.width -= 20f; // Scroll bar alignment
         search.OnGUI(searchRect);
-        List<ThingDef?> animalsForViewing = Setup.AllAnimals.Where(animal =>
+        var animalsForViewing = Setup.AllAnimals.Where(animal =>
             search.filter.Matches(animal?.label)
             || search.filter.Matches(animal?.defName)
             || search.filter.Matches(animal?.modContentPack?.Name)).ToList();
-
+        options.Gap(4f);
+        var previousHeight = options.CurHeight;
+        options.End();
+        
         //========Scroll area=========
-        mountableFilterRect.y += 30f;
-        Rect mountableFilterInnerRect = mountableFilterRect with {
-            width = mountableFilterRect.width - 30f,
-            height = coreLineNumber * 22f
+        var scrollView = tabView.BottomPartPixels(tabView.height - previousHeight);
+        var mountableFilterInnerRect = scrollView with {
+            width = scrollView.width - 20f,
+            height = coreLineNumber * Text.LineHeight
         };
-        Widgets.BeginScrollView(mountableFilterRect.ContractedBy(5f), ref coreScrollPos, mountableFilterInnerRect);
+        Widgets.BeginScrollView(scrollView, ref coreScrollPos, mountableFilterInnerRect);
         options.Begin(mountableFilterInnerRect);
         options.DrawList(animalsForViewing, selectedTab == SelectedTab.BodySize ? MountableCache : DrawRulesCache, out coreLineNumber);
         options.End();
@@ -309,19 +307,16 @@ public class Mod_GiddyUp : Mod
         options.GapLine();
         options.Gap();
         options.Label("GUM_AllowedMechs".Translate());
-
-        var previousControls = options.CurHeight + 30f;
-        
-        options.End();
-
-        
         //========Search widget=========
-        Rect searchRect = new (15f, previousControls + 20f, display.width - 25f, 20f);
+        var searchRect = options.GetRect(Text.LineHeight);
+        searchRect.width -= 20f; // Scroll bar alignment
         search.OnGUI(searchRect);
-        List<ThingDef?> mechsForViewing = Setup.AllMechs.Where(mech =>
+        var mechsForViewing = Setup.AllMechs.Where(mech =>
             search.filter.Matches(mech?.label)
             || search.filter.Matches(mech?.defName)
             || search.filter.Matches(mech?.modContentPack?.Name)).ToList();
+        var previousControls = options.CurHeight;
+        options.End();
         
         Rect scrollView = display.BottomPartPixels(display.height - previousControls);
         Rect innerRect = scrollView with
