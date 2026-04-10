@@ -16,7 +16,7 @@
         <DefineConstants>TRACE;NDEBUG</DefineConstants>
         <WarningLevel>4</WarningLevel>
         <DebugSymbols>false</DebugSymbols>
-        <DebugType>None</DebugType>
+        <DebugType>Embedded</DebugType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <OutputPath>..\$(Version)\Assemblies</OutputPath>
