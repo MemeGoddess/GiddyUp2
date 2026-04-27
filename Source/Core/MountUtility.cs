@@ -275,7 +275,7 @@ internal static class MountUtility
         }
 
         //Reset free locomotion
-        if (animal == null || animal.Dead)
+        if (animal == null || animal.Dead || animal.pather == null)
             return; //We're done here
         animal.Drawer.tweener = new PawnTweener(animal);
         animal.pather.ResetToCurrentPosition();
