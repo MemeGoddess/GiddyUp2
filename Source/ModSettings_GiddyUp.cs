@@ -13,6 +13,7 @@ public class ModSettings_GiddyUp : ModSettings
     public static float handlingAccuracyImpact = 0.5f;
     public static float bodySizeFilter = 0.2f;
     public static int accuracyPenalty = 10;
+    public static bool disregardAnimalCarryingCapacity = false;
     public static Dictionary<string, float>? offsetCache;
     public static HashSet<string>? invertMountingRules; //These are only used on game start to setup the below, fast cache collections
     public static HashSet<string>? invertDrawRules; //These are only used on game start to setup the below, fast cache collections
@@ -50,7 +51,7 @@ public class ModSettings_GiddyUp : ModSettings
     public static bool mechanoidsEnabled = true;
     public static int mountChance = 40;
     public static string mountChanceBuffer;
-    public static bool disregardCarryingCapacity = false;
+    public static bool disregardMechCarryingCapacity = false;
     public static Dictionary<string, bool> mechSelector = new();
     public static HashSet<ushort> MechSelectedCache = new();
 
@@ -83,6 +84,7 @@ public class ModSettings_GiddyUp : ModSettings
         Scribe_Collections.Look(ref offsetCache, "offsetCache", LookMode.Value);
         Scribe_Collections.Look(ref invertMountingRules, "invertMountingRules", LookMode.Value);
         Scribe_Collections.Look(ref invertDrawRules, "invertDrawRules", LookMode.Value);
+        Scribe_Values.Look(ref disregardAnimalCarryingCapacity, "disregardAnimalCarryingCapacity");
 
         //Ride and Roll
         Scribe_Values.Look(ref rideAndRollEnabled, "rideAndRollEnabled", true);
@@ -113,7 +115,7 @@ public class ModSettings_GiddyUp : ModSettings
         //Mechanoids
         Scribe_Values.Look(ref mechanoidsEnabled, "mechanoidsEnabled", true);
         Scribe_Values.Look(ref mountChance, "mountChance", 40);
-        Scribe_Values.Look(ref disregardCarryingCapacity, "disregardCarryingCapacity");
+        Scribe_Values.Look(ref disregardMechCarryingCapacity, "disregardCarryingCapacity");
         Scribe_Collections.Look(ref mechSelector, "mechSelector", LookMode.Value, LookMode.Value);
 
         //SaddleUp

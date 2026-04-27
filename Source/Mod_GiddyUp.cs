@@ -93,7 +93,7 @@ public class Mod_GiddyUp : Mod
             "GUC_HandlingAccuracyImpact_Description".Translate());
         handlingAccuracyImpact = options.Slider((float)Math.Round(handlingAccuracyImpact, 1), 0f, 2f);
 
-        options.Gap();
+        options.CheckboxLabeled("GUM_DisCarCap".Translate(), ref disregardAnimalCarryingCapacity, "GUM_DisCarCapText".Translate());
 
         if (options.ButtonText("GU_Reset_Cache".Translate()))
             offsetCache = null;
@@ -301,7 +301,7 @@ public class Mod_GiddyUp : Mod
             tooltip: "GU_BME_MountChance_Description".Translate());
         mountChance = (int)options.Slider(mountChance, 0f, 100f);
 
-        options.CheckboxLabeled("GUM_DisCarCap".Translate(), ref disregardCarryingCapacity,
+        options.CheckboxLabeled("GUM_DisCarCap".Translate(), ref disregardMechCarryingCapacity,
             "GUM_DisCarCapText".Translate());
 
         options.GapLine();

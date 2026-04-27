@@ -5,7 +5,7 @@
 
 <GUM_AllowedMechs>Allowed Mechs</GUM_AllowedMechs>
 <GUM_DisCarCap>Disregard Carrying Capacity</GUM_DisCarCap>
-<GUM_DisCarCapText>If enabled, Carrying Capacity is no longer a factor for mounting mechs. Default false.</GUM_DisCarCapText>
+<GUM_DisCarCapText>If enabled, Carrying Capacity is no longer a factor for mounting. Default false.</GUM_DisCarCapText>
 <GU_BME_Tabs_Title>Mod settings</GU_BME_Tabs_Title>
 <GU_BME_tab1>Change mod settings..</GU_BME_tab1>
 <GU_BME_MountChance_Title>Chance enemies mount mechs (Min: {0}% Max: {1}% Default: {2}% Current: {3}%)</GU_BME_MountChance_Title>

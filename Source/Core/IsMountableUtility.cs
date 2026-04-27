@@ -286,6 +286,12 @@ public static class IsMountableUtility
 
     public static bool IsTooHeavy(this Pawn rider, Pawn animal)
     {
+        if (animal.RaceProps.IsMechanoid && disregardMechCarryingCapacity)
+            return false;
+
+        if (animal.IsAnimal && disregardAnimalCarryingCapacity)
+            return false;
+
         return rider.GetStatValue(StatDefOf.Mass) > animal.GetStatValue(StatDefOf.CarryingCapacity);
     }
 

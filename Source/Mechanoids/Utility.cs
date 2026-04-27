@@ -349,16 +349,5 @@ namespace GiddyUpMechanoids
 
 
         #endregion
-
-
-        public static bool IsTooHeavy(Pawn rider, Pawn mech)
-        {
-            if (ModSettings_GiddyUp.disregardCarryingCapacity)
-            {
-                return false;
-            }
-            return rider.GetStatValue(StatDefOf.Mass) > mech.GetStatValue(StatDefOf.CarryingCapacity);
-        }
-
     }
 }
