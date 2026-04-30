@@ -1,8 +1,5 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Linq;
 using Verse;
 using Settings = GiddyUp.ModSettings_GiddyUp;
 
@@ -11,32 +8,13 @@ namespace GiddyUp.Harmony;
 [HarmonyPatch(typeof(Pawn_DrawTracker), nameof(Pawn_DrawTracker.DrawPos), MethodType.Getter)]
 internal static class Pawn_DrawTracker_DrawPos
 {
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator)
+    private static bool Prefix(Pawn_DrawTracker __instance, ref Vector3 __result)
     {
-        var firstLdArg0Label = generator.DefineLabel();
-        var firstLdArg0 = instructions.First(i => i.opcode == OpCodes.Ldarg_0);
-        firstLdArg0.labels.Add(firstLdArg0Label);
+        if (!ExtendedDataStorage.isMounted.Contains(__instance.pawn.thingIDNumber))
+            return true;
 
-        var returnInstructionLabel = generator.DefineLabel();
-        var returnInstruction = instructions.ToList()[instructions.Count() - 1];
-        returnInstruction.labels.Add(returnInstructionLabel);
-
-        yield return new CodeInstruction(OpCodes.Ldsfld,
-            AccessTools.Field(typeof(ExtendedDataStorage), nameof(ExtendedDataStorage.isMounted)));
-        yield return new CodeInstruction(OpCodes.Ldarg_0);
-        yield return new CodeInstruction(OpCodes.Ldfld,
-            AccessTools.Field(typeof(Pawn_DrawTracker), nameof(Pawn_DrawTracker.pawn)));
-        yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Thing), nameof(Thing.thingIDNumber)));
-        yield return new CodeInstruction(OpCodes.Callvirt,
-            typeof(HashSet<int>).GetMethod(nameof(HashSet<int>.Contains)));
-        yield return new CodeInstruction(OpCodes.Brfalse_S, firstLdArg0Label);
-        yield return new CodeInstruction(OpCodes.Ldarg_0);
-        yield return new CodeInstruction(OpCodes.Call, typeof(Pawn_DrawTracker_DrawPos).GetMethod(nameof(DrawOffset)));
-        yield return new CodeInstruction(OpCodes.Br_S, returnInstructionLabel);
-
-        foreach (var code in instructions)
-            yield return code;
+        __result = DrawOffset(__instance);
+        return false;
     }
 
     public static Vector3 DrawOffset(Pawn_DrawTracker __instance)
