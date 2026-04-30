@@ -11,6 +11,7 @@ using static GiddyUp.IsMountableUtility;
 
 namespace GiddyUpCaravan.Harmony;
 
+[HarmonyPatchCategory(nameof(PatchCategoryModule.Caravans))]
 [HarmonyPatch(typeof(TransferableOneWayWidget), nameof(TransferableOneWayWidget.DoRow))]
 internal static class Patch_TransferableOneWayWidget
 {

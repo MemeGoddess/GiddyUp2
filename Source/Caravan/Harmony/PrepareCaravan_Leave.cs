@@ -9,6 +9,7 @@ using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace GiddyUpCaravan.Harmony;
 
+[HarmonyPatchCategory(nameof(PatchCategoryModule.Caravans))]
 [HarmonyPatch]
 internal static class Patch_PrepareCaravan_Leave
 {

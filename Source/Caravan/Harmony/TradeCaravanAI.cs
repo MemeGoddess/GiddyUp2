@@ -11,6 +11,7 @@ namespace GiddyUpCaravan.Harmony;
 
 //This patch makes sure that mounted animals won't attempt to follow the caravan after they are parked
 //TODO: There's probably a more elegant way to handle this, investigate further
+[HarmonyPatchCategory(nameof(PatchCategoryModule.Caravans))]
 [HarmonyPatch]
 internal static class Patch_TradeCaravanAI
 {
@@ -38,6 +39,7 @@ internal static class Patch_TradeCaravanAI
 
 //Have them follow the leader instead of considering their own mount as something to guard
 //TODO: The logic could be improved if turned into a transpiler
+[HarmonyPatchCategory(nameof(PatchCategoryModule.Caravans))]
 [HarmonyPatch(nameof(LordToil_ExitMapAndEscortCarriers), nameof(LordToil_ExitMapAndEscortCarriers.GetClosestCarrier))]
 internal static class Patch_GetClosestCarrier
 {

@@ -12,6 +12,7 @@ using Verse.Sound;
 
 namespace SaddleUp
 {
+    [HarmonyPatchCategory(nameof(PatchCategoryModule.SaddleUp))]
     [HarmonyPatch(typeof(Pawn), "GetGizmos")]
     public class Pawn_GetGizmos_SU2
     {

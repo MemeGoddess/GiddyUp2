@@ -8,6 +8,7 @@ using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace GiddyUpCaravan.Harmony;
 
+[HarmonyPatchCategory(nameof(PatchCategoryModule.Caravans))]
 [HarmonyPatch]
 internal static class Patch_IncidentWorkers
 {
@@ -43,6 +44,7 @@ internal static class Patch_IncidentWorkers
 }
 
 //Animals can't be turned into traders so should be stripped from the list
+[HarmonyPatchCategory(nameof(PatchCategoryModule.Caravans))]
 [HarmonyPatch(typeof(IncidentWorker_VisitorGroup), nameof(IncidentWorker_VisitorGroup.TryConvertOnePawnToSmallTrader))]
 internal static class Patch_TryConvertOnePawnToSmallTrader
 {

@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
+using GiddyUp;
 using Verse;
 using Verse.AI;
 using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace GiddyUpCore.RideAndRoll.Harmony;
 
+[HarmonyPatchCategory(nameof(PatchCategoryModule.RideAndRoll))]
 [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
 public class Pawn_GetGizmos
 {

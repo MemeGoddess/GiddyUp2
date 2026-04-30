@@ -9,6 +9,7 @@ using GiddyUpCore.Mechanoids;
 
 namespace GiddyUpMechanoids
 {
+    [HarmonyPatchCategory(nameof(PatchCategoryModule.Mechanoids))]
     [HarmonyPatch(typeof(IncidentWorker_Raid), "PostProcessSpawnedPawns")]
     public static class Patch_Raid_PostProcessSpawned
     {

@@ -10,6 +10,7 @@ using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace BattleMounts.Harmony;
 
+[HarmonyPatchCategory(nameof(PatchCategoryModule.BattleMounts))]
 [HarmonyPatch(typeof(IncidentWorker_Ambush), nameof(IncidentWorker_Ambush.DoExecute))]
 internal static class Patch_IncidentWorker_Ambush
 {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using GiddyUp.Jobs;
 using GiddyUpCaravan;
 using GiddyUpCore.Mechanoids;
@@ -52,7 +53,9 @@ public static class Setup
     static Setup()
     {
         var harmony = new HarmonyLib.Harmony("GiddyUp");
-        harmony.PatchAll();
+        var assembly = typeof(Setup).Assembly;
+        harmony.PatchAllUncategorized(assembly);
+        PatchOptionalModules(harmony);
 
         JobDriver_Mounted.BuildAllowedJobsCache(ModSettings_GiddyUp.noMountedHunting);
         BuildMountCache();
@@ -74,6 +77,24 @@ public static class Setup
             ExtendedDataStorage.noFleeingAnimals = HarmonyLib.Traverse.Create(type).Field("nofleeing_animals")
                 ?.GetValue<HashSet<Thing>>();
         WhatTheHackCompatibility.Setup();
+    }
+
+    private static void PatchOptionalModules(HarmonyLib.Harmony harmony)
+    {
+        if (ModSettings_GiddyUp.rideAndRollEnabled)
+            harmony.PatchCategory(PatchCategoryModule.RideAndRoll.ToString());
+
+        if (ModSettings_GiddyUp.caravansEnabled)
+            harmony.PatchCategory(PatchCategoryModule.Caravans.ToString());
+
+        if (ModSettings_GiddyUp.mechanoidsEnabled)
+            harmony.PatchCategory(PatchCategoryModule.Mechanoids.ToString());
+
+        if (ModSettings_GiddyUp.saddleUpEnabled)
+            harmony.PatchCategory(PatchCategoryModule.SaddleUp.ToString());
+
+        if (ModSettings_GiddyUp.battleMountsEnabled)
+            harmony.PatchCategory(PatchCategoryModule.BattleMounts.ToString());
     }
 
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
@@ -188,7 +209,7 @@ public static class Setup
             LoadedModManager.GetMod<Mod_GiddyUp>().modSettings.Write();
 
         //Only bother applying this harmony patch if using a mod that utilizes this extension
-        if (usingCustomStats && harmony != null && !PatchLedger.Add(1))
+        if (usingCustomStats && harmony != null && PatchLedger.Add(1))
             harmony.Patch(HarmonyLib.AccessTools.Method(typeof(ArmorUtility), nameof(ArmorUtility.ApplyArmor)),
                 postfix: new HarmonyLib.HarmonyMethod(typeof(Harmony.Patch_ApplyArmor),
                     nameof(Harmony.Patch_ApplyArmor.Postfix)));

@@ -31,8 +31,8 @@ public class ExtendedDataStorage(World world) : WorldComponent(world)
         {
             if (Settings.logging)
                 Log.Message("[Giddy-Up] Registering area for map ID " + map.uniqueID.ToString());
-            _areaNoMount.Add(map.uniqueID, null);
-            _areaDropAnimal.Add(map.uniqueID, null);
+            _areaNoMount.TryAdd(map.uniqueID, null);
+            _areaDropAnimal.TryAdd(map.uniqueID, null);
         }
 
         var list = map.areaManager.areas;

@@ -1,9 +1,7 @@
 ﻿using GiddyUp;
-using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using GiddyUp.Harmony;
 using Verse;
 using Verse.AI;
@@ -232,58 +230,10 @@ namespace GiddyUpMechanoids
             if (rider == null || mech == null || riderData == null)
                 return;
 
-            //Log.Message($"[Giddy-Up] DismountMech invoked: {rider} → {mech}");
-            //Log.Message($"[Giddy-Up] MissingJoy BEFORE dismount: {CountPawnsMissingJoy()}");
+            MountUtility.Dismount(rider, mech, riderData, clearReservation: true, ropeIfNeeded: false,
+                waitForRider: false);
 
-            var mechData = mech.GetExtendedPawnData();
-
-            // ------------------------------------------------------------------
-            // 1. Authoritative unmount state changes (mirrors Giddy-Up Dismount)
-            // ------------------------------------------------------------------
-            riderData.Mount = null;
-            if (mechData != null)
-                mechData.Mount = null;
-
-            // Reservation pair reset
-            riderData.ReservedMount = null;
-            if (mechData != null)
-                mechData.ReservedBy = null;
-
-            // Remove from isMounted list exactly as Giddy-Up does
-            try
-            {
-                var storageType = AccessTools.TypeByName("ExtendedDataStorage");
-                if (storageType != null)
-                {
-                    var worldComp = Find.World.GetComponent(storageType);
-                    var isMountedField = AccessTools.Field(storageType, "isMounted");
-                    if (worldComp != null && isMountedField != null)
-                    {
-                        var list = isMountedField.GetValue(worldComp) as IList<int>;
-                        list?.Remove(rider.thingIDNumber);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Warning("[GiddyUpMechanoids] Non-fatal ExtendedDataStorage.isMounted removal failure: " + ex);
-            }
-
-            // ------------------------------------------------------------------
-            // 2. Reset mech tweener + pathing (Giddy-Up uses EXACT lines below)
-            // ------------------------------------------------------------------
-            mech.Drawer.tweener = new PawnTweener(mech);
-            mech.pather.ResetToCurrentPosition();
-
-            // Duty re-focus for NPC mechs
-            if (!rider.Faction.def.isPlayer && mech.mindState?.duty != null)
-            {
-                mech.mindState.duty.focus = new LocalTargetInfo(mech.Position);
-            }
-
-            // ------------------------------------------------------------------
-            // 3. Clean up queued jobs (Mounted / Wait)
-            // ------------------------------------------------------------------
+            // Mech-specific cleanup: normalize the mech's job state after core dismount logic.
             if (mech.jobs?.jobQueue != null)
             {
                 for (int i = mech.jobs.jobQueue.Count - 1; i >= 0; i--)
@@ -306,45 +256,16 @@ namespace GiddyUpMechanoids
                 mech.jobs.EndCurrentJob(JobCondition.InterruptForced, true);
             }
 
-            // Give mech a sane idle job
             mech.jobs?.StartJob(
                 JobMaker.MakeJob(JobDefOf.Wait, mech.Position),
                 JobCondition.InterruptOptional);
 
-            // ------------------------------------------------------------------
-            // 4. End rider's Mount job if still running
-            // ------------------------------------------------------------------
             if (rider.jobs?.curJob != null &&
                 rider.jobs.curJob.def == ResourceBank.JobDefOf.Mount &&
                 rider.jobs.curJob.targetA == mech)
             {
                 rider.jobs.EndCurrentJob(JobCondition.Succeeded, true);
             }
-
-            // ------------------------------------------------------------------
-            // 5. (Optional) WaitForRider logic if you want to emulate GU
-            // ------------------------------------------------------------------
-            // Disabled by default (mechs probably shouldn't do this)
-            // Uncomment if needed:
-            /*
-            if (ModSettings_GiddyUp.rideAndRollEnabled &&
-                !rider.Drafted &&
-                rider.Faction.def.isPlayer &&
-                mechData?.reservedBy != null &&
-                waitForRider)
-            {
-                mech.jobs.jobQueue.EnqueueFirst(
-                    new Job(ResourceBank.JobDefOf.WaitForRider, mechData.reservedBy)
-                    {
-                        expiryInterval = ModSettings_GiddyUp.waitForRiderTimer,
-                        checkOverrideOnExpire = true,
-                        followRadius = 8f,
-                        locomotionUrgency = LocomotionUrgency.Walk
-                    });
-            }
-            */
-
-            //Log.Message($"[Giddy-Up] Dismount complete; MissingJoy AFTER dismount: {CountPawnsMissingJoy()}");
         }
 
 

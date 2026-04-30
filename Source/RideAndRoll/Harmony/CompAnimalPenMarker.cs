@@ -6,6 +6,7 @@ using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace GiddyUpCore.RideAndRoll.Harmony;
 
+[HarmonyPatchCategory(nameof(PatchCategoryModule.RideAndRoll))]
 [HarmonyPatch(typeof(CompAnimalPenMarker), nameof(CompAnimalPenMarker.AcceptsToPen))]
 internal class CompAnimalPenMarker_AcceptsToPen
 {

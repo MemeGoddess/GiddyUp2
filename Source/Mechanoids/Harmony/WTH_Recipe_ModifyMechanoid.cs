@@ -6,6 +6,7 @@ using Verse;
 
 namespace GiddyUpMechanoids
 {
+    [HarmonyPatchCategory(nameof(PatchCategoryModule.Mechanoids))]
     [HarmonyPatch]
     static class WTH_Recipe_ModifyMechanoid_CanApplyOn
     {
