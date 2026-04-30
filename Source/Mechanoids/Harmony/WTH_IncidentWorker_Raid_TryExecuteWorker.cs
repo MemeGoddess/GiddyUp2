@@ -15,7 +15,7 @@ namespace GiddyUpMechanoids
     {
         private const string LOG_POSTFIX = "[GiddyUpMechanoids] ";
 
-        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.CanUseInterop;
 
         public static void Postfix(IncidentWorker_Raid __instance, IncidentParms parms, List<Pawn> pawns)
         {

@@ -3,10 +3,6 @@ using GiddyUpMechanoids;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using Verse;
 
 namespace GiddyUpCore.Mechanoids
@@ -21,21 +17,51 @@ namespace GiddyUpCore.Mechanoids
 
         public const string WhatTheHackModId = "zal.whatthehack";
         public static bool WhatTheHackEnabled = ModLister.AnyModActiveNoSuffix([WhatTheHackModId]);
+        public static bool HasRequiredDefs =>
+            GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule != null &&
+            GU_Mech_DefOf.GU_Mech_GiddyUpModule != null &&
+            WhatTheHackDefOf.WTH_MountedTurret != null &&
+            WhatTheHackDefOf.WTH_TargetingHacked != null &&
+            WhatTheHackDefOf.WTH_TargetingHackedPoorly != null;
+
+        public static bool HasRequiredMethods =>
+            AccessTools.Method("WhatTheHack.Extensions:IsHacked") != null &&
+            AccessTools.Method("WhatTheHack.Extensions:IsActivated") != null;
+
+        public static bool CanUseInterop => WhatTheHackEnabled && HasRequiredDefs && HasRequiredMethods;
+
         public static void Setup()
         {
             if (!ModSettings_GiddyUp.mechanoidsEnabled || !WhatTheHackEnabled)
                 return;
 
-            IsHacked = AccessTools.MethodDelegate<_IsHacked>(
-                AccessTools.Method("WhatTheHack.Extensions:IsHacked"));
+            if (!HasRequiredDefs)
+            {
+                Log.Warning("[GiddyUp-Mechs] WhatTheHack detected, but one or more required defs are missing. Mech mounting integration will stay disabled.");
+                return;
+            }
 
-            IsActivated = AccessTools.MethodDelegate<_IsActivated>(
-                AccessTools.Method("WhatTheHack.Extensions:IsActivated"));
+            var isHackedMethod = AccessTools.Method("WhatTheHack.Extensions:IsHacked");
+            var isActivatedMethod = AccessTools.Method("WhatTheHack.Extensions:IsActivated");
+            if (isHackedMethod == null || isActivatedMethod == null)
+            {
+                Log.Warning("[GiddyUp-Mechs] WhatTheHack detected, but required extension methods were not found. Mech mounting integration will stay disabled.");
+                return;
+            }
+
+            IsHacked = AccessTools.MethodDelegate<_IsHacked>(isHackedMethod);
+            IsActivated = AccessTools.MethodDelegate<_IsActivated>(isActivatedMethod);
+
+            var recipe = GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule;
 
             foreach (var mech in GiddyUp.Setup.AllMechs)
             {
-                if (!mech.recipes.Contains(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule))
-                    mech.recipes.Add(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule);
+                if (mech == null)
+                    continue;
+
+                mech.recipes ??= [];
+                if (!mech.recipes.Contains(recipe))
+                    mech.recipes.Add(recipe);
             }
         }
     }

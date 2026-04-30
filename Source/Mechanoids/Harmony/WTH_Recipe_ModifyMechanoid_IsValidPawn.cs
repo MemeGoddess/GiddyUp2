@@ -10,7 +10,7 @@ namespace GiddyUpMechanoids;
 class WTH_Recipe_ModifyMechanoid_IsValidPawn
 {
     public static bool Prepare() =>
-        ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
+        ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.CanUseInterop;
 
     static bool Prefix(RecipeWorker __instance, Pawn pawn, ref bool __result)
     { 

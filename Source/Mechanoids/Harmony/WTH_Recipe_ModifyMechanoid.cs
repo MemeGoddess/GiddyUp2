@@ -10,7 +10,7 @@ namespace GiddyUpMechanoids
     [HarmonyPatch]
     static class WTH_Recipe_ModifyMechanoid_CanApplyOn
     {
-        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.CanUseInterop;
 
         public static MethodBase[] TargetMethods() =>
             [AccessTools.Method("WhatTheHack.Recipes.Recipe_ModifyMechanoid:CanApplyOn")];
