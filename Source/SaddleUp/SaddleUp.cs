@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GiddyUpCore.SaddleUp;
+using GiddyUpMechanoids;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -71,11 +72,16 @@ namespace SaddleUp
         public static void DismountPawn(Pawn pawn)
         {
             var extendedPawnData = ExtendedDataStorage.Singleton.GetExtendedPawnData(pawn);
-            var jobs = pawn.jobs;
-            var job = new Job(ResourceBank.JobDefOf.Dismount, extendedPawnData.Mount);
-            job.count = 1;
-            var tag = new JobTag?(JobTag.Misc);
-            jobs.TryTakeOrderedJob(job, tag);
+            if (extendedPawnData.Mount == null)
+                return;
+
+            if(extendedPawnData.Mount.RaceProps.IsMechanoid)
+                Utility.DismountMech(pawn, extendedPawnData.Mount, extendedPawnData);
+            else if (extendedPawnData.Mount.IsAnimal)
+                pawn.Dismount(extendedPawnData.Mount, extendedPawnData, true);
+            else
+                throw new NotImplementedException($"Dismount for '{pawn.kindDef.LabelCap}' kind not implemented");
+
         }
     }
 }

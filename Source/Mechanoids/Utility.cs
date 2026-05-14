@@ -230,7 +230,7 @@ namespace GiddyUpMechanoids
             if (rider == null || mech == null || riderData == null)
                 return;
 
-            MountUtility.Dismount(rider, mech, riderData, clearReservation: true, ropeIfNeeded: false,
+            rider.Dismount(mech, riderData, clearReservation: true, ropeIfNeeded: false,
                 waitForRider: false);
 
             // Mech-specific cleanup: normalize the mech's job state after core dismount logic.
@@ -254,17 +254,6 @@ namespace GiddyUpMechanoids
                  mech.jobs.curJob.def == JobDefOf.Wait))
             {
                 mech.jobs.EndCurrentJob(JobCondition.InterruptForced, true);
-            }
-
-            mech.jobs?.StartJob(
-                JobMaker.MakeJob(JobDefOf.Wait, mech.Position),
-                JobCondition.InterruptOptional);
-
-            if (rider.jobs?.curJob != null &&
-                rider.jobs.curJob.def == ResourceBank.JobDefOf.Mount &&
-                rider.jobs.curJob.targetA == mech)
-            {
-                rider.jobs.EndCurrentJob(JobCondition.Succeeded, true);
             }
         }
 
