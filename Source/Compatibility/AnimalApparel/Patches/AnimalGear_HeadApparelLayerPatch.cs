@@ -3,7 +3,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace GiddyUpCore.Compatibility.AnimalApparel;
+namespace GiddyUpCore.Compatibility.AnimalApparel.Patches;
 
 [HarmonyPatch]
 internal static class AnimalGear_HeadApparelLayerPatch

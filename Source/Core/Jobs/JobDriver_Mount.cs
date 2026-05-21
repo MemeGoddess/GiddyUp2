@@ -2,10 +2,10 @@
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
-using GiddyUpCore.Compatibility.AnimalApparel;
 using Verse;
 using Verse.AI;
 using Settings = GiddyUp.ModSettings_GiddyUp;
+using GiddyUpCore.Core;
 
 namespace GiddyUp.Jobs;
 

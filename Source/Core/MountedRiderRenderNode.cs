@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using GiddyUp;
+using GiddyUpCore.Compatibility;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace GiddyUpCore.Compatibility.AnimalApparel;
+namespace GiddyUpCore.Core;
 
 internal static class MountedRiderRenderNodeUtility
 {

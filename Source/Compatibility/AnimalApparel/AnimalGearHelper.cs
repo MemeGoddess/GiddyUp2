@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GiddyUpCore.Compatibility.AnimalApparel
 {
