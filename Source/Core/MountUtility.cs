@@ -3,6 +3,8 @@ using RimWorld.Planet;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using GiddyUpCore.Compatibility.AnimalApparel;
+using GiddyUpCore.Core.Extensions;
 //using Multiplayer.API;
 using Verse;
 using Verse.AI;
@@ -543,6 +545,23 @@ internal static class MountUtility
 
             animal = PawnGenerator.GeneratePawn(pawnKindDef, parms.faction);
             GenSpawn.Spawn(animal, pawn.Position, map, parms.spawnRotation);
+            if (modExtension?.apparel.Any() ?? false)
+            {
+                AnimalGearHelper.EnsureInitApparelTrackers(animal);
+                var reason = string.Empty;
+                var (wearable, unwearable) = modExtension.apparel
+                    .SplitIntoTwo(x => AnimalGearHelper.CanEquipApparelFromThingDef(x, animal, ref reason));
+
+                if (unwearable.Any()) 
+                    Log.Warning($"{animal.LabelCap} is unable to wear:\n{unwearable?.Select(x => x.LabelCap.ToString()).ToList().ToLineList("-")}");
+
+                foreach (var apparel in wearable)
+                {
+                    var item = (Apparel)ThingMaker.MakeThing(apparel,
+                        apparel.MadeFromStuff ? GenStuff.DefaultStuffFor(apparel) : null);
+                    animal.apparel?.Wear(item, false);
+                }
+            }
             list.Add(animal);
 
             //Set their training
