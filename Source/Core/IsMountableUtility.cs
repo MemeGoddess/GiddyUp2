@@ -148,16 +148,7 @@ public static class IsMountableUtility
 
             //TODO maybe add some logic to check if involved with a ritual
             //Check health
-            if (animal.Dead || animal.Downed || animal.InMentalState || !animal.Spawned ||
-                (animal.health != null &&
-                 animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold) ||
-                animal.health.HasHediffsNeedingTend() ||
-                animal.HasAttachment(ThingDefOf.Fire) ||
-                (animal.Faction.def
-                     .isPlayer && //Need checks only apply to colonist animals because guest caravans ride this value down very low before leaving
-                 ((animal.needs.food != null && animal.needs.food.CurCategory >= HungerCategory.UrgentlyHungry) ||
-                  (animal.needs.rest != null && animal.needs.rest.CurCategory >= RestCategory.VeryTired)))
-               )
+            if (animal.IsInPoorCondition())
             {
                 reason = Reason.IsPoorCondition;
                 return false;
@@ -293,6 +284,32 @@ public static class IsMountableUtility
             return false;
 
         return rider.GetStatValue(StatDefOf.Mass) > animal.GetStatValue(StatDefOf.CarryingCapacity);
+    }
+
+    public static bool IsInPoorCondition(this Pawn animal)
+    {
+        if (animal.Dead || animal.Downed || animal.InMentalState || !animal.Spawned)
+            return false;
+
+        if (animal.health != null && injuredThreshold > 0)
+        {
+            if(animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold ||
+               animal.health.hediffSet.hediffs.Any(x => x.CurStage is not null && animal.health.HasHediffsNeedingTend()))
+            return true;
+        }
+
+        if (animal.HasAttachment(ThingDefOf.Fire))
+            return true;
+
+        // ReSharper disable once InvertIf
+        if (animal.Faction.IsPlayer)
+        {
+            if (animal.needs.food is { CurCategory: >= HungerCategory.UrgentlyHungry } ||
+                animal.needs.rest is { CurCategory: >= RestCategory.VeryTired })
+                return true;
+        }
+
+        return false;
     }
 
     public static List<ReservationManager.Reservation> FetchReservedAnimals(this Map map)
