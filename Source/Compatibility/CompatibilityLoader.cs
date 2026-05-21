@@ -41,5 +41,9 @@ namespace GiddyUpCore.Compatibility
             }
         }
 
+        public const string WalkTheWorldIDsCSV = "addvans.WalkTheWorld";
+        public static string[] WalkTheWorldIDs = WalkTheWorldIDsCSV.Split(',');
+        public static bool WalkTheWorldInstalled = ModLister.AnyModActiveNoSuffix(WalkTheWorldIDs);
+
     }
 }
