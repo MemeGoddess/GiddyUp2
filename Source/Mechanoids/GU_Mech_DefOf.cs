@@ -1,4 +1,4 @@
-﻿using GiddyUpCore.Mechanoids;
+﻿using GiddyUpCore.Compatibility.WhatTheHack;
 using RimWorld;
 using Verse;
 
@@ -7,9 +7,9 @@ namespace GiddyUpMechanoids
     [DefOf]
     public static class GU_Mech_DefOf
     {
-        [MayRequire(WhatTheHackCompatibility.WhatTheHackModId)]
+        [MayRequire(Extensions.WhatTheHackModId)]
         public static HediffDef GU_Mech_GiddyUpModule;
-        [MayRequire(WhatTheHackCompatibility.WhatTheHackModId)]
+        [MayRequire(Extensions.WhatTheHackModId)]
         public static RecipeDef GU_Mech_InstallGiddyUpModule;
     }
 }

@@ -5,7 +5,7 @@ using Verse.AI;
 using System.Collections.Generic;
 using System.Linq;
 using GiddyUp;
-using GiddyUpCore.Mechanoids;
+using GiddyUpCore.Compatibility.WhatTheHack;
 
 namespace GiddyUpMechanoids
 {
@@ -14,7 +14,7 @@ namespace GiddyUpMechanoids
     {
         private const string LOG_POSTFIX = "[GiddyUpMechanoids] ";
 
-        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && Extensions.WhatTheHackEnabled;
 
         public static void Postfix(IncidentWorker_Raid __instance, IncidentParms parms, List<Pawn> pawns)
         {
@@ -57,7 +57,7 @@ namespace GiddyUpMechanoids
                 return;
             }
 
-            var mechs = pawns.Where(p => WhatTheHackCompatibility.IsHacked(p)).ToList();
+            var mechs = pawns.Where(p => Extensions.IsHacked(p)).ToList();
             Log.Message(LOG_POSTFIX + $"Hacked mechs found: {mechs.Count}");
 
             var humanlikes = pawns

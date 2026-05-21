@@ -9,7 +9,7 @@ namespace GiddyUpCore.Compatibility
 {
     public static class CompatibilityLoader
     {
-        public static bool AnimalApparel = ModLister.AnyModActiveNoSuffix(["Ingendum.AnimalApparelFramework"]);
+        public static bool AnimalApparelInstalled = ModLister.AnyModActiveNoSuffix(["Ingendum.AnimalApparelFramework"]);
 
     }
 }

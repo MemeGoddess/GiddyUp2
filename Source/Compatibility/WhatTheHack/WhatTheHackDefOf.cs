@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 
-namespace GiddyUpCore.Mechanoids
+namespace GiddyUpCore.Compatibility.WhatTheHack
 {
     [DefOf]
     public static class WhatTheHackDefOf
     {
-        [MayRequire(WhatTheHackCompatibility.WhatTheHackModId)]
+        [MayRequire(Extensions.WhatTheHackModId)]
         public static HediffDef WTH_MountedTurret;
 
-        [MayRequire(WhatTheHackCompatibility.WhatTheHackModId)]
+        [MayRequire(Extensions.WhatTheHackModId)]
         public static HediffDef WTH_TargetingHacked;
 
-        [MayRequire(WhatTheHackCompatibility.WhatTheHackModId)]
+        [MayRequire(Extensions.WhatTheHackModId)]
         public static HediffDef WTH_TargetingHackedPoorly;
     }
 }

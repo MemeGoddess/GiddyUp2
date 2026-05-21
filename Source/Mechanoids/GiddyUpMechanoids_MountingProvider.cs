@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GiddyUp;
 using GiddyUp.Harmony;
 using Verse;
+using GiddyUpCore.Compatibility.WhatTheHack;
 
 namespace GiddyUpMechanoids
 {

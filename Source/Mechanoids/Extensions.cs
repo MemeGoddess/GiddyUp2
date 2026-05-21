@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using GiddyUpCore.Compatibility.WhatTheHack;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,13 @@ namespace GiddyUpCore.Mechanoids
             var overseer = ModsConfig.BiotechActive ? pawn.relations?.GetFirstDirectRelationPawn(PawnRelationDefOf.Overseer) : null;
             return pawn.RaceProps.IsMechanoid &&
                    (by != null ? by == overseer : overseer != null ||
-                    WhatTheHackCompatibility.IsHacked(pawn));
+                    Compatibility.WhatTheHack.Extensions.IsHacked(pawn));
         }
 
         public static bool IsActivated(this Pawn pawn)
         {
             return pawn.RaceProps.IsMechanoid &&  ((ModsConfig.BiotechActive && !pawn.needs.energy.IsLowEnergySelfShutdown && pawn.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Overseer) != null) ||
-                   WhatTheHackCompatibility.IsActivated(pawn));
+                   Compatibility.WhatTheHack.Extensions.IsActivated(pawn));
         }
 
 

@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace GiddyUpCore.Mechanoids
+namespace GiddyUpCore.Compatibility.WhatTheHack
 {
-    public static class WhatTheHackCompatibility
+    public static class Extensions
     {
         public delegate bool _IsHacked(Pawn pawn);
         public delegate bool _IsActivated(Pawn pawn);
 
-        public static _IsHacked IsHacked = _ => false;
-        public static _IsActivated IsActivated = _ => false;
+        public static _IsHacked IsHacked = _ => default;
+        public static _IsActivated IsActivated = _ => default;
 
         public const string WhatTheHackModId = "zal.whatthehack";
         public static bool WhatTheHackEnabled = ModLister.AnyModActiveNoSuffix([WhatTheHackModId]);
