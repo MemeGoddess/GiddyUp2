@@ -8,4 +8,5 @@ internal class CustomMounts : DefModExtension
 {
     public int mountChance = 0;
     public Dictionary<PawnKindDef, int> possibleMounts = new();
+    public List<ThingDef> apparel = new();
 }
