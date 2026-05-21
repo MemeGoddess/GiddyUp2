@@ -549,16 +549,47 @@ internal static class MountUtility
             {
                 AnimalGearHelper.EnsureInitApparelTrackers(animal);
                 var reason = string.Empty;
-                var (wearable, unwearable) = modExtension.apparel
-                    .SplitIntoTwo(x => AnimalGearHelper.CanEquipApparelFromThingDef(x, animal, ref reason));
+
+                modExtension.apparel
+                    .SplitIntoTwo(
+                        out var wearable,
+                        out var unwearable,
+                        x => AnimalGearHelper.CanEquipApparelFromThingDef(x.ThingDef, animal, ref reason));
 
                 if (unwearable.Any()) 
-                    Log.Warning($"{animal.LabelCap} is unable to wear:\n{unwearable?.Select(x => x.LabelCap.ToString()).ToList().ToLineList("-")}");
+                    Log.Warning($"{animal.LabelCap} is unable to wear:\n{unwearable.Select(x => x.ThingDef.LabelCap.ToString()).ToList().ToLineList("-")}");
+
+                var reservedSpots = new HashSet<(ApparelLayerDef layer, BodyPartGroupDef bodyPartGroup)>();
+                wearable.SplitIntoTwo(
+                    out wearable,
+                    out var dupes,
+                    apparel =>
+                    {
+                        var apparelProps = apparel.ThingDef.apparel;
+                        if (apparelProps.layers.NullOrEmpty() || apparelProps.bodyPartGroups.NullOrEmpty())
+                            return true;
+
+                        var claimedSpots = new List<(ApparelLayerDef layer, BodyPartGroupDef bodyPartGroup)>();
+                        foreach (var layer in apparelProps.layers)
+                        foreach (var bodyPartGroup in apparelProps.bodyPartGroups)
+                        {
+                            var spot = (layer, bodyPartGroup);
+                            if (reservedSpots.Contains(spot))
+                                return false;
+                            claimedSpots.Add(spot);
+                        }
+
+                        foreach (var spot in claimedSpots)
+                            reservedSpots.Add(spot);
+                        return true;
+                    });
 
                 foreach (var apparel in wearable)
                 {
-                    var item = (Apparel)ThingMaker.MakeThing(apparel,
-                        apparel.MadeFromStuff ? GenStuff.DefaultStuffFor(apparel) : null);
+                    var item = (Apparel)ThingMaker.MakeThing(apparel.ThingDef,
+                        apparel.ThingDef.MadeFromStuff
+                            ? apparel.Stuff ?? GenStuff.DefaultStuffFor(apparel.ThingDef)
+                            : null);
                     animal.apparel?.Wear(item, false);
                 }
             }

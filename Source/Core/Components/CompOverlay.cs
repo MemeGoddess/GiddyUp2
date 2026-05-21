@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using GiddyUpCore.Compatibility;
 
 namespace GiddyUp;
 
@@ -24,9 +25,7 @@ internal class CompOverlay : ThingComp
                 offset = cache.Item4;
             if (_pawn.Rotation == Rot4.West)
                 offset.x = -offset.x;
-            offset.y += _pawn.Rotation == Rot4.South
-                ? 0.08f
-                : 0.04375f; //Tries to render above equipment but below the held weapon
+            offset.y += GetOverlayAltitude();
 
             //Somehow the rotation is flipped, hence the use of GetOpposite.
             cache.Item1.Graphic.Draw(drawPos + offset, parent.Rotation, parent, 0f);
@@ -35,6 +34,17 @@ internal class CompOverlay : ThingComp
         {
             TryCache();
         }
+    }
+
+    private float GetOverlayAltitude()
+    {
+        if (_pawn.Rotation != Rot4.South)
+            return 0.04375f;
+
+        if (CompatibilityLoader.AnimalApparelInstalled && _pawn.apparel?.WornApparel.Any() == true)
+            return 0.015f;
+
+        return 0.08f;
     }
     
     private void TryCache()

@@ -8,20 +8,21 @@ namespace GiddyUpCore.Core.Extensions
 {
     public static class ListExtensions
     {
-        public static (List<T>, List<T>) SplitIntoTwo<T>(
-            this IEnumerable<T> collection,
+        public static bool SplitIntoTwo<T>(
+            this IEnumerable<T> collection, out List<T> trueList, out List<T> falseList,
             Func<T, bool> predicate)
         {
-            var truthyValues = new List<T>();
-            var falsyValues = new List<T>();
+            trueList = [];
+            falseList = [];
             foreach (var item in collection)
             {
                 if (predicate(item))
-                    truthyValues.Add(item);
+                    trueList.Add(item);
                 else
-                    falsyValues.Add(item);
+                    falseList.Add(item);
             }
-            return (truthyValues, falsyValues);
+
+            return trueList.Any();
         }
     }
 }
