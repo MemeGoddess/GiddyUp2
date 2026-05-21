@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using RimWorld;
 using Verse;
 
 namespace GiddyUp;
@@ -9,6 +10,7 @@ internal class CustomMounts : DefModExtension
 {
     public int mountChance = 0;
     public Dictionary<PawnKindDef, int> possibleMounts = new();
+    [MayRequire("Ingendum.AnimalApparelFramework")]
     public List<CustomMountApparel> apparel = new();
 
     public override void ResolveReferences(Def parentDef)

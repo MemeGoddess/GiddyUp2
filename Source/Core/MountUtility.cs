@@ -3,6 +3,7 @@ using RimWorld.Planet;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using GiddyUpCore.Compatibility;
 using GiddyUpCore.Compatibility.AnimalApparel;
 using GiddyUpCore.Core.Extensions;
 //using Multiplayer.API;
@@ -547,7 +548,7 @@ internal static class MountUtility
 
             animal = PawnGenerator.GeneratePawn(pawnKindDef, parms.faction);
             GenSpawn.Spawn(animal, pawn.Position, map, parms.spawnRotation);
-            if (modExtension?.apparel.Any() ?? false)
+            if (CompatibilityLoader.AnimalApparelInstalled && (modExtension?.apparel?.Any() ?? false))
             {
                 AnimalGearHelper.EnsureInitApparelTrackers(animal);
                 var reason = string.Empty;

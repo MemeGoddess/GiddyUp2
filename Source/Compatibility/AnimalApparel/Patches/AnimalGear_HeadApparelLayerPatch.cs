@@ -9,8 +9,8 @@ namespace GiddyUpCore.Compatibility.AnimalApparel.Patches;
 internal static class AnimalGear_HeadApparelLayerPatch
 {
     private static readonly BodyPartGroupDef AnimalHead = DefDatabase<BodyPartGroupDef>.GetNamedSilentFail("AnimalHead");
-
-    private static Type TargetType => AccessTools.TypeByName("AnimalGear.Graphics.PawnRenderNode_Animal_Apparel");
+    private static bool Prepare() => CompatibilityLoader.AnimalApparelInstalled;
+    private static Type TargetType => Types.PawnRenderNode_Animal_Apparel!;
 
     private static System.Reflection.MethodBase? TargetMethod()
     {
