@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using GiddyUp;
 using GiddyUpCore.Compatibility;
-using GiddyUpCore.Compatibility.AnimalApparel;
+using GiddyUpCore.Core.Render;
 using RimWorld;
+using UnityEngine;
 using Verse;
+using Types = GiddyUpCore.Compatibility.AnimalApparel.Types;
 
 namespace GiddyUpCore.Core;
 
@@ -39,5 +42,22 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
         };
 
         yield return (new MountedRiderRenderNode(pawn, props, tree, rider), bodyNode);
+
+        if (pawn.TryGetComp<CompOverlay>(out var comp))
+        {
+            var overlayProps = new PawnRenderNodeProperties()
+            {
+                debugLabel = "Overlay",
+                useGraphic = true,
+                workerClass = typeof(OverlayRenderNodeWorker),
+                nodeClass = typeof(OverlayRenderNode),
+                baseLayer = 75f,
+                texPath = "Things/Pawn/Horse2_overlay_south",
+                drawSize = ParseHelper.FromStringVector2("2.1") * 0.66f,
+
+            };
+
+            yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp, rider), bodyNode);
+        }
     }
 }

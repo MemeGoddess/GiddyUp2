@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -8,8 +9,8 @@ namespace GiddyUp;
 
 internal class CompOverlay : ThingComp
 {
-    private CompProperties_Overlay _overlayComp;
-    private bool _valid;
+    public CompProperties_Overlay Prop => props as CompProperties_Overlay ?? throw new InvalidOperationException();
+    public bool _valid;
     private bool _incompatible;
     private Pawn _pawn;
     private readonly Dictionary<Rot4, (GraphicData, Vector3, Vector3, Vector3)> _graphicCache = new();
@@ -36,6 +37,76 @@ internal class CompOverlay : ThingComp
         }
     }
 
+    public Vector3 GetOffset()
+    {
+        var rotation = _pawn.Rotation == Rot4.East ? Rot4.West : _pawn.Rotation;
+        var overlay = Prop.GetOverlay(rotation);
+        if(overlay == null)
+            return Vector3.zero;
+        var offset = _pawn.gender == Gender.Female ? overlay.offsetFemale : overlay.offsetMale;
+        if (offset == Vector3.zero)
+            offset = overlay.offsetDefault;
+        if (_pawn.Rotation == Rot4.West)
+            offset.x = -offset.x;
+        offset.y += GetOverlayAltitude();
+        return offset;
+    }
+
+    public Graphic? GetGraphic()
+    {
+        var pawn = parent as Pawn;
+        var rotation = pawn.Rotation == Rot4.East ? Rot4.West : pawn.Rotation;
+        var overlay = Prop.GetOverlay(rotation);
+        if (overlay == null)
+            return null;
+
+        var graphicData = (pawn.gender == Gender.Female ? overlay.graphicDataFemale : overlay.graphicDataMale) ??
+                          overlay.graphicDataDefault;
+        if (graphicData == null)
+            return null;
+
+        //support multi texture animals
+        if (overlay.allVariants == null) 
+            return graphicData.Graphic;
+
+        var graphicPath = pawn.Drawer?.renderer?.SilhouetteGraphic?.path;
+        if (graphicPath.NullOrEmpty())
+            return null;
+        var graphicName = graphicPath!.Split('/').Last();
+        var found = false;
+        foreach (var variant in overlay.allVariants)
+        {
+            var variantName = variant.texPath.Split('/').Last().Split(overlay.stringDelimiter.ToCharArray())[0];
+
+            if (graphicName != variantName) 
+                continue;
+
+            //set required properties
+            var texPath = variant.texPath;
+            variant.CopyFrom(graphicData);
+            variant.texPath = texPath;
+            graphicData = variant;
+            found = true;
+            break;
+        }
+
+        if (found) 
+            return graphicData.Graphic;
+        _incompatible = true;
+        return null;
+
+    }
+
+    public Vector2 GetDrawSize()
+    {
+        var rotation = _pawn.Rotation == Rot4.East ? Rot4.West : _pawn.Rotation;
+        var overlay = Prop.GetOverlay(rotation);
+        if (overlay == null)
+            return default;
+        return ((_pawn.gender == Gender.Female ? overlay.graphicDataFemale : overlay.graphicDataMale) ??
+                overlay.graphicDataDefault).drawSize;
+    }
+
     private float GetOverlayAltitude()
     {
         if (_pawn.Rotation != Rot4.South)
@@ -49,9 +120,9 @@ internal class CompOverlay : ThingComp
     
     private void TryCache()
     {
-        _overlayComp = props as CompProperties_Overlay;
         if (parent is Pawn pawn)
         {
+            Log.Warning("Caching");
             _pawn = pawn;
             CacheGraphicData(Rot4.South);
             CacheGraphicData(Rot4.North);
@@ -61,7 +132,7 @@ internal class CompOverlay : ThingComp
     
     private void CacheGraphicData(Rot4 rotation)
     {
-        var overlay = _overlayComp.GetOverlay(rotation);
+        var overlay = Prop.GetOverlay(rotation);
         if (overlay == null)
             return;
 

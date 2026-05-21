@@ -9,11 +9,9 @@ internal static class MountedRiderRenderNodeUtility
 {
     public static bool ShouldUseMountedRenderNode(Pawn rider)
     {
-        return CompatibilityLoader.AnimalApparelInstalled &&
-               rider.IsMounted() &&
+        return rider.IsMounted() &&
                rider.GetExtendedPawnData().Mount is { } mount &&
-               mount.GetExtendedPawnData().ReservedBy == rider &&
-               mount.apparel?.WornApparel.Any() == true;
+               mount.GetExtendedPawnData().ReservedBy == rider;
     }
 
     public static bool TryGetMountedRider(Pawn mount, out Pawn? rider)
@@ -47,9 +45,6 @@ internal static class MountedRiderRenderNodeUtility
 
     public static void RefreshMountedAnimalGraphics(Pawn? animal)
     {
-        if (!CompatibilityLoader.AnimalApparelInstalled || animal == null)
-            return;
-
-        animal.Drawer?.renderer?.SetAllGraphicsDirty();
+        animal?.Drawer?.renderer?.SetAllGraphicsDirty();
     }
 }

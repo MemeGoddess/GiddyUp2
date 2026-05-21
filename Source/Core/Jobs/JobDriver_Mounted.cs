@@ -2,6 +2,7 @@
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 using Verse.AI;
 using Settings = GiddyUp.ModSettings_GiddyUp;
@@ -154,12 +155,20 @@ public class JobDriver_Mounted : JobDriver
 
                     //Check mount first. If it's null then they must have dismounted outside the driver's control
                     if (_riderData.Mount != null)
-                        Rider.Dismount(
-                            pawn,
-                            _riderData,
-                            false,
-                            IsParking && pawn.Position.DistanceTo(_dismountingAt) < 5f ? _dismountingAt : default,
-                            waitForRider: !_interrupted);
+                        if (_riderData.Mount.jobs.jobQueue.jobs.FirstOrDefault()?.job.def == JobDefOf.RemoveApparel)
+                        {
+                            var jobs = _riderData.Mount.jobs.jobQueue;
+                            jobs.EnqueueLast(new Job(ResourceBank.JobDefOf.Mounted, Rider) { count = 1 });
+                        }
+                        else
+                        {
+                            Rider.Dismount(
+                                pawn,
+                                _riderData,
+                                false,
+                                IsParking && pawn.Position.DistanceTo(_dismountingAt) < 5f ? _dismountingAt : default,
+                                waitForRider: !_interrupted);
+                        }
                     IsParking = false;
 
                     //Check if the mount was meant to despawn along with the rider. This is already handled in the RiderShouldDismount but some spaghetti code elsewhere could bypass it
