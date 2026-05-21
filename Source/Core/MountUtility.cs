@@ -140,6 +140,7 @@ internal static class MountUtility
         if (animal.HostileTo(Current.gameInt.worldInt.factionManager.ofPlayer))
             animal.mindState.duty = new PawnDuty(DutyDefOf.Defend);
         animal.jobs.TryTakeOrderedJob(new Job(ResourceBank.JobDefOf.Mounted, rider) { count = 1 });
+        
     }
 
     public static void TryAutoMount(this Pawn pawn, Pawn_JobTracker jobTracker, ref ThinkResult thinkResult)
@@ -281,6 +282,7 @@ internal static class MountUtility
             return; //We're done here
         animal.Drawer.tweener = new PawnTweener(animal);
         animal.pather.ResetToCurrentPosition();
+        
 
         //========Post-dismount behavior======
         //If this is a visitor's animal, keep it from wandering off
@@ -570,10 +572,11 @@ internal static class MountUtility
                             return true;
 
                         var claimedSpots = new List<(ApparelLayerDef layer, BodyPartGroupDef bodyPartGroup)>();
-                        foreach (var layer in apparelProps.layers)
-                        foreach (var bodyPartGroup in apparelProps.bodyPartGroups)
+                        foreach (var spot in 
+                                 from layer in apparelProps.layers 
+                                 from bodyPartGroup in apparelProps.bodyPartGroups 
+                                 select (layer, bodyPartGroup))
                         {
-                            var spot = (layer, bodyPartGroup);
                             if (reservedSpots.Contains(spot))
                                 return false;
                             claimedSpots.Add(spot);
@@ -583,6 +586,8 @@ internal static class MountUtility
                             reservedSpots.Add(spot);
                         return true;
                     });
+
+
 
                 foreach (var apparel in wearable)
                 {
@@ -599,7 +604,7 @@ internal static class MountUtility
             Spawned:
             if (animal.playerSettings == null)
                 animal.playerSettings = new Pawn_PlayerSettings(animal);
-            animal.training.Train(TrainableDefOf.Obedience, pawn);
+            animal.training?.Train(TrainableDefOf.Obedience, pawn);
 
             //Mount up
             pawn.GoMount(animal, GiveJobMethod.Instant);

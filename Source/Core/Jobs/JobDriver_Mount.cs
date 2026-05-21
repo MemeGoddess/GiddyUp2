@@ -2,6 +2,7 @@
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
+using GiddyUpCore.Compatibility.AnimalApparel;
 using Verse;
 using Verse.AI;
 using Settings = GiddyUp.ModSettings_GiddyUp;
@@ -43,6 +44,13 @@ public class JobDriver_Mount : JobDriver
         if (pawn.interactions != null)
             yield return Toils_Interpersonal.WaitToBeAbleToInteract(pawn);
         yield return TalkToAnimal();
+        yield return new Toil()
+        {
+            finishActions =
+            [
+                delegate { MountedRiderRenderNodeUtility.RefreshMountedAnimalGraphics(TargetPawnA); }
+            ]
+        };
     }
 
     private Toil LetMountParticipate()
