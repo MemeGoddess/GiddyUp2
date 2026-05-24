@@ -15,8 +15,11 @@ namespace GiddyUpCore.Core.Render
         private CompProperties_Overlay? overlayProperties;
         public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
         {
-            var enabled =  node.debugEnabled && node is OverlayRenderNode { Rider.Spawned: true, Properties: not null } mountedNode &&
-                   MountedRiderRenderNodeUtility.ShouldUseMountedRenderNode(mountedNode.Rider);
+            var enabled =
+                node.debugEnabled &&
+                node is OverlayRenderNode { Rider.Spawned: true, Properties: not null } mountedNode &&
+                mountedNode.graphics[parms.facing.AsInt] != null &&
+                MountedRiderRenderNodeUtility.ShouldUseMountedRenderNode(mountedNode.Rider);
             return enabled;
         }
 

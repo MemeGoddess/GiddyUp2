@@ -21,14 +21,14 @@ namespace GiddyUpCore.Core.Render
 
         public override GraphicMeshSet MeshSetFor(Pawn pawn) => MeshPool.GetMeshSetForSize(1f, 1f);
 
-        public override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
+        public override IEnumerable<Graphic?> GraphicsFor(Pawn pawn)
         {
             foreach (var rotation in Rot4.AllRotations)
             {
                 var overlay = Properties.GetOverlay(rotation);
                 if (overlay == null)
                 {
-                    yield return new Graphic();
+                    yield return null;
                     continue;
                 }
                  
@@ -46,19 +46,17 @@ namespace GiddyUpCore.Core.Render
                     var variantGraphicData = overlay.allVariants.FirstOrDefault(x =>
                         x.texPath.Split('/').Last().Split(overlay.stringDelimiter.ToCharArray())[0] == pawnVariant);
 
-                    var textPath = variantGraphicData?.texPath ?? graphicData.texPath;
-                    if (variantGraphicData == null)
+                    var textPath = variantGraphicData?.texPath ?? graphicData?.texPath;
+                    
+                    if (variantGraphicData != null)
                     {
-                        Log.WarningOnce($"Variant '{pawnVariant}' for {pawn.LabelShortCap} not found", pawn.thingIDNumber);
-                        variantGraphicData = new GraphicData();
+                        variantGraphicData.CopyFrom(graphicData);
+                        variantGraphicData.texPath = textPath;
                     }
-
-                    variantGraphicData.CopyFrom(graphicData);
-                    variantGraphicData.texPath = textPath;
                     graphicData = variantGraphicData;
                 }
 
-                yield return graphicData?.Graphic ?? new Graphic();
+                yield return graphicData?.Graphic;
             }
         }
     }
