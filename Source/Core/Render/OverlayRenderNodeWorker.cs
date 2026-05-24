@@ -11,7 +11,6 @@ namespace GiddyUpCore.Core.Render
 {
     internal class OverlayRenderNodeWorker : PawnRenderNodeWorker
     {
-        private bool init;
         private OverlayRenderNode? renderNode;
         private CompProperties_Overlay? overlayProperties;
         public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
@@ -21,19 +20,24 @@ namespace GiddyUpCore.Core.Render
             return enabled;
         }
 
-        //public override Vector3 ScaleFor(PawnRenderNode node, PawnDrawParms parms)
-        //{
-        //    var overlay = (node as OverlayRenderNode)?.Properties.Prop.GetOverlay(parms.facing);
-        //    if (overlay == null)
-        //        return Vector3.one;
-        //    var graphic = 
-        //        (parms.pawn.gender == Gender.Female ? overlay.graphicDataFemale : overlay.graphicDataMale) ??
-        //                   overlay.graphicDataDefault;
-        //    if(graphic  == null) return Vector3.zero;
-        //    var drawSize = graphic.drawSize;
-            
-        //    return (drawSize * 0.66f).ToVector3();
-        //}
+        public override Vector3 ScaleFor(PawnRenderNode node, PawnDrawParms parms)
+        {
+            var a = Vector3.one;
+            var graphic = GetGraphic(node, parms);
+            a.x *= node.Props.drawSize.x * node.debugScale * graphic.drawSize.x;
+            a.z *= node.Props.drawSize.y * node.debugScale * graphic.drawSize.y;
+
+            if (!parms.flags.FlagSet(PawnRenderFlags.Portrait))
+            {
+                if (node.TryGetAnimationScale(parms, out var offset))
+                    a = a.ScaledBy(offset);
+            }
+
+            if (node.Props.drawData != null)
+                a *= node.Props.drawData.ScaleFor(parms.pawn);
+
+            return a;
+        }
 
         public override Vector3 OffsetFor(PawnRenderNode node, PawnDrawParms parms, out Vector3 pivot)
         {

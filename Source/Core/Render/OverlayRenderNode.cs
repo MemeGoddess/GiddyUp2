@@ -19,6 +19,8 @@ namespace GiddyUpCore.Core.Render
             Rider = rider;
         }
 
+        public override GraphicMeshSet MeshSetFor(Pawn pawn) => MeshPool.GetMeshSetForSize(1f, 1f);
+
         public override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
             foreach (var rotation in Rot4.AllRotations)
@@ -29,13 +31,12 @@ namespace GiddyUpCore.Core.Render
                     yield return new Graphic();
                     continue;
                 }
-
+                 
                 var graphicData =
                     (pawn.gender == Gender.Female
                         ? overlay.graphicDataFemale
                         : overlay.graphicDataMale)
                     ?? overlay.graphicDataDefault;
-
 
                 if (overlay.allVariants.Any())
                 {
@@ -45,7 +46,7 @@ namespace GiddyUpCore.Core.Render
                     var variantGraphicData = overlay.allVariants.FirstOrDefault(x =>
                         x.texPath.Split('/').Last().Split(overlay.stringDelimiter.ToCharArray())[0] == pawnVariant);
 
-                    var textPath = variantGraphicData?.texPath ?? "UI/Misc/BadTexture";
+                    var textPath = variantGraphicData?.texPath ?? graphicData.texPath;
                     if (variantGraphicData == null)
                     {
                         Log.WarningOnce($"Variant '{pawnVariant}' for {pawn.LabelShortCap} not found", pawn.thingIDNumber);
