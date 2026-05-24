@@ -32,32 +32,30 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
         if (!tree.TryGetNodeByTag(PawnRenderNodeTagDefOf.Body, out var bodyNode) || bodyNode == null)
             yield break;
 
-        var props = new PawnRenderNodeProperties
+
+        var riderProps = new PawnRenderNodeProperties
         {
-            debugLabel = "Mounted rider",
+            debugLabel = "Rider",
             useGraphic = false,
             workerClass = typeof(MountedRiderRenderNodeWorker),
             nodeClass = typeof(MountedRiderRenderNode),
             baseLayer = 71f
         };
 
-        yield return (new MountedRiderRenderNode(pawn, props, tree, rider), bodyNode);
+        yield return (new MountedRiderRenderNode(pawn, riderProps, tree, rider), bodyNode);
 
-        if (pawn.TryGetComp<CompOverlay>(out var comp))
+        if (!pawn.TryGetComp<CompOverlay>(out var comp)) 
+            yield break;
+
+        var overlayProps = new PawnRenderNodeProperties()
         {
-            var overlayProps = new PawnRenderNodeProperties()
-            {
-                debugLabel = "Overlay",
-                useGraphic = true,
-                workerClass = typeof(OverlayRenderNodeWorker),
-                nodeClass = typeof(OverlayRenderNode),
-                baseLayer = 75f,
-                //texPath = "Things/Pawn/Horse2_overlay_south",
-                //drawSize = ParseHelper.FromStringVector2("2.1") * 0.66f,
+            debugLabel = "Overlay",
+            useGraphic = true,
+            workerClass = typeof(OverlayRenderNodeWorker),
+            nodeClass = typeof(OverlayRenderNode),
+            baseLayer = 75f,
+        };
 
-            };
-
-            yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp.Prop, rider), bodyNode);
-        }
+        yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp.Prop, rider), bodyNode);
     }
 }
