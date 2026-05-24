@@ -11,12 +11,54 @@ namespace GiddyUpCore.Core.Render
     internal class OverlayRenderNode : PawnRenderNode
     {
         public Pawn Rider { get; }
-        public CompOverlay Overlay;
+        public CompProperties_Overlay Properties;
 
-        public OverlayRenderNode(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree, CompOverlay overlay, Pawn rider) : base(pawn, props, tree)
+        public OverlayRenderNode(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree, CompProperties_Overlay properties, Pawn rider) : base(pawn, props, tree)
         {
-            Overlay = overlay;
+            Properties = properties;
             Rider = rider;
+        }
+
+        public override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
+        {
+            foreach (var rotation in Rot4.AllRotations)
+            {
+                var overlay = Properties.GetOverlay(rotation);
+                if (overlay == null)
+                {
+                    yield return new Graphic();
+                    continue;
+                }
+
+                var graphicData =
+                    (pawn.gender == Gender.Female
+                        ? overlay.graphicDataFemale
+                        : overlay.graphicDataMale)
+                    ?? overlay.graphicDataDefault;
+
+
+                if (overlay.allVariants.Any())
+                {
+                    var pawnVariant = pawn.drawer.renderer.BodyGraphic.path
+                        .Split('/').Last();
+
+                    var variantGraphicData = overlay.allVariants.FirstOrDefault(x =>
+                        x.texPath.Split('/').Last().Split(overlay.stringDelimiter.ToCharArray())[0] == pawnVariant);
+
+                    var textPath = variantGraphicData?.texPath ?? "UI/Misc/BadTexture";
+                    if (variantGraphicData == null)
+                    {
+                        Log.WarningOnce($"Variant '{pawnVariant}' for {pawn.LabelShortCap} not found", pawn.thingIDNumber);
+                        variantGraphicData = new GraphicData();
+                    }
+
+                    variantGraphicData.CopyFrom(graphicData);
+                    variantGraphicData.texPath = textPath;
+                    graphicData = variantGraphicData;
+                }
+
+                yield return graphicData?.Graphic ?? new Graphic();
+            }
         }
     }
 }

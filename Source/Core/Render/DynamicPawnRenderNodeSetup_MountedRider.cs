@@ -52,12 +52,12 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
                 workerClass = typeof(OverlayRenderNodeWorker),
                 nodeClass = typeof(OverlayRenderNode),
                 baseLayer = 75f,
-                texPath = "Things/Pawn/Horse2_overlay_south",
-                drawSize = ParseHelper.FromStringVector2("2.1") * 0.66f,
+                //texPath = "Things/Pawn/Horse2_overlay_south",
+                //drawSize = ParseHelper.FromStringVector2("2.1") * 0.66f,
 
             };
 
-            yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp, rider), bodyNode);
+            yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp.Prop, rider), bodyNode);
         }
     }
 }
