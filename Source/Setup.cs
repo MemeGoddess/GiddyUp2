@@ -2,6 +2,7 @@
 using System.Linq;
 using GiddyUp.Jobs;
 using GiddyUpCaravan;
+using GiddyUpCore.Compatibility;
 using GiddyUpCore.Compatibility.WhatTheHack;
 using GiddyUpMechanoids;
 using GiddyUpRideAndRoll;
@@ -73,7 +74,7 @@ public static class Setup
         if (type != null)
             ExtendedDataStorage.noFleeingAnimals = HarmonyLib.Traverse.Create(type).Field("nofleeing_animals")
                 ?.GetValue<HashSet<Thing>>();
-        Extensions.Setup();
+        CompatibilityLoader.Setup();
     }
 
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
