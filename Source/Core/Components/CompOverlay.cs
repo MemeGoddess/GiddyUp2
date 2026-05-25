@@ -52,7 +52,6 @@ internal class CompOverlay : ThingComp
     {
         if (parent is Pawn pawn)
         {
-            Log.Warning("Caching");
             _pawn = pawn;
             CacheGraphicData(Rot4.South);
             CacheGraphicData(Rot4.North);
