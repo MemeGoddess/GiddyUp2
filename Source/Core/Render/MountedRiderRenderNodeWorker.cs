@@ -35,7 +35,7 @@ internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
 
     public override float LayerFor(PawnRenderNode node, PawnDrawParms parms)
     {
-        return RiderLayer + node.debugLayerOffset;
+        return RiderLayer + node.debugLayerOffset + (parms.facing == Rot4.North ? 10f : 0);
     }
 
     public override void PostDraw(PawnRenderNode node, PawnDrawParms parms, Mesh mesh, Matrix4x4 matrix)
