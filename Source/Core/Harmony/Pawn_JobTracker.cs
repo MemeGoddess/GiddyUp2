@@ -63,7 +63,7 @@ internal static class Patch_DetermineNextJob
             if (pawn.IsMounted() && pawn.IsColonist)
             {
                 var pawnData = pawn.GetExtendedPawnData();
-                if (pawnData.Mount.CurJobDef != ResourceBank.JobDefOf.Mounted ||
+                if ((pawnData.Mount.CurJobDef != ResourceBank.JobDefOf.Mounted && pawnData.Mount.CurJobDef != JobDefOf.RemoveApparel ) ||
                     (pawnData.Mount.jobs.curDriver is JobDriver_Mounted driver && driver.Rider != pawn))
                     pawn.Dismount(null, pawnData, true);
             }

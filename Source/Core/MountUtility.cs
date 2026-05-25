@@ -3,6 +3,9 @@ using RimWorld.Planet;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using GiddyUpCore.Compatibility;
+using GiddyUpCore.Compatibility.AnimalApparel;
+using GiddyUpCore.Core.Extensions;
 //using Multiplayer.API;
 using Verse;
 using Verse.AI;
@@ -138,6 +141,7 @@ internal static class MountUtility
         if (animal.HostileTo(Current.gameInt.worldInt.factionManager.ofPlayer))
             animal.mindState.duty = new PawnDuty(DutyDefOf.Defend);
         animal.jobs.TryTakeOrderedJob(new Job(ResourceBank.JobDefOf.Mounted, rider) { count = 1 });
+        
     }
 
     public static void TryAutoMount(this Pawn pawn, Pawn_JobTracker jobTracker, ref ThinkResult thinkResult)
@@ -279,6 +283,7 @@ internal static class MountUtility
             return; //We're done here
         animal.Drawer.tweener = new PawnTweener(animal);
         animal.pather.ResetToCurrentPosition();
+        
 
         //========Post-dismount behavior======
         //If this is a visitor's animal, keep it from wandering off
@@ -543,13 +548,64 @@ internal static class MountUtility
 
             animal = PawnGenerator.GeneratePawn(pawnKindDef, parms.faction);
             GenSpawn.Spawn(animal, pawn.Position, map, parms.spawnRotation);
+            if (CompatibilityLoader.AnimalApparelInstalled && (modExtension?.apparel?.Any() ?? false))
+            {
+                AnimalGearHelper.EnsureInitApparelTrackers(animal);
+                var reason = string.Empty;
+
+                modExtension.apparel
+                    .SplitIntoTwo(
+                        out var wearable,
+                        out var unwearable,
+                        x => AnimalGearHelper.CanEquipApparelFromThingDef(x.ThingDef, animal, ref reason));
+
+                if (unwearable.Any()) 
+                    Log.Warning($"{animal.LabelCap} is unable to wear:\n{unwearable.Select(x => x.ThingDef.LabelCap.ToString()).ToList().ToLineList("-")}");
+
+                var reservedSpots = new HashSet<(ApparelLayerDef layer, BodyPartGroupDef bodyPartGroup)>();
+                wearable.SplitIntoTwo(
+                    out wearable,
+                    out var dupes,
+                    apparel =>
+                    {
+                        var apparelProps = apparel.ThingDef.apparel;
+                        if (apparelProps.layers.NullOrEmpty() || apparelProps.bodyPartGroups.NullOrEmpty())
+                            return true;
+
+                        var claimedSpots = new List<(ApparelLayerDef layer, BodyPartGroupDef bodyPartGroup)>();
+                        foreach (var spot in 
+                                 from layer in apparelProps.layers 
+                                 from bodyPartGroup in apparelProps.bodyPartGroups 
+                                 select (layer, bodyPartGroup))
+                        {
+                            if (reservedSpots.Contains(spot))
+                                return false;
+                            claimedSpots.Add(spot);
+                        }
+
+                        foreach (var spot in claimedSpots)
+                            reservedSpots.Add(spot);
+                        return true;
+                    });
+
+
+
+                foreach (var apparel in wearable)
+                {
+                    var item = (Apparel)ThingMaker.MakeThing(apparel.ThingDef,
+                        apparel.ThingDef.MadeFromStuff
+                            ? apparel.Stuff ?? GenStuff.DefaultStuffFor(apparel.ThingDef)
+                            : null);
+                    animal.apparel?.Wear(item, false);
+                }
+            }
             list.Add(animal);
 
             //Set their training
             Spawned:
             if (animal.playerSettings == null)
                 animal.playerSettings = new Pawn_PlayerSettings(animal);
-            animal.training.Train(TrainableDefOf.Obedience, pawn);
+            animal.training?.Train(TrainableDefOf.Obedience, pawn);
 
             //Mount up
             pawn.GoMount(animal, GiveJobMethod.Instant);

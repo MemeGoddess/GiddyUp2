@@ -60,12 +60,17 @@ internal static class Pawn_DrawTracker_DrawPos
         if (modX != null)
             offset += AddCustomOffsets(rotation, modX);
 
-        if (rotation == Rot4.South && Settings.DrawRulesCache.Contains(pawnData.Mount.def.shortHash))
-            offset.y -= 0.01f;
-        else
-            offset.y += 0.01f;
+        offset.y += GetMountedAltitudeOffset(pawnData.Mount, rotation);
 
         return offset;
+    }
+
+    private static float GetMountedAltitudeOffset(Pawn mount, Rot4 rotation)
+    {
+        if (rotation == Rot4.South && Settings.DrawRulesCache.Contains(mount.def.shortHash))
+            return -0.01f;
+
+        return 0.01f;
     }
 
     private static Vector3 AddCustomOffsets(Rot4 rotation, DrawingOffset customOffsets)

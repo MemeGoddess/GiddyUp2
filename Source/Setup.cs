@@ -2,7 +2,8 @@
 using System.Linq;
 using GiddyUp.Jobs;
 using GiddyUpCaravan;
-using GiddyUpCore.Mechanoids;
+using GiddyUpCore.Compatibility;
+using GiddyUpCore.Compatibility.WhatTheHack;
 using GiddyUpMechanoids;
 using GiddyUpRideAndRoll;
 using RimWorld;
@@ -73,7 +74,7 @@ public static class Setup
         if (type != null)
             ExtendedDataStorage.noFleeingAnimals = HarmonyLib.Traverse.Create(type).Field("nofleeing_animals")
                 ?.GetValue<HashSet<Thing>>();
-        WhatTheHackCompatibility.Setup();
+        CompatibilityLoader.Setup();
     }
 
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
@@ -286,7 +287,7 @@ public static class Setup
 
     private static void RemoveMechanoids()
     {
-        if (WhatTheHackCompatibility.WhatTheHackEnabled)
+        if (Extensions.WhatTheHackEnabled)
         {
 
             DefDatabase<RecipeDef>.Remove(GU_Mech_DefOf.GU_Mech_InstallGiddyUpModule);

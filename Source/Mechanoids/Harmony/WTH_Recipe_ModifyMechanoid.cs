@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using GiddyUp;
-using GiddyUpCore.Mechanoids;
+using GiddyUpCore.Compatibility.WhatTheHack;
 using HarmonyLib;
 using Verse;
 
@@ -9,7 +9,7 @@ namespace GiddyUpMechanoids
     [HarmonyPatch]
     static class WTH_Recipe_ModifyMechanoid_CanApplyOn
     {
-        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && WhatTheHackCompatibility.WhatTheHackEnabled;
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && Extensions.WhatTheHackEnabled;
 
         public static MethodBase[] TargetMethods() =>
             [AccessTools.Method("WhatTheHack.Recipes.Recipe_ModifyMechanoid:CanApplyOn")];
