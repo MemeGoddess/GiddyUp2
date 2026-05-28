@@ -38,7 +38,7 @@ namespace GiddyUpCore.Core.Render
                         : overlay.graphicDataMale)
                     ?? overlay.graphicDataDefault;
 
-                if (overlay.allVariants.Any())
+                if (overlay.allVariants?.Any() ?? false)
                 {
                     var pawnVariant = pawn.drawer.renderer.BodyGraphic.path
                         .Split('/').Last();
