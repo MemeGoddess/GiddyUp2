@@ -48,7 +48,14 @@ public class Mod_GiddyUp : Mod
 
         var currentTabRect = new Rect(0f, Text.LineHeight + 6, inRect.width, inRect.height - Text.LineHeight - 6);
         Widgets.DrawMenuSection(currentTabRect);
-        DrawTabs(new Rect(0f, 0, inRect.width, Text.LineHeight), tabs);
+
+        new Rect(0f, 0, inRect.width, Text.LineHeight).SplitVerticallyWithMargin(out var tabsHeader,
+            out var refreshCache, out _, 4f, rightWidth: Text.LineHeight);
+        if (Widgets.ButtonImageWithBG(refreshCache, TexUI.RotRightTex, new Vector2(16, 16)))
+            offsetCache = null;
+        TooltipHandler.TipRegion(refreshCache, () => "GU_Reset_Cache".Translate(), 427985);
+        DrawTabs(tabsHeader, tabs);
+        
         
         switch (selectedTab)
         {
@@ -111,13 +118,11 @@ public class Mod_GiddyUp : Mod
         };
         var row = options.GetRect(Text.LineHeight);
         row.SplitVerticallyWithMargin(out var leftRow, out var rightRow, 8f);
-        rightRow.SplitVerticallyWithMargin(out var resetCacheRect, out var disregardCapRect, out _, compressibleMargin: 4f, leftWidth: 150f);
-        if (Widgets.ButtonText(resetCacheRect, "GU_Reset_Cache".Translate()))
-            offsetCache = null;
-        if(Mouse.IsOver(disregardCapRect))
-            Widgets.DrawHighlight(disregardCapRect);
-        TooltipHandler.TipRegion(disregardCapRect, () => "GUM_DisCarCapText".Translate(), 8542);
-        Widgets.CheckboxLabeled(disregardCapRect, "GUM_DisCarCap".Translate(), ref disregardAnimalCarryingCapacity);
+        
+        if(Mouse.IsOver(rightRow))
+            Widgets.DrawHighlight(rightRow);
+        TooltipHandler.TipRegion(rightRow, () => "GUM_DisCarCapText".Translate(), 8542);
+        Widgets.CheckboxLabeled(rightRow, "GUM_DisCarCap".Translate(), ref disregardAnimalCarryingCapacity);
 
 
 
