@@ -129,12 +129,12 @@ public class Mod_GiddyUp : Mod
         DrawTabs(leftRow, tabs);
 
         //Record positioning before closing out the lister...
-        options.GapLine(6f);
+        options.Gap(6f);
         var mountableFilterRect = options.GetRect(view.height - options.CurHeight);
 
         //========Between tabs and scroll body=========
-        //Widgets.DrawMenuSection(mountableFilterRect);
-        var tabView = mountableFilterRect;
+        Widgets.DrawMenuSection(mountableFilterRect);
+        var tabView = mountableFilterRect.ContractedBy(10f);
         var mountOptions = new Listing_Standard();
         
         mountOptions.Begin(tabView);
