@@ -134,19 +134,26 @@ public class Mod_GiddyUp : Mod
 
         //========Between tabs and scroll body=========
         Widgets.DrawMenuSection(mountableFilterRect);
-        var tabView = mountableFilterRect.ContractedBy(10f);
+        var tabView = mountableFilterRect.ContractedBy(1f);
         var mountOptions = new Listing_Standard();
         
         mountOptions.Begin(tabView);
+        mountOptions.Gap(2f);
         if (selectedTab == SelectedTab.BodySize)
         {
+            var anchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleCenter;
             mountOptions.Label("GUC_BodySizeFilter_Title".Translate("0", "5", "0.2", bodySizeFilter.ToString()), -1f,
                 "GUC_BodySizeFilter_Description".Translate());
+            Text.Anchor = anchor;
             bodySizeFilter = mountOptions.Slider((float)Math.Round(bodySizeFilter, 1), 0f, 5f);
         }
         else
         {
+            var anchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleCenter;
             mountOptions.Label("GUC_DrawBehavior_Description".Translate());
+            Text.Anchor = anchor;
         }
         //========Search widget=========
         var searchRect = mountOptions.GetRect(Text.LineHeight);
