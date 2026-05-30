@@ -20,6 +20,7 @@ public class ExtendedPawnData : IExposable
 
     public bool selectedForCaravan = false, canRide = true;
     public float drawOffset;
+    public int lastMountedTick = 0;
     public Automount automount = Automount.Anyone;
 
     public enum Automount
@@ -83,6 +84,7 @@ public class ExtendedPawnData : IExposable
         Scribe_Values.Look(ref ID, "ID");
         Scribe_Values.Look(ref automount, "automount", Automount.Anyone);
         Scribe_Values.Look(ref drawOffset, "drawOffset");
+        Scribe_Values.Look(ref lastMountedTick, "lastMountedTick", 0);
 
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {

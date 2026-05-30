@@ -123,6 +123,7 @@ internal static class MountUtility
         
         //Instantly mount, as if the mount jobDriver had just finished
         pawnData.Mount = animal;
+        pawnData.lastMountedTick = Find.TickManager.TicksGame;
         ExtendedDataStorage.isMounted.Add(rider.thingIDNumber);
         pawnData.ReservedMount = animal;
         animal.GetExtendedPawnData().ReservedBy = rider;

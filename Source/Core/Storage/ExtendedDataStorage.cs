@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GiddyUpRideAndRoll;
 using RimWorld;
 using RimWorld.Planet;
@@ -157,6 +158,33 @@ public class ExtendedDataStorage(World world) : WorldComponent(world)
         {
             _extendedPawnDataStore ??= new Dictionary<int, ExtendedPawnData>();
             _badSpots ??= [];
+        }
+    }
+
+    public override void WorldComponentTick()
+    {
+        var tick = Find.TickManager.TicksGame;
+        if (ModsConfig.IdeologyActive && Settings.ideoEnabled && tick % 100 == 0)
+        {
+            var pawns = PawnsFinder.AllMaps_Spawned
+                .Where(x => x.IsMounted())
+                .Select(x => x.GetExtendedPawnData())
+                .ToList();
+
+            foreach (var caravan in Find.WorldObjects.Caravans)
+            {
+                var caravanPawns = caravan.PawnsListForReading.ToHashSet();
+                if(!caravanPawns.Any(x => x.IsEverMountable()))
+                   continue;
+                pawns.AddRange(caravan.PawnsListForReading
+                    .Where(pawn => !pawn.RaceProps.Animal)
+                    .Select(pawn => pawn.GetExtendedPawnData()));
+            }
+
+            foreach (var pawn in pawns)
+            {
+                pawn.lastMountedTick = tick;
+            }
         }
     }
 }

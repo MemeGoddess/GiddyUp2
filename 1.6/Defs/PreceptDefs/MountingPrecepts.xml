@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <IssueDef MayRequire="Ludeon.RimWorld.Ideology">
+    <defName>GU_Mounting</defName>
+    <label>mounts</label>
+  </IssueDef>
+
+  <ThoughtDef MayRequire="Ludeon.RimWorld.Ideology">
+    <defName>GU_NoRecentMount</defName>
+    <workerClass>GiddyUp.ThoughtWorker_Precept_NoRecentMount</workerClass>
+    <stages>
+      <li>
+        <label>itching to ride</label>
+        <description>No Recent Mount</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+      <li>
+        <label>frustrated by not riding</label>
+        <description>No Recent Mount</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+      <li>
+        <label>miserable without a mount</label>
+        <description>No Recent Mount</description>
+        <baseMoodEffect>-10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+    <defName>GU_Mounting_Essential</defName>
+    <issue>GU_Mounting</issue>
+    <label>essential</label>
+    <impact>Medium</impact>
+    <displayOrderInIssue>1</displayOrderInIssue>
+    <selectionWeight>1</selectionWeight>
+    <enabledForNPCFactions>false</enabledForNPCFactions>
+    <comps>
+      <li Class="RimWorld.PreceptComp_SituationalThought">
+        <thought>GU_NoRecentMount</thought>
+        <thoughtStageDescriptions>
+          <li>5 days without riding</li>
+          <li>10 days without riding</li>
+          <li>15 days without riding</li>
+        </thoughtStageDescriptions>
+      </li>
+    </comps>
+  </PreceptDef>
+</Defs>
