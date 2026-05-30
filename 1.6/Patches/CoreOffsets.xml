@@ -154,5 +154,19 @@
 		</value>
 	</Operation>
 
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[defName="Boomrat"]</xpath>
+		<value>
+			<modExtensions>
+				<li Class="GiddyUp.DrawingOffset">
+					<northOffset>(0.00, 0.00, -0.15)</northOffset>
+					<southOffset>(0.00, 0.00, -0.15)</southOffset>
+					<eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+					<westOffset>(0.00, 0.00, -0.15)</westOffset>
+				</li>
+			</modExtensions>
+		</value>
+	</Operation>
+
 	
 </Patch>
