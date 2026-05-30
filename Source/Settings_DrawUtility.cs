@@ -9,9 +9,9 @@ namespace GiddyUp;
 public static class OptionsDrawUtility
 {
     public static int cellPosition;
-    private const int LineHeight = 22; //Text.LineHeight + options.verticalSpacing;
+    public const int LineHeight = 22; //Text.LineHeight + options.verticalSpacing;
 
-    public static void DrawList(this Listing_Standard options, List<ThingDef?> defs, HashSet<ushort> cache, out int lineNumber)
+    public static void DrawList(this Listing_Standard options, List<ThingDef?> defs, HashSet<ushort> cache, IntRange viewRange, out int lineNumber)
     {
         lineNumber = cellPosition = 0; //Reset
         //List out all the unremoved defs from the compiled database
@@ -23,7 +23,8 @@ public static class OptionsDrawUtility
             if (selectedTab == SelectedTab.BodySize && def.race.baseBodySize < bodySizeFilter)
                 continue;
 
-            DrawListItem(options, def, cache, lineNumber % 2 != 0);
+            if (viewRange.Includes(lineNumber))
+                DrawListItem(options, def, cache, lineNumber % 2 != 0);
             cellPosition += LineHeight;
             ++lineNumber;
         }
@@ -63,11 +64,11 @@ public static class OptionsDrawUtility
 
         //Is there an icon?
         var iconRect = new Rect(leftHalf.x, leftHalf.y, 32f, leftHalf.height);
-        Texture2D? icon = null;
-        if (def is BuildableDef)
-            icon = def.uiIcon;
-        if (icon != null)
-            GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit, true, 1f, Color.white, 0f, 0f);
+        if (def is BuildableDef buildable && buildable.uiIcon != null)
+        {
+            GUI.DrawTexture(iconRect, buildable.uiIcon, ScaleMode.ScaleToFit, true, 1f, 
+                buildable?.uiIconColor ?? Color.white, 0f, 0f);
+        }
 
         //If there is a label, split the cell in half, otherwise use the full cell for data
         if (!label.NullOrEmpty())

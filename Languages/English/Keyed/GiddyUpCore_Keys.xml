@@ -43,6 +43,7 @@
 	<GUC_RnR_Tab>Ride and Roll</GUC_RnR_Tab>
 	<GUC_BattleMounts_Tab>Battle Mounts</GUC_BattleMounts_Tab>
 	<GUC_Caravans_Tab>Caravans</GUC_Caravans_Tab>
+	<GUC_Ideology_Tab>Ideology</GUC_Ideology_Tab>
 	
 	<GU_Enable_RnR>Enable Ride and Roll module</GU_Enable_RnR>
 	<GU_Enable_RnR_Description>Disabling this module will remove functionality related to pawns using mounts to get around the map out of convenience or for jobs. Changing this setting requires a restart.</GU_Enable_RnR_Description>
@@ -59,6 +60,9 @@
 	<GU_Enable_SaddleUp>Enable Saddle Up module</GU_Enable_SaddleUp>
 	<GU_Enable_SaddleUp_Description>Disabling this module will remove the gizmo to go and mount a nearby animal or mech.</GU_Enable_SaddleUp_Description>
 	
+	<GU_Enable_Ideology>Enable Ideology module</GU_Enable_Ideology>
+	<GU_Enable_Ideology_Description>Disabling this module will remove functionality related to Ideology DLC. Changing this setting requires a restart.</GU_Enable_Ideology_Description>
+
 	<GU_Reset_Cache>Reset offset cache</GU_Reset_Cache>
 	
 	<GU_Car_TooYoung>Too young</GU_Car_TooYoung>
