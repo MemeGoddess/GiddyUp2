@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationSequence">
+		<success>Always</success>
+		<operations>
+			<li Class="PatchOperationAdd">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="Cassowary" or 
+					defName="Chicken" or 
+					defName="Turkey" or 
+					defName="Goose" or 
+					defName="Dromedary" or 
+					defName="Goat" or 
+					defName="Donkey" or 
+					defName="Rhinoceros" or 
+					defName="Thrumbo" or 
+					defName="Deer" or 
+					defName="Sheep" or 
+					defName="Alpaca" or 
+					defName="Megasloth"][not(comps)]</xpath>
+				<value>
+					<comps />
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Cassowary"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Cassowary_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.8</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Chicken"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Chicken_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>0.87</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Turkey"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataMale>
+								<texPath>Things/Pawn/TurkeyTom_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.4</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataMale>
+                            <graphicDataFemale>
+								<texPath>Things/Pawn/TurkeyHen_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.4</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataFemale>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Goose"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Goose_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.32</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Dromedary"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Dromedary_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>3</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Goat"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataMale>
+								<texPath>Things/Pawn/GoatMale_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.42</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataMale>
+							<graphicDataFemale>
+								<texPath>Things/Pawn/GoatFemale_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.42</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataFemale>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Donkey"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Donkey_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.9</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Rhinoceros"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Rhino_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>3</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Thrumbo"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Thrumbo_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>4.8</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Deer"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataMale>
+								<texPath>Things/Pawn/DeerMale_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>2.25</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataMale>
+							<graphicDataFemale>
+								<texPath>Things/Pawn/DeerFemale_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>2.25</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataFemale>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Sheep"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataMale>
+								<texPath>Things/Pawn/SheepMale_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.75</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataMale>
+							<graphicDataFemale>
+								<texPath>Things/Pawn/SheepFemale_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>1.75</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataFemale>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Alpaca"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Alpaca_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>2.2</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName="Megasloth"]/comps</xpath>
+				<value>
+					<li Class="GiddyUp.CompProperties_Overlay">
+						<overlayFront>
+							<graphicDataDefault>
+								<texPath>Things/Pawn/Megasloth_south</texPath>
+								<graphicClass>Graphic_Single</graphicClass>
+								<drawSize>3.8</drawSize>
+								<drawRotated>false</drawRotated>
+							</graphicDataDefault>
+						</overlayFront>
+					</li>
+				</value>
+			</li>
+		</operations>
+	</Operation>
+</Patch>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GiddyUp;
+using UnityEngine;
 using Verse;
 
 namespace GiddyUpCore.Core.Render
@@ -19,7 +20,7 @@ namespace GiddyUpCore.Core.Render
             Rider = rider;
         }
 
-        public override GraphicMeshSet MeshSetFor(Pawn pawn) => MeshPool.GetMeshSetForSize(1f, 1f);
+        public override GraphicMeshSet MeshSetFor(Pawn pawn) => MeshPool.GetMeshSetForSize(1, 1);
 
         public override IEnumerable<Graphic?> GraphicsFor(Pawn pawn)
         {
@@ -54,6 +55,13 @@ namespace GiddyUpCore.Core.Render
                         variantGraphicData.texPath = textPath;
                     }
                     graphicData = variantGraphicData;
+                }
+
+                if(graphicData != null)
+                {
+                    var bodyGraphic = pawn.drawer?.renderer?.BodyGraphic;
+                    graphicData.color = bodyGraphic?.color ?? Color.white;
+                    graphicData.colorTwo = bodyGraphic?.colorTwo ?? Color.white;
                 }
 
                 yield return graphicData?.Graphic;
