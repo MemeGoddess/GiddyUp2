@@ -10,7 +10,7 @@
 			<operations>
 				<li Class="PatchOperationAdd">
 					<success>Always</success>
-					<xpath>Defs/ThingDef[defName="Dryad_Clawer"][not(comps)]</xpath>
+					<xpath>Defs/ThingDef[defName="Dryad_Clawer" or defName="Dryad_Woodmaker" or defName="Dryad_Carrier" or defName="Dryad_Barkskin"][not(comps)]</xpath>
 					<value>
 						<comps />
 					</value>
@@ -22,6 +22,51 @@
 							<overlayFront>
 								<graphicDataDefault>
 									<texPath>Things/Pawn/Dryad_Clawer_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.5</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Woodmaker"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/DryadWoodmaker_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.5</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Carrier"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/DryadCarrier_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.25</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Barkskin"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Dryad_Barkskin_south</texPath>
 									<graphicClass>Graphic_Single</graphicClass>
 									<drawSize>1.5</drawSize>
 									<drawRotated>false</drawRotated>

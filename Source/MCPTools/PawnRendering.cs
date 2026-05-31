@@ -65,8 +65,9 @@ namespace GiddyUpCore.MCP
                             new Texture(x.RaceProps.AnyPawnKind.lifeStages.Last().bodyGraphicData, x.def.modContentPack.Name));
                 })
                 .Where(x => x.Value != null)
+                .GroupBy(x => x.Key)
                 .ToList();
-            return mounted.ToDictionary(x => x.Key, x => x.Value)!;
+            return mounted.ToDictionary(x => x.Key, x => x.FirstOrDefault().Value)!;
         }
     }
 
