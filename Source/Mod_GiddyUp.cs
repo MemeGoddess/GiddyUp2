@@ -131,8 +131,25 @@ public class Mod_GiddyUp : Mod
         DrawTabs(leftRow, tabs);
 
         //Record positioning before closing out the lister...
-        options.Gap(6f);
-        var mountableFilterRect = options.GetRect(view.height - options.CurHeight);
+        var mountableFilterRect = inRect.ContractedBy(15f);
+        mountableFilterRect.y = options.curY + 90f;
+        mountableFilterRect.height = inRect.height - options.curY - 105f; //Use remaining space
+
+        options.End();
+
+        //========Setup tabs=========
+        var tabs = new List<TabRecord>
+        {
+            new("GUC_Mountable_Tab".Translate(), delegate { selectedTab = SelectedTab.BodySize; },
+                selectedTab == SelectedTab.BodySize),
+            new("GUC_DrawBehavior_Tab".Translate(),
+                delegate { selectedTab = SelectedTab.DrawBehavior; }, selectedTab == SelectedTab.DrawBehavior)
+        };
+
+        Widgets.DrawMenuSection(mountableFilterRect); //Used to make the background light grey with white border
+        TabDrawer.DrawTabs(
+            new Rect(mountableFilterRect.x, mountableFilterRect.y, mountableFilterRect.width, Text.LineHeight),
+            tabs);
 
         //========Between tabs and scroll body=========
         Widgets.DrawMenuSection(mountableFilterRect);

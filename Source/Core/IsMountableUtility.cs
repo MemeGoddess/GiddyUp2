@@ -165,7 +165,7 @@ public static class IsMountableUtility
         }
 
         //Check age
-        if (!animal.ageTracker.Adult && !animal.RaceProps.IsMechanoid)
+        if (!disregardAnimalAge && !animal.ageTracker.Adult && !animal.RaceProps.IsMechanoid)
         {
             var customLifeStages = animal.def.GetModExtension<AllowedLifeStages>();
             if (customLifeStages == null || !customLifeStages.IsAllowedAge(animal.ageTracker.CurLifeStageIndex))

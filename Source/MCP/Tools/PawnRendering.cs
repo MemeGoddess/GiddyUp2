@@ -47,8 +47,26 @@ namespace GiddyUpCore.MCP.Tools
                 Log.WarningOnce($"There were {mounted.Count - grouped.Count} duplicates", 387923);
 
             return grouped.ToDictionary(x => x.Key,
-                x => x.FirstOrDefault()!.Value);
+                x => x.FirstOrDefault()!.Value)!;
         }
+
+        [MCPTool("get_textures", "Gets Texture Paths",
+            "Returns the Texture Path by Animal DefName to be used for Overlays")]
+        internal static Dictionary<string, Texture> GetTextures()
+        {
+            var mounted = Find.CurrentMap.mapPawns.ColonyAnimals
+                .Select(x =>
+                {
+                    if(!x.IsMountedAnimal(out _))
+                        return new KeyValuePair<string, Texture?>(x.def.defName, null);
+
+                    return new KeyValuePair<string, Texture?>(x.def.defName,
+                            new Texture(x.RaceProps.AnyPawnKind.lifeStages.Last().bodyGraphicData, x.def.modContentPack.Name));
+                })
+                .Where(x => x.Value != null)
+                .ToList();
+            return mounted.ToDictionary(x => x.Key, x => x.Value)!;
+        } 
     }
 
     public record Offset
@@ -66,6 +84,31 @@ namespace GiddyUpCore.MCP.Tools
             eastOffset = all.ToString();
             westOffset = all.ToString();
             ModContentPack = modContentPack;
+        }
+    }
+
+    public record Texture
+    {
+        public GraphicDataSlim graphicDataDefault;
+
+        public Texture(GraphicData graphic, string ModContentPack)
+        {
+            this.ModContentPack = ModContentPack;
+            var newGraphic = new GraphicData();
+            newGraphic.CopyFrom(graphic);
+            newGraphic.texPath += "_south";
+            graphicDataDefault = GraphicDataSlim.ToSlim(newGraphic);
+        }
+
+        public string ModContentPack { get; init; }
+
+    }
+
+    public record GraphicDataSlim(string texPath, string graphicClass, string drawSize, string drawRotated)
+    {
+        public static GraphicDataSlim ToSlim(GraphicData data)
+        {
+            return new GraphicDataSlim(data.texPath, "Graphic_Single", data.drawSize.x.ToString(), "false");
         }
     }
 }
