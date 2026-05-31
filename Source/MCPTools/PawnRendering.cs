@@ -10,7 +10,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace GiddyUpCore.MCP.Tools
+namespace GiddyUpCore.MCP
 {
     internal static class PawnRendering
     {
@@ -21,7 +21,7 @@ namespace GiddyUpCore.MCP.Tools
             var mounted = Find.CurrentMap.mapPawns.ColonyAnimals
                 .Select(x =>
                 {
-                    if(!x.IsMountedAnimal(out _))
+                    if (!x.IsMountedAnimal(out _))
                         return new KeyValuePair<string, Offset?>(x.def.defName, null);
 
                     if (!x.Drawer.renderer.renderTree.TryGetNodeByTag(PawnRenderNodeTagDefOf.Body, out var body))
@@ -43,7 +43,7 @@ namespace GiddyUpCore.MCP.Tools
                 .GroupBy(x => x.Key)
                 .ToList();
 
-            if(grouped.Count != mounted.Count )
+            if (grouped.Count != mounted.Count)
                 Log.WarningOnce($"There were {mounted.Count - grouped.Count} duplicates", 387923);
 
             return grouped.ToDictionary(x => x.Key,
@@ -57,7 +57,7 @@ namespace GiddyUpCore.MCP.Tools
             var mounted = Find.CurrentMap.mapPawns.ColonyAnimals
                 .Select(x =>
                 {
-                    if(!x.IsMountedAnimal(out _))
+                    if (!x.IsMountedAnimal(out _))
                         return new KeyValuePair<string, Texture?>(x.def.defName, null);
 
                     return new KeyValuePair<string, Texture?>(x.def.defName,
@@ -66,7 +66,7 @@ namespace GiddyUpCore.MCP.Tools
                 .Where(x => x.Value != null)
                 .ToList();
             return mounted.ToDictionary(x => x.Key, x => x.Value)!;
-        } 
+        }
     }
 
     public record Offset
