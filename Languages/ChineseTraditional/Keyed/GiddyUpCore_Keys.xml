@@ -19,7 +19,7 @@
   <GUC_AccuracyPenalty_Title>騎乘－ＨＩＴ減益（範圍：{0}～{1}%　默認：{2}% 當前：{3}%）</GUC_AccuracyPenalty_Title>
   <GUC_AccuracyPenalty_Description>騎乘時，命中率的減益影響</GUC_AccuracyPenalty_Description>
 
-  <GUC_BodySizeFilter_Title>按體型篩選（範圍：{0}～{1}%　默認：{2}% 當前：{3}%）</GUC_BodySizeFilter_Title>
+  <GUC_BodySizeFilter_Title>按體型篩選 ({0})</GUC_BodySizeFilter_Title>
   <GUC_BodySizeFilter_Description>按體型篩選可騎乘的動物</GUC_BodySizeFilter_Description>
 
   <GUC_CannotMount>無法騎乘: </GUC_CannotMount>

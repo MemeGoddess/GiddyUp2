@@ -18,6 +18,8 @@ public class Mod_GiddyUp : Mod
 #endif
     private static int coreLineNumber, mechLineNumber;
     private readonly QuickSearchWidget search = new QuickSearchWidget();
+
+    private string? drawBehavior;
     public Mod_GiddyUp(ModContentPack content) : base(content)
     {
         GetSettings<ModSettings_GiddyUp>();
@@ -42,8 +44,8 @@ public class Mod_GiddyUp : Mod
                 selectedTab == SelectedTab.Caravans),
             new("GU_Mechanoids_Tab".Translate(), delegate { selectedTab = SelectedTab.Mechanoids; search.Reset(); },
                 selectedTab == SelectedTab.Mechanoids),
-            new("GUC_Ideology_Tab".Translate(), delegate { selectedTab = SelectedTab.Ideo;},
-                    selectedTab == SelectedTab.Ideo)
+            //new("GUC_Ideology_Tab".Translate(), delegate { selectedTab = SelectedTab.Ideo;},
+            //        selectedTab == SelectedTab.Ideo)
         };
 
         var currentTabRect = new Rect(0f, Text.LineHeight + 6, inRect.width, inRect.height - Text.LineHeight - 6);
@@ -138,27 +140,30 @@ public class Mod_GiddyUp : Mod
         var mountOptions = new Listing_Standard();
         
         mountOptions.Begin(tabView);
-        mountOptions.Gap(2f);
+        mountOptions.Gap();
+        var filtersRect = mountOptions.GetRect(Text.LineHeight);
+        filtersRect = filtersRect.LeftPartPixels(filtersRect.width - 20f);
+        filtersRect = filtersRect.ContractedBy(4f, 0f);
+        drawBehavior ??= "GUC_DrawBehavior_Description".Translate();
+        filtersRect.SplitVerticallyWithMargin(out var searchRect, out var filterRect, out var _, compressibleMargin: 4f,
+            rightWidth: selectedTab == SelectedTab.DrawBehavior ? Text.CalcSize(drawBehavior).x : filtersRect.width / 2);
+        filterRect.width += 20f;
         if (selectedTab == SelectedTab.BodySize)
         {
-            var anchor = Text.Anchor;
-            Text.Anchor = TextAnchor.MiddleCenter;
-            mountOptions.Label("GUC_BodySizeFilter_Title".Translate("0", "5", "0.2", bodySizeFilter.ToString()), -1f,
-                "GUC_BodySizeFilter_Description".Translate());
-            Text.Anchor = anchor;
-            bodySizeFilter = mountOptions.Slider((float)Math.Round(bodySizeFilter, 1), 0f, 5f);
+            search.OnGUI(searchRect);
+            Widgets.HorizontalSlider(filterRect, ref bodySizeFilter, new FloatRange(0f, 5f),
+                "GUC_BodySizeFilter_Title".Translate(bodySizeFilter.ToString()), 0.1f);
         }
         else
         {
             var anchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleCenter;
-            mountOptions.Label("GUC_DrawBehavior_Description".Translate());
+            Widgets.Label(filterRect, drawBehavior);
             Text.Anchor = anchor;
+            search.OnGUI(searchRect);
         }
         //========Search widget=========
-        var searchRect = mountOptions.GetRect(Text.LineHeight);
-        searchRect.width -= 20f; // Scroll bar alignment
-        search.OnGUI(searchRect);
+        
         var animalsForViewing = Setup.AllAnimals.Where(animal =>
             search.filter.Matches(animal?.label)
             || search.filter.Matches(animal?.defName)

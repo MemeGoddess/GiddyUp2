@@ -19,7 +19,7 @@
   <GUC_AccuracyPenalty_Title>骑乘时对射击精度的惩罚 (最小值: {0}% 最大值: {1}% 默认值: {2}% 当前值: {3}%)</GUC_AccuracyPenalty_Title>
   <GUC_AccuracyPenalty_Description>当小人骑乘时射击精度受到的惩罚</GUC_AccuracyPenalty_Description>
 
-  <GUC_BodySizeFilter_Title>按体型过滤 (最小值: {0} 最大值: {1} 默认值: {2} 当前值: {3})</GUC_BodySizeFilter_Title>
+  <GUC_BodySizeFilter_Title>按体型过滤 ({0})</GUC_BodySizeFilter_Title>
   <GUC_BodySizeFilter_Description>根据体型来过滤可骑乘的动物</GUC_BodySizeFilter_Description>
 
   <GUC_CannotMount>不能骑乘: </GUC_CannotMount>

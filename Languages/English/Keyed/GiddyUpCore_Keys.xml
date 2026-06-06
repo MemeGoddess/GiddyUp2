@@ -19,7 +19,7 @@
 	<GUC_AccuracyPenalty_Title>Mounted accuracy penalty (Min: {0}% Max: {1}% Default: {2}% Current: {3}%)</GUC_AccuracyPenalty_Title>
 	<GUC_AccuracyPenalty_Description>Accuracy penalty when pawns are mounted</GUC_AccuracyPenalty_Description>
 	
-	<GUC_BodySizeFilter_Title>Filter by body size (Min: {0} Max: {1} Default: {2} Current: {3})</GUC_BodySizeFilter_Title>
+	<GUC_BodySizeFilter_Title>Filter by body size ({0})</GUC_BodySizeFilter_Title>
 	<GUC_BodySizeFilter_Description>Filter mountable animals by body size</GUC_BodySizeFilter_Description>
 		
 	<GUC_CannotMount>Cannot mount: </GUC_CannotMount>
