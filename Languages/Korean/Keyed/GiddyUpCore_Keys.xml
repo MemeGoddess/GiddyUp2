@@ -29,4 +29,5 @@
  <GUC_NeedsObedience>탑승 하기 위해 복종 훈련이 필요</GUC_NeedsObedience>
  <GUC_Mount>올라타기</GUC_Mount>
  <GUC_Dismount>내리기</GUC_Dismount>
+ <GUC_DisAgeCap>연령 제한 무시</GUC_DisAgeCap>
 </LanguageData>

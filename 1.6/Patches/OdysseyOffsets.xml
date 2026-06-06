@@ -176,6 +176,20 @@
                     </value>
                 </li>
 
+                <li Class="PatchOperationAdd">
+                    <xpath>Defs/ThingDef[defName="Wolf_Great"]</xpath>
+                    <value>
+                        <modExtensions>
+                            <li Class="GiddyUp.DrawingOffset">
+                                <northOffset>(0.00, 0.00, -0.55)</northOffset>
+                                <southOffset>(0.00, 0.00, -0.55)</southOffset>
+                                <eastOffset>(0.00, 0.00, -0.55)</eastOffset>
+                                <westOffset>(0.00, 0.00, -0.55)</westOffset>
+                            </li>
+                        </modExtensions>
+                    </value>
+                </li>
+
             </operations>
         </match>
     </Operation>

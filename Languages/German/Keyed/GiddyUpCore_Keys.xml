@@ -29,4 +29,5 @@
  <GUC_NeedsObedience>Aufsteigen nicht möglich, Tier nicht 'Gehorsam'</GUC_NeedsObedience>
  <GUC_Mount>Aufsteigen</GUC_Mount>
  <GUC_Dismount>Absteigen</GUC_Dismount>
+ <GUC_DisAgeCap>Altersgrenze ignorieren</GUC_DisAgeCap>
 </LanguageData>

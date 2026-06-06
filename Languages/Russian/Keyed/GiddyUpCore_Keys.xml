@@ -29,4 +29,5 @@
  <GUC_NeedsObedience>Нельзя оседлать, животное нужно обучить покорности</GUC_NeedsObedience>
  <GUC_Mount>Оседлать</GUC_Mount>
  <GUC_Dismount>Спешиться</GUC_Dismount>
+ <GUC_DisAgeCap>Игнорировать возрастное ограничение</GUC_DisAgeCap>
 </LanguageData>

@@ -59,5 +59,6 @@
   <GU_IncompatibleEquipment>裝備妨礙</GU_IncompatibleEquipment>
   <GU_CannotRide>騎手無法</GU_CannotRide>
   <GUC_TooHeavy>過重</GUC_TooHeavy>
+  <GUC_DisAgeCap>忽略年齡限制</GUC_DisAgeCap>
 
 </LanguageData>

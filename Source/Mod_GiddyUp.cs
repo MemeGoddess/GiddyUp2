@@ -110,6 +110,21 @@ public class Mod_GiddyUp : Mod
             "GUC_HandlingAccuracyImpact_Description".Translate());
         handlingAccuracyImpact = options.Slider((float)Math.Round(handlingAccuracyImpact, 1), 0f, 2f);
 
+
+        var disregardsRow = options.GetRect(Text.LineHeight);
+        disregardsRow.SplitVerticallyWithMargin(out var disregardsCapacity, out var disregardsAge, 4f);
+
+        // Disregard Capacity
+        if (Mouse.IsOver(disregardsCapacity))
+            Widgets.DrawHighlight(disregardsCapacity);
+        TooltipHandler.TipRegion(disregardsCapacity, () => "GUM_DisCarCapText".Translate(), 8542);
+        Widgets.CheckboxLabeled(disregardsCapacity, "GUM_DisCarCap".Translate(), ref disregardAnimalCarryingCapacity);
+
+        //Disregard Age
+        if (Mouse.IsOver(disregardsAge))
+            Widgets.DrawHighlight(disregardsAge);
+        Widgets.CheckboxLabeled(disregardsAge, "GUC_DisAgeCap".Translate(), ref disregardAnimalAge);
+
         //========Setup tabs=========
         var tabs = new List<TabRecord>
         {
@@ -118,17 +133,9 @@ public class Mod_GiddyUp : Mod
             new("GUC_DrawBehavior_Tab".Translate(),
                 delegate { selectedTab = SelectedTab.DrawBehavior; }, selectedTab == SelectedTab.DrawBehavior)
         };
-        var row = options.GetRect(Text.LineHeight);
-        row.SplitVerticallyWithMargin(out var leftRow, out var rightRow, 8f);
-        
-        if(Mouse.IsOver(rightRow))
-            Widgets.DrawHighlight(rightRow);
-        TooltipHandler.TipRegion(rightRow, () => "GUM_DisCarCapText".Translate(), 8542);
-        Widgets.CheckboxLabeled(rightRow, "GUM_DisCarCap".Translate(), ref disregardAnimalCarryingCapacity);
+        var tabsRow = options.GetRect(Text.LineHeight);
 
-
-
-        DrawTabs(leftRow, tabs);
+        DrawTabs(tabsRow, tabs);
 
         options.Gap(6f);
         var mountableFilterRect = options.GetRect(view.height - options.CurHeight);

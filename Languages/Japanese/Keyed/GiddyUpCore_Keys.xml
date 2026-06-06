@@ -38,5 +38,6 @@
   <GUC_IsRoped>騎乗できません、この動物は誘導されています</GUC_IsRoped>
   <GUC_Mount>騎乗する</GUC_Mount>
   <GUC_Dismount>降りる</GUC_Dismount>
+  <GUC_DisAgeCap>年齢制限を無視する</GUC_DisAgeCap>
 
 </LanguageData>
