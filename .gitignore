@@ -485,3 +485,5 @@ fabric.properties
 
 Workshop/
 /.github/agents
+/1.6/Assemblies/Newtonsoft.Json.dll
+/1.6/Assemblies/RimMCP.Tools.dll
