@@ -69,4 +69,6 @@
 	<GU_IncompatibleEquipment>Incompatible equipment</GU_IncompatibleEquipment>
 	<GU_CannotRide>Rider incapable</GU_CannotRide>
 	<GUC_TooHeavy>Too heavy</GUC_TooHeavy>
+	<GUC_DisAgeCap>Disregard Age Limit</GUC_DisAgeCap>
+
 </LanguageData>

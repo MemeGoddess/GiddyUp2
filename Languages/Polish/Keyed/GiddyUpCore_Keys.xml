@@ -29,4 +29,5 @@
  <GUC_NeedsObedience>Nie można ujeżdzaćt, zwierzę wymaga ukończenia treningu</GUC_NeedsObedience>
  <GUC_Mount>Ujeżdżaj</GUC_Mount>
  <GUC_Dismount>Zsiądź</GUC_Dismount>
+ <GUC_DisAgeCap>Ignoruj limit wieku</GUC_DisAgeCap>
 </LanguageData>

@@ -167,9 +167,6 @@ public static class Setup
                 for (var lifeIndex = 0; lifeIndex < lifeIndexes; lifeIndex++)
                 {
                     //Convert the def and age into a key string used for storage between sessions
-                    if (lifeIndex != lifeIndexes - 1 &&
-                        (customLifeStages == null || !customLifeStages.IsAllowedAge(lifeIndex)))
-                        continue;
                     var key = TextureUtility.FormatKey(pawnKindDef, lifeIndex);
 
                     //Skip if already set

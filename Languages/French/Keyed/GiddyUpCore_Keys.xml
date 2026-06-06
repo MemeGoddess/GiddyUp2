@@ -38,5 +38,6 @@
   <GUC_IsRoped>Ne peut pas chevaucher, l'animal est attaché</GUC_IsRoped>
   <GUC_Mount>Chevaucher</GUC_Mount>
   <GUC_Dismount>Descendre</GUC_Dismount>
+  <GUC_DisAgeCap>Ignorer la limite d'âge</GUC_DisAgeCap>
 
 </LanguageData>

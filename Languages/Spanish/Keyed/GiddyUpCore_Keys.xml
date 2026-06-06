@@ -29,5 +29,6 @@ Muchos animales deberían dibujarse detrás de los personajes, pero algunos (esp
   <GUC_NeedsObedience>No se puede montar, el animal necesita el entrenamiento de obediencia</GUC_NeedsObedience>
   <GUC_Mount>Montar</GUC_Mount>
   <GUC_Dismount>Desmontar</GUC_Dismount>
+  <GUC_DisAgeCap>Ignorar límite de edad</GUC_DisAgeCap>
 
 </LanguageData>

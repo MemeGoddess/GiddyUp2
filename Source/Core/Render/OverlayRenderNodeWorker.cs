@@ -26,9 +26,10 @@ namespace GiddyUpCore.Core.Render
         public override Vector3 ScaleFor(PawnRenderNode node, PawnDrawParms parms)
         {
             var a = Vector3.one;
-            var graphic = GetGraphic(node, parms);
-            a.x *= node.Props.drawSize.x * node.debugScale * graphic.drawSize.x;
-            a.z *= node.Props.drawSize.y * node.debugScale * graphic.drawSize.y;
+            var bodyGraphic = parms.pawn.drawer?.renderer?.BodyGraphic;
+            var drawSize = bodyGraphic?.drawSize ?? GetGraphic(node, parms).drawSize;
+            a.x *= node.Props.drawSize.x * node.debugScale * drawSize.x;
+            a.z *= node.Props.drawSize.y * node.debugScale * drawSize.y;
 
             if (!parms.flags.FlagSet(PawnRenderFlags.Portrait))
             {

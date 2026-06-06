@@ -14,6 +14,7 @@ public class ModSettings_GiddyUp : ModSettings
     public static float bodySizeFilter = 0.2f;
     public static int accuracyPenalty = 10;
     public static bool disregardAnimalCarryingCapacity = false;
+    public static bool disregardAnimalAge = false;
     public static Dictionary<string, float>? offsetCache;
     public static HashSet<string>? invertMountingRules; //These are only used on game start to setup the below, fast cache collections
     public static HashSet<string>? invertDrawRules; //These are only used on game start to setup the below, fast cache collections
@@ -89,6 +90,7 @@ public class ModSettings_GiddyUp : ModSettings
         Scribe_Collections.Look(ref invertMountingRules, "invertMountingRules", LookMode.Value);
         Scribe_Collections.Look(ref invertDrawRules, "invertDrawRules", LookMode.Value);
         Scribe_Values.Look(ref disregardAnimalCarryingCapacity, "disregardAnimalCarryingCapacity");
+        Scribe_Values.Look(ref disregardAnimalAge, "disregardAnimalAge");
 
         //Ride and Roll
         Scribe_Values.Look(ref rideAndRollEnabled, "rideAndRollEnabled", true);

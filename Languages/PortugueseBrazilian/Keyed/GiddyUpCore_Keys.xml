@@ -37,4 +37,5 @@
 	<GUC_NeedsObedience>Não pode montar, o animal precisa de treinamento em Defender</GUC_NeedsObedience>
 	<GUC_Mount>Montar</GUC_Mount>
 	<GUC_Dismount>Desmontar</GUC_Dismount>
+	<GUC_DisAgeCap>Ignorar limite de idade</GUC_DisAgeCap>
 </LanguageData>

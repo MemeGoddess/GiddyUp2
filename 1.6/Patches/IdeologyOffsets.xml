@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Ideology</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Always</success>
+			<operations>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Clawer"]</xpath>
+					<value>
+						<modExtensions>
+							<li Class="GiddyUp.DrawingOffset">
+								<northOffset>(0.00, 0.00, 0.15)</northOffset>
+								<southOffset>(0.00, 0.00, 0.15)</southOffset>
+								<eastOffset>(0.00, 0.00, 0.15)</eastOffset>
+								<westOffset>(0.00, 0.00, 0.15)</westOffset>
+							</li>
+						</modExtensions>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Woodmaker"]</xpath>
+					<value>
+						<modExtensions>
+							<li Class="GiddyUp.DrawingOffset">
+								<northOffset>(0.00, 0.00, -0.40)</northOffset>
+								<southOffset>(0.00, 0.00, -0.40)</southOffset>
+								<eastOffset>(0.00, 0.00, -0.40)</eastOffset>
+								<westOffset>(0.00, 0.00, -0.40)</westOffset>
+							</li>
+						</modExtensions>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Carrier"]</xpath>
+					<value>
+						<modExtensions>
+							<li Class="GiddyUp.DrawingOffset">
+								<northOffset>(0.00, 0.00, -0.30)</northOffset>
+								<southOffset>(0.00, 0.00, -0.30)</southOffset>
+								<eastOffset>(0.00, 0.00, -0.30)</eastOffset>
+								<westOffset>(0.00, 0.00, -0.30)</westOffset>
+							</li>
+						</modExtensions>
+					</value>
+				</li>
+
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Dryad_Medicinemaker"]</xpath>
+					<value>
+						<modExtensions>
+							<li Class="GiddyUp.DrawingOffset">
+								<northOffset>(0.00, 0.00, 0.15)</northOffset>
+								<southOffset>(0.00, 0.00, 0.15)</southOffset>
+								<eastOffset>(0.00, 0.00, 0.15)</eastOffset>
+								<westOffset>(0.00, 0.00, 0.15)</westOffset>
+							</li>
+						</modExtensions>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+</Patch>
