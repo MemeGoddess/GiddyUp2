@@ -58,6 +58,9 @@ public class ModSettings_GiddyUp : ModSettings
     //SaddleUp
     public static bool saddleUpEnabled = true;
 
+    //Ideo
+    public static bool ideoEnabled = true;
+
     //UI State
     private static string? _tabsHandler;
     public static Vector2 coreScrollPos;
@@ -72,7 +75,8 @@ public class ModSettings_GiddyUp : ModSettings
         Rnr,
         BattleMounts,
         Caravans,
-        Mechanoids
+        Mechanoids,
+        Ideo
     };
 
     public override void ExposeData()
@@ -133,7 +137,7 @@ public class ModSettings_GiddyUp : ModSettings
     {
         static void Postfix()
         {
-            //Find.WindowStack.Add(new Dialog_ModSettings(Mod_GiddyUp.Instance));
+            Find.WindowStack.Add(new Dialog_ModSettings(Mod_GiddyUp.Instance));
         }
     }
 #endif
