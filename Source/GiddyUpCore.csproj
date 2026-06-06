@@ -29,6 +29,8 @@
         </PackageReference>
         <PackageReference Include="Lib.Harmony" Version="2.*" ExcludeAssets="runtime" />
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <PackageReference Include="RimMCP.Tools" Version="0.1.0" />
     </ItemGroup>
     <ItemGroup>

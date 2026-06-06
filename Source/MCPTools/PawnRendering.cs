@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using GiddyUp;
 using GiddyUpCore.Core;
 using GiddyUpCore.Core.Render;
-using RimMCP.Tools;
 using RimWorld;
 using UnityEngine;
 using Verse;
+#if DEBUG
+using RimMCP.Tools;
 
 namespace GiddyUpCore.MCP
 {
+
     internal static class PawnRendering
     {
         [MCPTool("get_offsets", "Get Pawn Offsets",
@@ -114,3 +116,4 @@ namespace GiddyUpCore.MCP
         }
     }
 }
+#endif
