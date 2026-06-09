@@ -7,21 +7,6 @@ namespace GiddyUpCore.Core;
 
 internal static class MountedRiderRenderNodeUtility
 {
-    public static bool ShouldUseMountedRenderNode(Pawn rider)
-    {
-        return rider.IsMounted() &&
-               rider.GetExtendedPawnData().Mount is { } mount &&
-               mount.GetExtendedPawnData().ReservedBy == rider;
-    }
-
-    public static bool TryGetMountedRider(Pawn mount, out Pawn? rider)
-    {
-        rider = mount.GetExtendedPawnData().ReservedBy;
-        return rider != null &&
-               rider.IsMounted() &&
-               rider.GetExtendedPawnData().Mount == mount &&
-               ShouldUseMountedRenderNode(rider);
-    }
 
     public static Vector3 GetMountedRiderOffset(Pawn rider, Pawn mount, Rot4 rotation)
     {

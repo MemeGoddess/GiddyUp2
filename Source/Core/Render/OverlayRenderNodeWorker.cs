@@ -17,9 +17,9 @@ namespace GiddyUpCore.Core.Render
         {
             var enabled =
                 node.debugEnabled &&
-                node is OverlayRenderNode { Rider.Spawned: true, Properties: not null } mountedNode &&
-                mountedNode.graphics[parms.facing.AsInt] != null &&
-                MountedRiderRenderNodeUtility.ShouldUseMountedRenderNode(mountedNode.Rider);
+                node is OverlayRenderNode { Properties: not null } mountedNode &&
+                mountedNode.AnimalData.Rider != null &&
+                mountedNode.graphics[parms.facing.AsInt] != null;
             return enabled;
         }
 

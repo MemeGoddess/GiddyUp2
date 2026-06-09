@@ -125,7 +125,10 @@ internal static class MountUtility
         pawnData.Mount = animal;
         ExtendedDataStorage.isMounted.Add(rider.thingIDNumber);
         pawnData.ReservedMount = animal;
-        animal.GetExtendedPawnData().ReservedBy = rider;
+
+        var animalData = animal.GetExtendedPawnData();
+        animalData.ReservedBy = rider;
+        animalData.Rider = rider;
 
         //Break ropes if there are any
         if (animal.roping?.IsRoped ?? false)
@@ -277,6 +280,9 @@ internal static class MountUtility
             if(animalData != null)
                 animalData.ReservedBy = null;
         }
+
+        if(animalData != null)
+            animalData.Rider = null;
 
         //Reset free locomotion
         if (animal == null || animal.Dead || animal.pather == null)

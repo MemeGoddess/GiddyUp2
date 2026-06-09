@@ -26,7 +26,7 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
     public override IEnumerable<(PawnRenderNode node, PawnRenderNode parent)> GetDynamicNodes(Pawn pawn,
         PawnRenderTree tree)
     {
-        if (!MountedRiderRenderNodeUtility.TryGetMountedRider(pawn, out var rider) || rider == null)
+        if (!pawn.IsMountedAnimal(out var thingRider) || thingRider is not Pawn rider)
             yield break;
 
         if (!tree.TryGetNodeByTag(PawnRenderNodeTagDefOf.Body, out var bodyNode) || bodyNode == null)
@@ -42,7 +42,7 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
             baseLayer = 71f
         };
 
-        yield return (new MountedRiderRenderNode(pawn, riderProps, tree, rider), bodyNode);
+        yield return (new MountedRiderRenderNode(pawn, riderProps, tree), bodyNode);
 
         if (!pawn.TryGetComp<CompOverlay>(out var comp)) 
             yield break;
@@ -56,6 +56,6 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
             baseLayer = 75f,
         };
 
-        yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp.Prop, rider), bodyNode);
+        yield return (new OverlayRenderNode(pawn, overlayProps, tree, comp.Prop), bodyNode);
     }
 }

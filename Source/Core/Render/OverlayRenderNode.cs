@@ -11,13 +11,13 @@ namespace GiddyUpCore.Core.Render
 {
     internal class OverlayRenderNode : PawnRenderNode
     {
-        public Pawn Rider { get; }
+        public ExtendedPawnData AnimalData { get; }
         public CompProperties_Overlay Properties;
 
-        public OverlayRenderNode(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree, CompProperties_Overlay properties, Pawn rider) : base(pawn, props, tree)
+        public OverlayRenderNode(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree, CompProperties_Overlay properties) : base(pawn, props, tree)
         {
             Properties = properties;
-            Rider = rider;
+            AnimalData = pawn.GetExtendedPawnData();
         }
 
         public override GraphicMeshSet MeshSetFor(Pawn pawn) => MeshPool.GetMeshSetForSize(1, 1);

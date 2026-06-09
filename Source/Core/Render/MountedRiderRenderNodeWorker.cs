@@ -11,9 +11,7 @@ internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
 
     public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
     {
-        return node is MountedRiderRenderNode mountedNode &&
-               mountedNode.Rider.Spawned &&
-               MountedRiderRenderNodeUtility.ShouldUseMountedRenderNode(mountedNode.Rider);
+        return node is MountedRiderRenderNode mountedNode;
     }
 
     public override void AppendDrawRequests(PawnRenderNode node, PawnDrawParms parms,
@@ -26,7 +24,9 @@ internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
     {
         pivot = Vector3.zero;
         var mountedNode = (MountedRiderRenderNode)node;
-        var offset = MountedRiderRenderNodeUtility.GetMountedRiderOffset(mountedNode.Rider, mountedNode.Mount,
+        if (mountedNode.AnimalData.Rider == null)
+            return pivot;
+        var offset = MountedRiderRenderNodeUtility.GetMountedRiderOffset(mountedNode.AnimalData.Rider, mountedNode.Mount,
             parms.facing);
         offset += node.DebugOffset;
         if (!parms.flags.FlagSet(PawnRenderFlags.Portrait) && node.TryGetAnimationOffset(parms, out var animationOffset))
@@ -47,11 +47,11 @@ internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
             return;
 
         var mountedNode = (MountedRiderRenderNode)node;
-        if (!MountedRiderRenderNodeUtility.ShouldUseMountedRenderNode(mountedNode.Rider))
+        if (mountedNode.AnimalData.Rider == null)
             return;
 
         var drawLoc = matrix.MultiplyPoint3x4(Vector3.zero);
-        using var _ = MountedRiderRenderLayerCompression.Push(mountedNode.Rider, LayerFor(node, parms));
-        mountedNode.Rider.Drawer.renderer.RenderPawnAt(drawLoc, parms.facing);
+        using var _ = MountedRiderRenderLayerCompression.Push(mountedNode.AnimalData.Rider, LayerFor(node, parms));
+        mountedNode.AnimalData.Rider.Drawer.renderer.RenderPawnAt(drawLoc, parms.facing);
     }
 }

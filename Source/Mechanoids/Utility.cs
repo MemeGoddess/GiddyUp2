@@ -224,62 +224,12 @@ namespace GiddyUpMechanoids
             // ------------------------------------------------------------
         }
 
-
-
-
         public static void DismountMech(Pawn rider, Pawn mech, ExtendedPawnData riderData)
         {
             if (rider == null || mech == null || riderData == null)
                 return;
 
-            //Log.Message($"[Giddy-Up] DismountMech invoked: {rider} → {mech}");
-            //Log.Message($"[Giddy-Up] MissingJoy BEFORE dismount: {CountPawnsMissingJoy()}");
-
-            var mechData = mech.GetExtendedPawnData();
-
-            // ------------------------------------------------------------------
-            // 1. Authoritative unmount state changes (mirrors Giddy-Up Dismount)
-            // ------------------------------------------------------------------
-            riderData.Mount = null;
-            if (mechData != null)
-                mechData.Mount = null;
-
-            // Reservation pair reset
-            riderData.ReservedMount = null;
-            if (mechData != null)
-                mechData.ReservedBy = null;
-
-            // Remove from isMounted list exactly as Giddy-Up does
-            try
-            {
-                var storageType = AccessTools.TypeByName("ExtendedDataStorage");
-                if (storageType != null)
-                {
-                    var worldComp = Find.World.GetComponent(storageType);
-                    var isMountedField = AccessTools.Field(storageType, "isMounted");
-                    if (worldComp != null && isMountedField != null)
-                    {
-                        var list = isMountedField.GetValue(worldComp) as IList<int>;
-                        list?.Remove(rider.thingIDNumber);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Warning("[GiddyUpMechanoids] Non-fatal ExtendedDataStorage.isMounted removal failure: " + ex);
-            }
-
-            // ------------------------------------------------------------------
-            // 2. Reset mech tweener + pathing (Giddy-Up uses EXACT lines below)
-            // ------------------------------------------------------------------
-            mech.Drawer.tweener = new PawnTweener(mech);
-            mech.pather.ResetToCurrentPosition();
-
-            // Duty re-focus for NPC mechs
-            if (!rider.Faction.def.isPlayer && mech.mindState?.duty != null)
-            {
-                mech.mindState.duty.focus = new LocalTargetInfo(mech.Position);
-            }
+            rider.Dismount(mech, riderData, ropeIfNeeded: false, waitForRider: false);
 
             // ------------------------------------------------------------------
             // 3. Clean up queued jobs (Mounted / Wait)
@@ -320,34 +270,7 @@ namespace GiddyUpMechanoids
             {
                 rider.jobs.EndCurrentJob(JobCondition.Succeeded, true);
             }
-
-            // ------------------------------------------------------------------
-            // 5. (Optional) WaitForRider logic if you want to emulate GU
-            // ------------------------------------------------------------------
-            // Disabled by default (mechs probably shouldn't do this)
-            // Uncomment if needed:
-            /*
-            if (ModSettings_GiddyUp.rideAndRollEnabled &&
-                !rider.Drafted &&
-                rider.Faction.def.isPlayer &&
-                mechData?.reservedBy != null &&
-                waitForRider)
-            {
-                mech.jobs.jobQueue.EnqueueFirst(
-                    new Job(ResourceBank.JobDefOf.WaitForRider, mechData.reservedBy)
-                    {
-                        expiryInterval = ModSettings_GiddyUp.waitForRiderTimer,
-                        checkOverrideOnExpire = true,
-                        followRadius = 8f,
-                        locomotionUrgency = LocomotionUrgency.Walk
-                    });
-            }
-            */
-
-            //Log.Message($"[Giddy-Up] Dismount complete; MissingJoy AFTER dismount: {CountPawnsMissingJoy()}");
         }
-
-
         #endregion
     }
 }
