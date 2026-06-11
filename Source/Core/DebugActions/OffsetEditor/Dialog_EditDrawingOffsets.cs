@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using GiddyUp;
 using RimWorld;
@@ -16,14 +17,15 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private static readonly Rot4[] Rotations = [Rot4.North, Rot4.South, Rot4.East, Rot4.West];
     private static readonly string[] AxisLabels = ["X", "Y", "Z"];
     private const float ColumnGap = 12f;
-    private const float PortraitHeight = 144f;
+    private const float PortraitHeight = 160f;
+    private const float PortraitGap = 60f;
     private const float PreviewPadding = 8f;
     private const float NumericFieldWidth = 92f;
 
     private readonly Pawn pawn;
     private readonly ThingDef pawnDef;
     private OffsetState committedState;
-    private readonly DrawingOffset workingOffset;
+    private DrawingOffset workingOffset;
     private readonly Dictionary<Rot4, string[]> buffers = new();
 
     public override Vector2 InitialSize => new(1120f, 760f);
@@ -32,15 +34,11 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     {
         this.pawn = pawn;
         pawnDef = pawn.def;
-        committedState = CaptureCommittedState(pawnDef);
-        workingOffset = CloneOffset(committedState.Offset);
-
-        foreach (var rotation in Rotations)
-            buffers[rotation] = CreateBuffers(GetOffset(rotation));
+        workingOffset = GetDrawingOffset(pawnDef);
 
         doCloseX = true;
         doCloseButton = false;
-        absorbInputAroundWindow = true;
+        //absorbInputAroundWindow = true;
         optionalTitle = "GU_DrawOffsetEditor_Title".Translate(pawn.LabelCap, pawnDef.defName);
     }
 
@@ -55,15 +53,13 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         DrawEditor(editorRect);
         DrawXmlPreview(xmlRect);
         DrawButtons(buttonRow);
-
-        if (!OffsetEquals(workingOffset, GetAppliedOffset(pawnDef)))
-            ApplyPreviewState();
     }
 
-    public override void PostClose()
+    public override void PreOpen()
     {
-        if (!OffsetEquals(workingOffset, committedState.Offset) || committedState.HasExtension != pawnDef.HasModExtension<DrawingOffset>())
-            ApplyState(pawn, pawnDef, committedState);
+        base.PreOpen();
+
+        ApplyState(pawn);
     }
 
     private void DrawHeader(Rect rect)
@@ -82,24 +78,62 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     private void DrawEditor(Rect rect)
     {
-        var columnWidth = (rect.width - ColumnGap * 3f) / 4f;
         var changed = false;
 
-        for (var index = 0; index < Rotations.Length; index++)
+        var center = rect.center;
+
+        var offset = PortraitGap + PortraitHeight / 2 ; 
+        foreach (var rotation in Rot4.AllRotations)
         {
-            var columnRect = new Rect(rect.x + index * (columnWidth + ColumnGap), rect.y, columnWidth, rect.height);
-            var previous = GetOffset(Rotations[index]);
-            DrawRotationEditor(columnRect, Rotations[index], ref previous);
-            if (previous != GetOffset(Rotations[index]))
+            var rotationCenter = center + (rotation.AsVector2 * offset);
+            var rotationRect = new Rect(rotationCenter.x - (PortraitHeight / 2), rotationCenter.y - (PortraitHeight / 2), PortraitHeight,
+                PortraitHeight);
+            var rotationOffset = workingOffset.GetOffsetByRotation(rotation);
+            var previousZ = rotationOffset.z;
+            var previousX = rotationOffset.x;
+            var newZ = Mathf.RoundToMultipleOf(
+                OffsetEditorWidgets.VerticalSlider(new Rect(rotationRect.x, rotationRect.y + 20f, 20f, rotationRect.height - 40f),
+                    rotationOffset.z, -1f, 1f), 0.05f);
+            var newX = Widgets.HorizontalSlider(
+                new Rect(rotationRect.x + 20f, rotationRect.y + rotationRect.height - 20f, rotationRect.width - 40f,
+                    20f), rotationOffset.x, -1, 1, roundTo: 0.05f);
+
+            var portraitCenter = rotationRect.center;
+            var textHeight = Text.LineHeight;
+            var zBox = new Rect(rotationRect.x + 20f, portraitCenter.y - (textHeight / 2), rotationRect.width / 2, textHeight);
+            var xBox = new Rect(rotationRect.x, rotationRect.y + rotationRect.height - 20f - textHeight,
+                rotationRect.width, textHeight);
+            Widgets.Label(zBox, $"{newZ:F}");
+            var textAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.LowerCenter;
+            Widgets.Label(xBox, $"{newX:F}");
+            Text.Anchor = textAnchor;
+
+            if (previousX != newX || previousZ != newZ)
             {
-                SetOffset(Rotations[index], previous);
-                SyncBuffers(Rotations[index], previous);
+                switch (rotation.AsInt)
+                {
+                    case Rot4.NorthInt:
+                        workingOffset.northOffset = new Vector3(newX, 0, newZ);
+                        break;
+                    case Rot4.SouthInt:
+                        workingOffset.southOffset = new Vector3(newX, 0, newZ);
+                        break;
+                    case Rot4.WestInt:
+                        workingOffset.westOffset = new Vector3(newX, 0, newZ);
+                        break;
+                    case Rot4.EastInt:
+                        workingOffset.eastOffset = new Vector3(newX, 0, newZ);
+                        break;
+                }
+
                 changed = true;
             }
+            DrawPortrait(rotationRect, rotation);
         }
 
         if (changed)
-            ApplyPreviewState();
+            ApplyState(pawn);
     }
 
     private void DrawRotationEditor(Rect rect, Rot4 rotation, ref Vector3 offset)
@@ -120,7 +154,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     private void DrawPortrait(Rect rect, Rot4 rotation)
     {
-        Widgets.DrawBoxSolid(rect, Widgets.WindowBGFillColor);
+        //Widgets.DrawBoxSolid(rect, Color.red);
         var previewRect = rect.ContractedBy(PreviewPadding);
         var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 0.6f, supersample: true, compensateForUIScale: true);
         Widgets.DrawTextureFitted(previewRect, portrait, 1f);
@@ -192,7 +226,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         foreach (var rotation in Rotations)
             SyncBuffers(rotation, GetOffset(rotation));
 
-        ApplyState(pawn, pawnDef, committedState);
+        ApplyState(pawn);
     }
 
     private void SavePatch()
@@ -203,7 +237,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
             Directory.CreateDirectory(Path.GetDirectoryName(patchPath) ?? throw new InvalidOperationException());
             File.WriteAllText(patchPath, BuildPatchXml(), Encoding.UTF8);
             committedState = new OffsetState(true, CloneOffset(workingOffset));
-            ApplyState(pawn, pawnDef, committedState);
+            ApplyState(pawn);
             Messages.Message("GU_DrawOffsetEditor_Saved".Translate(patchPath), MessageTypeDefOf.TaskCompletion, false);
         }
         catch (Exception exception)
@@ -213,26 +247,21 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         }
     }
 
-    private void ApplyPreviewState()
+    private static void ApplyState(Pawn pawn)
     {
-        ApplyState(pawn, pawnDef, new OffsetState(true, CloneOffset(workingOffset)));
-    }
-
-    private static void ApplyState(Pawn pawn, ThingDef def, OffsetState state)
-    {
-        def.modExtensions ??= [];
-        def.modExtensions.RemoveAll(extension => extension is DrawingOffset);
-        if (state.HasExtension)
-            def.modExtensions.Add(CloneOffset(state.Offset));
-
         PortraitsCache.SetDirty(pawn);
         MountedRiderRenderNodeUtility.RefreshMountedAnimalGraphics(pawn);
     }
 
-    private static OffsetState CaptureCommittedState(ThingDef def)
+    private static DrawingOffset GetDrawingOffset(ThingDef def)
     {
-        var existing = def.GetModExtension<DrawingOffset>();
-        return existing == null ? new OffsetState(false, new DrawingOffset()) : new OffsetState(true, CloneOffset(existing));
+        var drawingOffset = def.GetModExtension<DrawingOffset>();
+        if (drawingOffset != null) 
+            return drawingOffset;
+        drawingOffset = new DrawingOffset();
+        def.modExtensions ??= [];
+        def.modExtensions.Add(drawingOffset);
+        return drawingOffset;
     }
 
     private string BuildPatchXml()
