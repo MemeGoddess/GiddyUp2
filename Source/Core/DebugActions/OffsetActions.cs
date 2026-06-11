@@ -151,7 +151,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     {
         Widgets.DrawBoxSolid(rect, Widgets.WindowBGFillColor);
         var previewRect = rect.ContractedBy(PreviewPadding);
-        var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 1f, supersample: true, compensateForUIScale: true);
+        var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 0.6f, supersample: true, compensateForUIScale: true);
         Widgets.DrawTextureFitted(previewRect, portrait, 1f);
     }
 
