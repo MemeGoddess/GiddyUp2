@@ -46,16 +46,14 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     public override void DoWindowContents(Rect inRect)
     {
-        var headerRect = new Rect(inRect.x, inRect.y, inRect.width, 70f);
+        inRect.SplitHorizontallyWithMargin(out var headerRect, out inRect, out _, ColumnGap, 70f);
+
+        inRect.SplitHorizontallyWithMargin(out var bodyRect, out var buttonRow, out _, ColumnGap, inRect.height - 42f - ColumnGap);
+        bodyRect.SplitVerticallyWithMargin(out var editorRect, out var xmlRect, out _, ColumnGap, (inRect.width - ColumnGap) / 2);
+
         DrawHeader(headerRect);
-
-        var editorRect = new Rect(inRect.x, headerRect.yMax + 12f, inRect.width, 420f);
         DrawEditor(editorRect);
-
-        var xmlRect = new Rect(inRect.x, editorRect.yMax + 12f, inRect.width, inRect.yMax - editorRect.yMax - 68f);
         DrawXmlPreview(xmlRect);
-
-        var buttonRow = new Rect(inRect.x, inRect.yMax - 42f, inRect.width, 42f);
         DrawButtons(buttonRow);
 
         if (!OffsetEquals(workingOffset, GetAppliedOffset(pawnDef)))
