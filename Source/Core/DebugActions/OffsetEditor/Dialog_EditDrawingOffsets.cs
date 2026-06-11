@@ -5,38 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GiddyUp;
-using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace GiddyUpCore.Core.DebugActions;
-
-[HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
-internal static class Pawn_GetGizmos_DrawingOffsetEditor
-{
-    private static readonly Texture2D GizmoIcon = ContentFinder<Texture2D>.Get("UI/QM_horseshoe_icon");
-
-    private static void Postfix(ref IEnumerable<Gizmo> __result, Pawn __instance)
-    {
-        if (!ShouldShowFor(__instance))
-            return;
-
-        __result = __result.AddItem(new Command_Action
-        {
-            defaultLabel = "GU_DrawOffsetEditor_Gizmo_Label".Translate(),
-            defaultDesc = "GU_DrawOffsetEditor_Gizmo_Description".Translate(__instance.LabelCap),
-            icon = GizmoIcon,
-            Order = -25f,
-            action = () => Find.WindowStack.Add(new Dialog_EditDrawingOffsets(__instance))
-        });
-    }
-
-    private static bool ShouldShowFor(Pawn pawn)
-    {
-        return pawn.RaceProps.Animal || ModSettings_GiddyUp.mechanoidsEnabled && pawn.RaceProps.IsMechanoid;
-    }
-}
+namespace GiddyUpCore.Core.DebugActions.OffsetEditor;
 
 internal sealed class Dialog_EditDrawingOffsets : Window
 {
@@ -66,7 +39,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
             buffers[rotation] = CreateBuffers(GetOffset(rotation));
 
         doCloseX = true;
-        doCloseButton = true;
+        doCloseButton = false;
         absorbInputAroundWindow = true;
         optionalTitle = "GU_DrawOffsetEditor_Title".Translate(pawn.LabelCap, pawnDef.defName);
     }
@@ -289,7 +262,9 @@ internal sealed class Dialog_EditDrawingOffsets : Window
                       ?? pawnDef.modContentPack?.RootDir
                       ?? throw new InvalidOperationException("Unable to resolve the Giddy-Up mod root.");
         var versionFolder = VersionControl.CurrentVersionStringWithoutBuild;
-        return Path.Combine(modRoot, versionFolder, "Patches", $"ZZZ_GiddyUpOffsetEditor_{SanitizeFileName(pawnDef.defName)}.xml");
+        var fileName = pawnDef.modContentPack.Name + "Offsets.xml";
+
+        return Path.Combine(modRoot, versionFolder, "Patches", fileName);
     }
 
     private Vector3 GetOffset(Rot4 rotation)
@@ -368,9 +343,9 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private static bool OffsetEquals(DrawingOffset left, DrawingOffset right)
     {
         return left.northOffset == right.northOffset
-            && left.southOffset == right.southOffset
-            && left.eastOffset == right.eastOffset
-            && left.westOffset == right.westOffset;
+               && left.southOffset == right.southOffset
+               && left.eastOffset == right.eastOffset
+               && left.westOffset == right.westOffset;
     }
 
     private static string EscapeXml(string value)
@@ -393,15 +368,4 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     }
 
     private readonly record struct OffsetState(bool HasExtension, DrawingOffset Offset);
-}
-
-internal static class DrawingOffsetEditorExtensions
-{
-    public static Vector3 NorthOffset(this DrawingOffset offset) => offset.northOffset;
-
-    public static Vector3 SouthOffset(this DrawingOffset offset) => offset.southOffset;
-
-    public static Vector3 EastOffset(this DrawingOffset offset) => offset.eastOffset;
-
-    public static Vector3 WestOffset(this DrawingOffset offset) => offset.westOffset;
 }
