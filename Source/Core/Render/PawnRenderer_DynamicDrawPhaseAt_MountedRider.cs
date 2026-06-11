@@ -15,6 +15,7 @@ internal static class PawnRenderer_DynamicDrawPhaseAt_MountedRider
         if (phase != DrawPhase.ParallelPreDraw && phase != DrawPhase.Draw)
             return true;
         var pawn = PawnField(__instance);
-        return pawn.GetExtendedPawnData().Mount == null;
+
+        return !pawn.IsMounted();
     }
 }

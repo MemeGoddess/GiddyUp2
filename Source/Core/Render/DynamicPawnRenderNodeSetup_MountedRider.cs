@@ -26,12 +26,11 @@ internal sealed class DynamicPawnRenderNodeSetup_MountedRider : DynamicPawnRende
     public override IEnumerable<(PawnRenderNode node, PawnRenderNode parent)> GetDynamicNodes(Pawn pawn,
         PawnRenderTree tree)
     {
-        if (!pawn.IsMountedAnimal(out var thingRider) || thingRider is not Pawn rider)
+        if (!pawn.RaceProps.Animal && !(ModSettings_GiddyUp.mechanoidsEnabled && pawn.RaceProps.IsMechanoid))
             yield break;
 
         if (!tree.TryGetNodeByTag(PawnRenderNodeTagDefOf.Body, out var bodyNode) || bodyNode == null)
             yield break;
-
 
         var riderProps = new PawnRenderNodeProperties
         {

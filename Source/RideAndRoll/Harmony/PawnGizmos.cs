@@ -17,19 +17,16 @@ public class Pawn_GetGizmos
         return Settings.rideAndRollEnabled;
     }
 
-    private static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> values, Pawn __instance)
+    private static void Postfix(ref IEnumerable<Gizmo> __result, Pawn __instance)
     {
-        foreach (var value in values)
-            yield return value;
-
         if (__instance.CurJobDef == GiddyUp.ResourceBank.JobDefOf.WaitForRider)
-            yield return new Command_Action
+            __result = __result.AddItem(new Command_Action
             {
                 defaultLabel = label,
                 defaultDesc = desc,
                 icon = ContentFinder<Texture2D>.Get("UI/" + "LeaveRider", true),
                 action = () => PawnEndCurrentJob(__instance)
-            };
+            });
     }
 
     private static void PawnEndCurrentJob(Pawn pawn)
