@@ -47,7 +47,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         inRect.SplitHorizontallyWithMargin(out var headerRect, out inRect, out _, ColumnGap, 70f);
 
         inRect.SplitHorizontallyWithMargin(out var bodyRect, out var buttonRow, out _, ColumnGap, inRect.height - 42f - ColumnGap);
-        bodyRect.SplitVerticallyWithMargin(out var editorRect, out var xmlRect, out _, ColumnGap, (inRect.width - ColumnGap) / 2);
+        bodyRect.SplitVerticallyWithMargin(out var editorRect, out var xmlRect, out _, ColumnGap, (inRect.width - 100f - ColumnGap) / 2);
 
         DrawHeader(headerRect);
         DrawEditor(editorRect);
