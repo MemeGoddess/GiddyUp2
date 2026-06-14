@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using GiddyUp;
 using RimWorld;
@@ -20,12 +19,11 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private const float PortraitHeight = 160f;
     private const float PortraitGap = 60f;
     private const float PreviewPadding = 8f;
-    private const float NumericFieldWidth = 92f;
 
     private readonly Pawn pawn;
     private readonly ThingDef pawnDef;
-    private OffsetState committedState;
     private DrawingOffset workingOffset;
+    private Vector3? northOffset, southOffset, eastOffset, westOffset;
     private readonly Dictionary<Rot4, string[]> buffers = new();
 
     public override Vector2 InitialSize => new(1120f, 760f);
@@ -47,17 +45,22 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         inRect.SplitHorizontallyWithMargin(out var headerRect, out inRect, out _, ColumnGap, 70f);
 
         inRect.SplitHorizontallyWithMargin(out var bodyRect, out var buttonRow, out _, ColumnGap, inRect.height - 42f - ColumnGap);
-        bodyRect.SplitVerticallyWithMargin(out var editorRect, out var xmlRect, out _, ColumnGap, (inRect.width - 100f - ColumnGap) / 2);
 
         DrawHeader(headerRect);
-        DrawEditor(editorRect);
-        DrawXmlPreview(xmlRect);
+        DrawEditor(bodyRect);
         DrawButtons(buttonRow);
     }
 
     public override void PreOpen()
     {
         base.PreOpen();
+
+        
+        var current = GetDrawingOffset(pawnDef);
+        eastOffset = current.eastOffset;
+        northOffset = current.northOffset;
+        southOffset = current.southOffset;
+        westOffset = current.westOffset;
 
         ApplyState(pawn);
     }
@@ -136,64 +139,12 @@ internal sealed class Dialog_EditDrawingOffsets : Window
             ApplyState(pawn);
     }
 
-    private void DrawRotationEditor(Rect rect, Rot4 rotation, ref Vector3 offset)
-    {
-        Widgets.DrawMenuSection(rect);
-        var inner = rect.ContractedBy(10f);
-
-        Text.Anchor = TextAnchor.MiddleCenter;
-        Widgets.Label(new Rect(inner.x, inner.y, inner.width, 24f), rotation.ToStringHuman());
-        Text.Anchor = TextAnchor.UpperLeft;
-
-        var portraitRect = new Rect(inner.x, inner.y + 28f, inner.width, PortraitHeight);
-        DrawPortrait(portraitRect, rotation);
-
-        var tableRect = new Rect(inner.x, portraitRect.yMax + 10f, inner.width, 110f);
-        DrawOffsetFields(tableRect, ref offset, buffers[rotation]);
-    }
-
     private void DrawPortrait(Rect rect, Rot4 rotation)
     {
         //Widgets.DrawBoxSolid(rect, Color.red);
         var previewRect = rect.ContractedBy(PreviewPadding);
         var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 0.6f, supersample: true, compensateForUIScale: true);
         Widgets.DrawTextureFitted(previewRect, portrait, 1f);
-    }
-
-    private static void DrawOffsetFields(Rect rect, ref Vector3 offset, string[] buffer)
-    {
-        var value = offset;
-        for (var axis = 0; axis < AxisLabels.Length; axis++)
-        {
-            var rowRect = new Rect(rect.x, rect.y + axis * 34f, rect.width, 30f);
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(new Rect(rowRect.x, rowRect.y, 22f, rowRect.height), AxisLabels[axis]);
-            Text.Anchor = TextAnchor.UpperLeft;
-            var fieldRect = new Rect(rowRect.xMax - NumericFieldWidth, rowRect.y, NumericFieldWidth, rowRect.height);
-
-            switch (axis)
-            {
-                case 0:
-                    Widgets.TextFieldNumeric(fieldRect, ref value.x, ref buffer[axis], -10f, 10f);
-                    break;
-                case 1:
-                    Widgets.TextFieldNumeric(fieldRect, ref value.y, ref buffer[axis], -10f, 10f);
-                    break;
-                default:
-                    Widgets.TextFieldNumeric(fieldRect, ref value.z, ref buffer[axis], -10f, 10f);
-                    break;
-            }
-        }
-
-        offset = value;
-    }
-
-    private void DrawXmlPreview(Rect rect)
-    {
-        Widgets.DrawMenuSection(rect);
-        var inner = rect.ContractedBy(10f);
-        Widgets.Label(new Rect(inner.x, inner.y, inner.width, 24f), "GU_DrawOffsetEditor_XmlPreview".Translate());
-        Widgets.TextArea(new Rect(inner.x, inner.y + 28f, inner.width, inner.height - 28f), BuildPatchXml(), true);
     }
 
     private void DrawButtons(Rect rect)
@@ -203,14 +154,8 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         var saveRect = new Rect(copyRect.xMax + 12f, rect.y, buttonWidth, rect.height);
         var resetRect = new Rect(saveRect.xMax + 12f, rect.y, buttonWidth, rect.height);
 
-        if (Widgets.ButtonText(copyRect, "GU_DrawOffsetEditor_CopyXml".Translate()))
-        {
-            GUIUtility.systemCopyBuffer = BuildPatchXml();
-            Messages.Message("GU_DrawOffsetEditor_Copied".Translate(pawnDef.defName), MessageTypeDefOf.TaskCompletion, false);
-        }
-
         if (Widgets.ButtonText(saveRect, "GU_DrawOffsetEditor_SavePatch".Translate()))
-            SavePatch();
+            BuildFullXml();
 
         if (Widgets.ButtonText(resetRect, "GU_DrawOffsetEditor_Reset".Translate()))
             ResetWorkingOffset();
@@ -218,33 +163,11 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     private void ResetWorkingOffset()
     {
-        SetOffset(Rot4.North, committedState.Offset.northOffset);
-        SetOffset(Rot4.South, committedState.Offset.southOffset);
-        SetOffset(Rot4.East, committedState.Offset.eastOffset);
-        SetOffset(Rot4.West, committedState.Offset.westOffset);
-
-        foreach (var rotation in Rotations)
-            SyncBuffers(rotation, GetOffset(rotation));
-
+        workingOffset.eastOffset = eastOffset ?? Vector3.zero;
+        workingOffset.northOffset = northOffset ?? Vector3.zero;
+        workingOffset.southOffset = southOffset ?? Vector3.zero;
+        workingOffset.westOffset = westOffset ?? Vector3.zero;
         ApplyState(pawn);
-    }
-
-    private void SavePatch()
-    {
-        try
-        {
-            var patchPath = GetPatchFilePath();
-            Directory.CreateDirectory(Path.GetDirectoryName(patchPath) ?? throw new InvalidOperationException());
-            File.WriteAllText(patchPath, BuildPatchXml(), Encoding.UTF8);
-            committedState = new OffsetState(true, CloneOffset(workingOffset));
-            ApplyState(pawn);
-            Messages.Message("GU_DrawOffsetEditor_Saved".Translate(patchPath), MessageTypeDefOf.TaskCompletion, false);
-        }
-        catch (Exception exception)
-        {
-            Log.Error($"Failed to save drawing offset patch for {pawnDef.defName}: {exception}");
-            Messages.Message("GU_DrawOffsetEditor_SaveFailed".Translate(pawnDef.defName), MessageTypeDefOf.RejectInput, false);
-        }
     }
 
     private static void ApplyState(Pawn pawn)
@@ -264,23 +187,110 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         return drawingOffset;
     }
 
-    private string BuildPatchXml()
+    private string BuildExtensionXml(string defName, DrawingOffset offset, bool isCore)
     {
-        var defName = EscapeXml(pawnDef.defName);
-        var extensionXml = BuildExtensionXml();
-        return $"<?xml version=\"1.0\" encoding=\"utf-8\" ?>{Environment.NewLine}<Patch>{Environment.NewLine}\t<Operation Class=\"PatchOperationConditional\">{Environment.NewLine}\t\t<xpath>Defs/ThingDef[defName=\"{defName}\"]/modExtensions/li[@Class=\"GiddyUp.DrawingOffset\"]</xpath>{Environment.NewLine}\t\t<match Class=\"PatchOperationReplace\">{Environment.NewLine}\t\t\t<xpath>Defs/ThingDef[defName=\"{defName}\"]/modExtensions/li[@Class=\"GiddyUp.DrawingOffset\"]</xpath>{Environment.NewLine}\t\t\t<value>{Environment.NewLine}{extensionXml}{Environment.NewLine}\t\t\t</value>{Environment.NewLine}\t\t</match>{Environment.NewLine}\t\t<nomatch Class=\"PatchOperationAddModExtension\">{Environment.NewLine}\t\t\t<xpath>Defs/ThingDef[defName=\"{defName}\"]</xpath>{Environment.NewLine}\t\t\t<value>{Environment.NewLine}{extensionXml}{Environment.NewLine}\t\t\t</value>{Environment.NewLine}\t\t</nomatch>{Environment.NewLine}\t</Operation>{Environment.NewLine}</Patch>{Environment.NewLine}";
+        var north = offset.northOffset;
+        var south = offset.southOffset;
+        var west = offset.westOffset;
+        var east = offset.eastOffset;
+        var tag = isCore ? "Operation" : "li";
+        var xml =
+$@"<{tag} Class=""GiddyUp.PatchOperationDrawingOffset"">
+    <def>{defName}</def>
+    <value>
+        <li Class=""GiddyUp.DrawingOffset"">
+            <northOffset>({north.x:0.00}, {north.y:0.00}, {north.z:0.00})</northOffset>
+            <southOffset>({south.x:0.00}, {south.y:0.00}, {south.z:0.00})</southOffset>
+            <eastOffset>({east.x:0.00}, {east.y:0.00}, {east.z:0.00})</eastOffset>
+            <westOffset>({west.x:0.00}, {west.y:0.00}, {west.z:0.00})</westOffset>
+        </li>
+    </value>
+</{tag}>";
+        return xml;
     }
 
-    private string BuildExtensionXml()
+    private string BuildPatch(string patches, string? mod)
     {
-        var builder = new StringBuilder();
-        builder.AppendLine("\t\t\t\t<li Class=\"GiddyUp.DrawingOffset\">");
-        builder.AppendLine($"\t\t\t\t\t<northOffset>{FormatOffset(workingOffset.northOffset)}</northOffset>");
-        builder.AppendLine($"\t\t\t\t\t<southOffset>{FormatOffset(workingOffset.southOffset)}</southOffset>");
-        builder.AppendLine($"\t\t\t\t\t<eastOffset>{FormatOffset(workingOffset.eastOffset)}</eastOffset>");
-        builder.AppendLine($"\t\t\t\t\t<westOffset>{FormatOffset(workingOffset.westOffset)}</westOffset>");
-        builder.Append("\t\t\t\t</li>");
-        return builder.ToString();
+        if (mod == null)
+            return
+$"""
+ <?xml version="1.0" encoding="utf-8" ?>
+ <Patch>
+ {patches.Replace("\n", "\n\t")}
+ </Patch>
+ """;
+        return
+$"""
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+            <li>{mod}</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Always</success>
+			<operations>
+                {patches.Replace("\n", "\n\t\t\t\t")}
+            </operations>
+		</match>
+	</Operation>
+</Patch>
+
+""";
+    }
+
+    private void BuildFullXml()
+    {
+        var animals = FilteredAnimals();
+        var mountables = animals.GroupBy(x => x.modContentPack).ToList();
+        var modRoot = LoadedModManager.ModHandles.OfType<Mod_GiddyUp>().FirstOrDefault()?.Content.RootDir
+                      ?? pawnDef.modContentPack?.RootDir
+                      ?? throw new InvalidOperationException("Unable to resolve the Giddy-Up mod root.");
+        var versionFolder = VersionControl.CurrentVersionStringWithoutBuild;
+        var rootFolder = Path.Combine(modRoot, versionFolder, "Patches");
+        if (!Directory.Exists(rootFolder))
+            throw new InvalidOperationException("Patches folder doesn't exist");
+
+        foreach (var mountable in mountables)
+        {
+            if(mountable.Key == null)
+                continue;
+
+            var fileName = string.Join("", mountable.Key.Name.Split([..Path.GetInvalidFileNameChars(), ' '])) + "Offsets.xml";
+
+            var path =  Path.Combine(rootFolder, fileName);
+
+            var isCore = mountable.Key.Name == "Core";
+
+            var patches = mountable.Select(x =>
+                x == null ? "" : BuildExtensionXml(x.defName, x.GetModExtension<DrawingOffset>()!, isCore));
+
+            var xml = BuildPatch(string.Join('\n', patches), isCore ? null : mountable.Key.Name);
+
+
+            if(File.Exists(path))
+                Log.Warning($"Overwriting patches for '{mountable.Key.Name}");
+
+            File.WriteAllText(path, xml);
+        }
+    }
+
+    private List<ThingDef> FilteredAnimals()
+    {
+        List<ThingDef?> animals = [.. Setup.AllAnimals, .. Setup.AllMechs];
+        animals.RemoveAll(x =>
+        {
+            var extension = x?.GetModExtension<DrawingOffset>();
+            if (extension == null)
+                return true;
+            return extension.northOffset == Vector3.zero &&
+                   extension.eastOffset == Vector3.zero &&
+                   extension.southOffset == Vector3.zero &&
+                   extension.westOffset == Vector3.zero;
+        });
+
+        return animals!;
     }
 
     private string GetPatchFilePath()
@@ -322,76 +332,6 @@ internal sealed class Dialog_EditDrawingOffsets : Window
                 workingOffset.westOffset = value;
                 break;
         }
-    }
-
-    private static DrawingOffset GetAppliedOffset(ThingDef def)
-    {
-        return def.GetModExtension<DrawingOffset>() ?? new DrawingOffset();
-    }
-
-    private static DrawingOffset CloneOffset(DrawingOffset offset)
-    {
-        return new DrawingOffset
-        {
-            northOffset = offset.northOffset,
-            southOffset = offset.southOffset,
-            eastOffset = offset.eastOffset,
-            westOffset = offset.westOffset
-        };
-    }
-
-    private static string[] CreateBuffers(Vector3 vector)
-    {
-        return
-        [
-            FormatFloat(vector.x),
-            FormatFloat(vector.y),
-            FormatFloat(vector.z)
-        ];
-    }
-
-    private void SyncBuffers(Rot4 rotation, Vector3 vector)
-    {
-        buffers[rotation][0] = FormatFloat(vector.x);
-        buffers[rotation][1] = FormatFloat(vector.y);
-        buffers[rotation][2] = FormatFloat(vector.z);
-    }
-
-    private static string FormatOffset(Vector3 vector)
-    {
-        return $"({FormatFloat(vector.x)}, {FormatFloat(vector.y)}, {FormatFloat(vector.z)})";
-    }
-
-    private static string FormatFloat(float value)
-    {
-        return value.ToString("0.00", CultureInfo.InvariantCulture);
-    }
-
-    private static bool OffsetEquals(DrawingOffset left, DrawingOffset right)
-    {
-        return left.northOffset == right.northOffset
-               && left.southOffset == right.southOffset
-               && left.eastOffset == right.eastOffset
-               && left.westOffset == right.westOffset;
-    }
-
-    private static string EscapeXml(string value)
-    {
-        return value
-            .Replace("&", "&amp;")
-            .Replace("\"", "&quot;")
-            .Replace("<", "&lt;")
-            .Replace(">", "&gt;")
-            .Replace("'", "&apos;");
-    }
-
-    private static string SanitizeFileName(string value)
-    {
-        var invalidChars = Path.GetInvalidFileNameChars();
-        var builder = new StringBuilder(value.Length);
-        foreach (var character in value)
-            builder.Append(invalidChars.Contains(character) ? '_' : character);
-        return builder.ToString();
     }
 
     private readonly record struct OffsetState(bool HasExtension, DrawingOffset Offset);
