@@ -25,6 +25,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private DrawingOffset workingOffset;
     private Vector3? northOffset, southOffset, eastOffset, westOffset;
     private readonly Dictionary<Rot4, string[]> buffers = new();
+    private Dictionary<string, Vector2> labelSizes = new();
 
     public override Vector2 InitialSize => new(1120f, 760f);
 
@@ -37,7 +38,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         doCloseX = true;
         doCloseButton = false;
         //absorbInputAroundWindow = true;
-        optionalTitle = "GU_DrawOffsetEditor_Title".Translate(pawn.LabelCap, pawnDef.defName);
+        //optionalTitle = ;
     }
 
     public override void DoWindowContents(Rect inRect)
@@ -67,16 +68,13 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     private void DrawHeader(Rect rect)
     {
-        Widgets.DrawMenuSection(rect);
+        //Widgets.DrawMenuSection(rect);
         var inner = rect.ContractedBy(12f);
 
+        var font = Text.Font;
         Text.Font = GameFont.Medium;
-        Widgets.Label(new Rect(inner.x, inner.y, inner.width, 32f), pawn.LabelCap);
-        Text.Font = GameFont.Small;
-
-        var metadata = "GU_DrawOffsetEditor_Metadata".Translate(pawnDef.defName, pawnDef.modContentPack?.Name ?? "Unknown");
-        Widgets.Label(new Rect(inner.x, inner.y + 34f, inner.width, 24f), metadata);
-        Widgets.Label(new Rect(inner.x, inner.y + 54f, inner.width, 24f), GetPatchFilePath());
+        Widgets.Label(new Rect(inner.x, inner.y, inner.width, 32f), "GU_DrawOffsetEditor_Title".Translate(pawn.LabelCap, pawnDef.modContentPack.Name, pawnDef.defName));
+        Text.Font = font;
     }
 
     private void DrawEditor(Rect rect)
@@ -84,7 +82,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         var changed = false;
 
         var center = rect.center;
-
+        var color = GUI.color;
         var offset = PortraitGap + PortraitHeight / 2 ; 
         foreach (var rotation in Rot4.AllRotations)
         {
@@ -103,13 +101,24 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
             var portraitCenter = rotationRect.center;
             var textHeight = Text.LineHeight;
-            var zBox = new Rect(rotationRect.x + 20f, portraitCenter.y - (textHeight / 2), rotationRect.width / 2, textHeight);
-            var xBox = new Rect(rotationRect.x, rotationRect.y + rotationRect.height - 20f - textHeight,
+            var zLabel = $"{newZ:F}";
+            var xLabel = $"{newX:F}";
+            var zBox = new Rect(rotationRect.x - 20f - GetLabelSize(zLabel).x , portraitCenter.y - (textHeight / 2), rotationRect.width / 2, textHeight);
+            var xBox = new Rect(rotationRect.x, rotationRect.y + rotationRect.height,
                 rotationRect.width, textHeight);
-            Widgets.Label(zBox, $"{newZ:F}");
+            var original = GetOffsetByDirection(rotation);
+            var zChanged = newZ != original.z;
+            var xChanged = newX != original.x;
+            if (!zChanged)
+                GUI.color = new Color(1, 1, 1, 0.6f);
+            Widgets.Label(zBox, zLabel);
+            GUI.color = color;
             var textAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.LowerCenter;
-            Widgets.Label(xBox, $"{newX:F}");
+            if (!xChanged)
+                GUI.color = new Color(1, 1, 1, 0.6f);
+            Widgets.Label(xBox, xLabel);
+            GUI.color = color;
             Text.Anchor = textAnchor;
 
             if (previousX != newX || previousZ != newZ)
@@ -150,9 +159,8 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private void DrawButtons(Rect rect)
     {
         const float buttonWidth = 180f;
-        var copyRect = new Rect(rect.x, rect.y, buttonWidth, rect.height);
-        var saveRect = new Rect(copyRect.xMax + 12f, rect.y, buttonWidth, rect.height);
-        var resetRect = new Rect(saveRect.xMax + 12f, rect.y, buttonWidth, rect.height);
+        var saveRect = new Rect(rect.center.x - buttonWidth - 6f, rect.y, buttonWidth, rect.height);
+        var resetRect = new Rect(rect.center.x + 6f, rect.y, buttonWidth, rect.height);
 
         if (Widgets.ButtonText(saveRect, "GU_DrawOffsetEditor_SavePatch".Translate()))
             BuildFullXml();
@@ -174,6 +182,28 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     {
         PortraitsCache.SetDirty(pawn);
         MountedRiderRenderNodeUtility.RefreshMountedAnimalGraphics(pawn);
+    }
+
+    private Vector2 GetLabelSize(string label)
+    {
+        if (labelSizes.TryGetValue(label, out var size))
+            return size;
+
+        size = Text.CalcSize(label);
+        labelSizes[label] = size;
+        return size;
+    }
+
+    private Vector3 GetOffsetByDirection(Rot4 rot)
+    {
+        return rot.AsInt switch
+        {
+            Rot4.EastInt => eastOffset ?? Vector3.zero,
+            Rot4.NorthInt => northOffset ?? Vector3.zero,
+            Rot4.SouthInt => southOffset ?? Vector3.zero,
+            Rot4.WestInt => westOffset ?? Vector3.zero,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     private static DrawingOffset GetDrawingOffset(ThingDef def)

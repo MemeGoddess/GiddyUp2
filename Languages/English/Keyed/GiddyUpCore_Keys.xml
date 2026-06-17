@@ -72,14 +72,9 @@
 	<GUC_DisAgeCap>Disregard Age Limit</GUC_DisAgeCap>
 	<GU_DrawOffsetEditor_Gizmo_Label>Edit draw offsets</GU_DrawOffsetEditor_Gizmo_Label>
 	<GU_DrawOffsetEditor_Gizmo_Description>Open the drawing offset editor for {0}.</GU_DrawOffsetEditor_Gizmo_Description>
-	<GU_DrawOffsetEditor_Title>Drawing offsets: {0} ({1})</GU_DrawOffsetEditor_Title>
-	<GU_DrawOffsetEditor_Metadata>Def: {0}    Source mod: {1}</GU_DrawOffsetEditor_Metadata>
-	<GU_DrawOffsetEditor_XmlPreview>Generated patch XML</GU_DrawOffsetEditor_XmlPreview>
-	<GU_DrawOffsetEditor_CopyXml>Copy XML</GU_DrawOffsetEditor_CopyXml>
-	<GU_DrawOffsetEditor_SavePatch>Save patch</GU_DrawOffsetEditor_SavePatch>
+	<GU_DrawOffsetEditor_Title>{0} :: {1} :: {2}</GU_DrawOffsetEditor_Title>
+	<GU_DrawOffsetEditor_SavePatch>Export Patches</GU_DrawOffsetEditor_SavePatch>
 	<GU_DrawOffsetEditor_Reset>Reset</GU_DrawOffsetEditor_Reset>
-	<GU_DrawOffsetEditor_Copied>Copied drawing offset patch XML for {0} to the clipboard.</GU_DrawOffsetEditor_Copied>
-	<GU_DrawOffsetEditor_Saved>Saved drawing offset patch to {0}.</GU_DrawOffsetEditor_Saved>
 	<GU_DrawOffsetEditor_SaveFailed>Failed to save the drawing offset patch for {0}. Check the log for details.</GU_DrawOffsetEditor_SaveFailed>
 
 </LanguageData>

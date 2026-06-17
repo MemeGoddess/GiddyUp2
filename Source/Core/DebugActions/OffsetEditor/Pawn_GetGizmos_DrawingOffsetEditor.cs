@@ -28,6 +28,10 @@ internal static class Pawn_GetGizmos_DrawingOffsetEditor
 
     private static bool ShouldShowFor(Pawn pawn)
     {
+#if DEBUG
         return pawn.RaceProps.Animal || ModSettings_GiddyUp.mechanoidsEnabled && pawn.RaceProps.IsMechanoid;
+#else
+        return DebugSettings.godMode && (pawn.RaceProps.Animal || ModSettings_GiddyUp.mechanoidsEnabled && pawn.RaceProps.IsMechanoid);
+#endif
     }
 }
