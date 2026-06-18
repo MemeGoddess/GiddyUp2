@@ -8,13 +8,12 @@ using GiddyUp;
 using RimWorld;
 using UnityEngine;
 using Verse;
+// ReSharper disable CompareOfFloatsByEqualityOperator
 
 namespace GiddyUpCore.Core.DebugActions.OffsetEditor;
 
 internal sealed class Dialog_EditDrawingOffsets : Window
 {
-    private static readonly Rot4[] Rotations = [Rot4.North, Rot4.South, Rot4.East, Rot4.West];
-    private static readonly string[] AxisLabels = ["X", "Y", "Z"];
     private const float ColumnGap = 12f;
     private const float PortraitHeight = 160f;
     private const float PortraitGap = 60f;
@@ -24,8 +23,8 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private readonly ThingDef pawnDef;
     private DrawingOffset workingOffset;
     private Vector3? northOffset, southOffset, eastOffset, westOffset;
-    private readonly Dictionary<Rot4, string[]> buffers = new();
     private Dictionary<string, Vector2> labelSizes = new();
+    private TaggedString title, save, reset;
 
     public override Vector2 InitialSize => new(1120f, 760f);
 
@@ -37,8 +36,10 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
         doCloseX = true;
         doCloseButton = false;
-        //absorbInputAroundWindow = true;
-        //optionalTitle = ;
+
+        title = "GU_DrawOffsetEditor_Title".Translate();
+        save = "GU_DrawOffsetEditor_SavePatch".Translate();
+        reset = "GU_DrawOffsetEditor_Reset".Translate();
     }
 
     public override void DoWindowContents(Rect inRect)
@@ -68,12 +69,11 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     private void DrawHeader(Rect rect)
     {
-        //Widgets.DrawMenuSection(rect);
         var inner = rect.ContractedBy(12f);
 
         var font = Text.Font;
         Text.Font = GameFont.Medium;
-        Widgets.Label(new Rect(inner.x, inner.y, inner.width, 32f), "GU_DrawOffsetEditor_Title".Translate(pawn.LabelCap, pawnDef.modContentPack.Name, pawnDef.defName));
+        Widgets.Label(new Rect(inner.x, inner.y, inner.width, 32f), title.Formatted(pawn.LabelCap, pawnDef.modContentPack.Name, pawnDef.defName));
         Text.Font = font;
     }
 
@@ -83,13 +83,16 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
         var center = rect.center;
         var color = GUI.color;
-        var offset = PortraitGap + PortraitHeight / 2 ; 
+        var offset = PortraitGap + PortraitHeight / 2; 
+        var textHeight = Text.LineHeight;
+
         foreach (var rotation in Rot4.AllRotations)
         {
-            var rotationCenter = center + (rotation.AsVector2 * offset);
-            var rotationRect = new Rect(rotationCenter.x - (PortraitHeight / 2), rotationCenter.y - (PortraitHeight / 2), PortraitHeight,
+            var portraitCenter = center + (rotation.AsVector2 * offset);
+            var rotationRect = new Rect(portraitCenter.x - (PortraitHeight / 2), portraitCenter.y - (PortraitHeight / 2), PortraitHeight,
                 PortraitHeight);
             var rotationOffset = workingOffset.GetOffsetByRotation(rotation);
+
             var previousZ = rotationOffset.z;
             var previousX = rotationOffset.x;
             var newZ = Mathf.RoundToMultipleOf(
@@ -99,20 +102,20 @@ internal sealed class Dialog_EditDrawingOffsets : Window
                 new Rect(rotationRect.x + 20f, rotationRect.y + rotationRect.height - 20f, rotationRect.width - 40f,
                     20f), rotationOffset.x, -1, 1, roundTo: 0.05f);
 
-            var portraitCenter = rotationRect.center;
-            var textHeight = Text.LineHeight;
             var zLabel = $"{newZ:F}";
             var xLabel = $"{newX:F}";
-            var zBox = new Rect(rotationRect.x - 20f - GetLabelSize(zLabel).x , portraitCenter.y - (textHeight / 2), rotationRect.width / 2, textHeight);
+            var zBox = new Rect(rotationRect.x - 10f - GetLabelSize(zLabel).x , portraitCenter.y - (textHeight / 2), rotationRect.width / 2, textHeight);
             var xBox = new Rect(rotationRect.x, rotationRect.y + rotationRect.height,
                 rotationRect.width, textHeight);
             var original = GetOffsetByDirection(rotation);
             var zChanged = newZ != original.z;
             var xChanged = newX != original.x;
+
             if (!zChanged)
                 GUI.color = new Color(1, 1, 1, 0.6f);
             Widgets.Label(zBox, zLabel);
             GUI.color = color;
+
             var textAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.LowerCenter;
             if (!xChanged)
@@ -123,6 +126,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
             if (previousX != newX || previousZ != newZ)
             {
+                Log.Message("Updating");
                 switch (rotation.AsInt)
                 {
                     case Rot4.NorthInt:
@@ -150,7 +154,6 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
     private void DrawPortrait(Rect rect, Rot4 rotation)
     {
-        //Widgets.DrawBoxSolid(rect, Color.red);
         var previewRect = rect.ContractedBy(PreviewPadding);
         var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 0.6f, supersample: true, compensateForUIScale: true);
         Widgets.DrawTextureFitted(previewRect, portrait, 1f);
@@ -162,10 +165,10 @@ internal sealed class Dialog_EditDrawingOffsets : Window
         var saveRect = new Rect(rect.center.x - buttonWidth - 6f, rect.y, buttonWidth, rect.height);
         var resetRect = new Rect(rect.center.x + 6f, rect.y, buttonWidth, rect.height);
 
-        if (Widgets.ButtonText(saveRect, "GU_DrawOffsetEditor_SavePatch".Translate()))
+        if (Widgets.ButtonText(saveRect, save))
             BuildFullXml();
 
-        if (Widgets.ButtonText(resetRect, "GU_DrawOffsetEditor_Reset".Translate()))
+        if (Widgets.ButtonText(resetRect, reset))
             ResetWorkingOffset();
     }
 
@@ -322,47 +325,4 @@ $"""
 
         return animals!;
     }
-
-    private string GetPatchFilePath()
-    {
-        var modRoot = LoadedModManager.ModHandles.OfType<Mod_GiddyUp>().FirstOrDefault()?.Content.RootDir
-                      ?? pawnDef.modContentPack?.RootDir
-                      ?? throw new InvalidOperationException("Unable to resolve the Giddy-Up mod root.");
-        var versionFolder = VersionControl.CurrentVersionStringWithoutBuild;
-        var fileName = pawnDef.modContentPack.Name + "Offsets.xml";
-
-        return Path.Combine(modRoot, versionFolder, "Patches", fileName);
-    }
-
-    private Vector3 GetOffset(Rot4 rotation)
-    {
-        return rotation.AsInt switch
-        {
-            0 => workingOffset.NorthOffset(),
-            2 => workingOffset.SouthOffset(),
-            1 => workingOffset.EastOffset(),
-            _ => workingOffset.WestOffset()
-        };
-    }
-
-    private void SetOffset(Rot4 rotation, Vector3 value)
-    {
-        switch (rotation.AsInt)
-        {
-            case 0:
-                workingOffset.northOffset = value;
-                break;
-            case 2:
-                workingOffset.southOffset = value;
-                break;
-            case 1:
-                workingOffset.eastOffset = value;
-                break;
-            default:
-                workingOffset.westOffset = value;
-                break;
-        }
-    }
-
-    private readonly record struct OffsetState(bool HasExtension, DrawingOffset Offset);
 }
