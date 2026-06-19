@@ -15,9 +15,9 @@ namespace GiddyUpCore.Core.DebugActions.OffsetEditor;
 internal sealed class Dialog_EditDrawingOffsets : Window
 {
     private const float ColumnGap = 12f;
-    private const float PortraitHeight = 160f;
-    private const float PortraitGap = 60f;
-    private const float PreviewPadding = 8f;
+    private const float PortraitHeight = 200f;
+    private const float PortraitGap = 85f;
+    private const float PreviewPadding = 4f;
 
     private readonly Pawn pawn;
     private readonly ThingDef pawnDef;
@@ -155,7 +155,7 @@ internal sealed class Dialog_EditDrawingOffsets : Window
     private void DrawPortrait(Rect rect, Rot4 rotation)
     {
         var previewRect = rect.ContractedBy(PreviewPadding);
-        var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 0.6f, supersample: true, compensateForUIScale: true);
+        var portrait = PortraitsCache.Get(pawn, previewRect.size, rotation, cameraZoom: 0.5f, supersample: true, compensateForUIScale: true);
         Widgets.DrawTextureFitted(previewRect, portrait, 1f);
     }
 

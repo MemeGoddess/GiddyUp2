@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using JetBrains.Annotations;
 using Verse;
 
 // ReSharper disable once CheckNamespace
 namespace GiddyUp
 {
+    [UsedImplicitly]
     public class PatchOperationDrawingOffset : PatchOperation
     {
         private XmlContainer value;
