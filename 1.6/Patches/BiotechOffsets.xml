@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+            <li>Biotech</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Always</success>
+			<operations>
+                <li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>WasteRat</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.20)</southOffset>
+				            <eastOffset>(0.25, 0.00, 0.00)</eastOffset>
+				            <westOffset>(-0.25, 0.00, 0.00)</westOffset>
+				        </li>
+				    </value>
+				</li>
+            </operations>
+		</match>
+	</Operation>
+</Patch>

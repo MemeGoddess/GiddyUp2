@@ -9,8 +9,6 @@ namespace GiddyUpCore.Core.DebugActions.OffsetEditor;
 [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
 internal static class Pawn_GetGizmos_DrawingOffsetEditor
 {
-    private static readonly Texture2D GizmoIcon = ContentFinder<Texture2D>.Get("UI/QM_horseshoe_icon");
-
     private static void Postfix(ref IEnumerable<Gizmo> __result, Pawn __instance)
     {
         if (!ShouldShowFor(__instance))
@@ -20,7 +18,7 @@ internal static class Pawn_GetGizmos_DrawingOffsetEditor
         {
             defaultLabel = "GU_DrawOffsetEditor_Gizmo_Label".Translate(),
             defaultDesc = "GU_DrawOffsetEditor_Gizmo_Description".Translate(__instance.LabelCap),
-            icon = GizmoIcon,
+            icon = ResourceBank.iconGizmoSaddleUp,
             Order = -25f,
             action = () => Find.WindowStack.Add(new Dialog_EditDrawingOffsets(__instance))
         });

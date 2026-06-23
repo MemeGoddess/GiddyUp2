@@ -1,3 +1,4 @@
+using GiddyUp;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -7,8 +8,6 @@ namespace GiddyUpCore.Core.DebugActions.OffsetEditor;
 
 internal static class OffsetEditorWidgets
 {
-    private static readonly Texture2D SliderRailAtlas = ContentFinder<Texture2D>.Get("UI/Buttons/SliderRail");
-    private static readonly Texture2D SliderHandle = ContentFinder<Texture2D>.Get("UI/Buttons/SliderHandle");
     private static readonly Color RangeControlTextColor = new(0.6f, 0.6f, 0.6f);
 
     private static int sliderDraggingId;
@@ -42,12 +41,12 @@ internal static class OffsetEditorWidgets
         var rotatedRailRect = new Rect(atlasRect.center.x - (atlasRect.height / 2f), atlasRect.center.y - (atlasRect.width / 2f), atlasRect.height, atlasRect.width);
         var previousMatrix = GUI.matrix;
         GUIUtility.RotateAroundPivot(-90f, atlasRect.center);
-        Widgets.DrawAtlas(rotatedRailRect, SliderRailAtlas);
+        Widgets.DrawAtlas(rotatedRailRect, ResourceBank.SliderRailAtlas);
         GUI.matrix = previousMatrix;
         GUI.color = Color.white;
 
         var handleY = Mathf.Clamp(railRect.yMax - 6f - railRect.height * Mathf.InverseLerp(min, max, newValue), railRect.yMin - 6f, railRect.yMax - 6f);
-        GUI.DrawTexture(new Rect(atlasRect.center.x - 6f, handleY, 12f, 12f), SliderHandle);
+        GUI.DrawTexture(new Rect(atlasRect.center.x - 6f, handleY, 12f, 12f), ResourceBank.SliderHandle);
 
         if (Event.current.type == EventType.MouseDown && Mouse.IsOver(rect) && sliderDraggingId != dragId)
         {

@@ -166,7 +166,7 @@ public static class Setup
 
                 //Build out...
                 var offset = TextureUtility.SetDrawOffset(lifeStages[lifeIndex]);
-                ModSettings_GiddyUp.offsetCache.Add(key, offset);
+                ModSettings_GiddyUp.offsetCache.SetOrAdd(key, offset);
                 newEntries = true;
             }
         }
