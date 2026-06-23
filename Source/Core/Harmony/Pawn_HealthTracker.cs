@@ -16,8 +16,12 @@ internal static class Patch_MakeDowned
         var pawnData = pawn.GetExtendedPawnData();
         if (pawn.RaceProps.Humanlike)
             pawn.InvoluntaryDismount(pawnData.ReservedMount, pawnData);
-        else if (pawnData.ReservedBy != null && pawn.HostileTo(Current.gameInt.worldInt.factionManager.ofPlayer))
-            pawn.SetFaction(null); //If an enemy animal is downed, make it a wild animal so it can be rescued.
+        else if (pawnData.ReservedBy != null)
+        {
+            pawnData.ReservedBy.InvoluntaryDismount(pawn, pawnData);
+            if (pawn.HostileTo(Current.gameInt.worldInt.factionManager.ofPlayer))
+                pawn.SetFaction(null); //If an enemy animal is downed, make it a wild animal so it can be rescued.
+        }
     }
 }
 
