@@ -151,17 +151,6 @@
 				        </li>
 				    </value>
 				</li>
-				<li Class="GiddyUp.PatchOperationDrawingOffset">
-				    <def>Mech_Cyclops</def>
-				    <value>
-				        <li Class="GiddyUp.DrawingOffset">
-				            <northOffset>(0.00, 0.00, 1.00)</northOffset>
-				            <southOffset>(0.00, 0.00, 1.00)</southOffset>
-				            <eastOffset>(0.00, 0.00, 1.00)</eastOffset>
-				            <westOffset>(0.00, 0.00, 1.00)</westOffset>
-				        </li>
-				    </value>
-				</li>
             </operations>
 		</match>
 	</Operation>

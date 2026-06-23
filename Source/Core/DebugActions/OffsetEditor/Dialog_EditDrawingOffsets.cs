@@ -299,10 +299,12 @@ $"""
             var patches = mountable.Select(x =>
                 x == null ? "" : BuildExtensionXml(x.defName, x.GetModExtension<DrawingOffset>()!, isCore));
 
-            var xml = BuildPatch(string.Join('\n', patches), isCore ? null : mountable.Key.Name);
+            var xml = BuildPatch(string.Join('\n', patches), isCore ? null : mountable.Key.Name)
+                .Replace("\r\n", "\n").Replace("\n", "\r\n"); // A crappy way to normalize the line endings ;(
 
 
-            if(File.Exists(path))
+
+            if (File.Exists(path))
                 Log.Warning($"Overwriting patches for '{mountable.Key.Name}");
 
             File.WriteAllText(path, xml);

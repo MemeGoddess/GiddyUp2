@@ -86,7 +86,6 @@ public class ModSettings_GiddyUp : ModSettings
         Scribe_Values.Look(ref handlingMovementImpact, "handlingMovementImpact", 2.5f);
         Scribe_Values.Look(ref handlingAccuracyImpact, "handlingAccuracyImpact", 0.5f);
         Scribe_Values.Look(ref accuracyPenalty, "accuracyPenalty", 10);
-        Scribe_Collections.Look(ref offsetCache, "offsetCache", LookMode.Value);
         Scribe_Collections.Look(ref invertMountingRules, "invertMountingRules", LookMode.Value);
         Scribe_Collections.Look(ref invertDrawRules, "invertDrawRules", LookMode.Value);
         Scribe_Values.Look(ref disregardAnimalCarryingCapacity, "disregardAnimalCarryingCapacity");

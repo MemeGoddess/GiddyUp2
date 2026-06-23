@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GiddyUp;
 using LudeonTK;
 using RimWorld;
@@ -14,25 +15,40 @@ namespace GiddyUpCore.Core.DebugActions
             actionType = DebugActionType.ToolMap)]
         internal static void SpawnMounted()
         {
-            DoSpawn(true);
+            DoSpawn(true, Setup.AllAnimals);
+        }
+
+        [DebugAction("GiddyUp", "Spawn Rideable Mounted Mechs", allowedGameStates = AllowedGameStates.PlayingOnMap,
+            actionType = DebugActionType.ToolMap)]
+        internal static void SpawnMountedMechs()
+        {
+            DoSpawn(true, Setup.AllMechs);
         }
 
         [DebugAction("GiddyUp", "Spawn All Mounted Animals", allowedGameStates = AllowedGameStates.PlayingOnMap,
             actionType = DebugActionType.ToolMap)]
         internal static void SpawnAll()
         {
-            DoSpawn(false);
+            DoSpawn(false, Setup.AllAnimals);
         }
 
-        private static void DoSpawn(bool allowed)
+        [DebugAction("GiddyUp", "Spawn All Mounted Mechs", allowedGameStates = AllowedGameStates.PlayingOnMap,
+            actionType = DebugActionType.ToolMap)]
+        internal static void SpawnAllMechs()
+        {
+            DoSpawn(false, Setup.AllMechs);
+
+        }
+
+        private static void DoSpawn(bool allowed, List<ThingDef?> list)
         {
             var location = UI.MouseCell();
             var cache = ModSettings_GiddyUp.MountableCache;
             var animalKinds = DefDatabase<PawnKindDef>.AllDefs
-                .Where(x => !allowed ? Setup.AllAnimals.Contains(x.race) : cache.Contains(x.race.shortHash))
+                .Where(x => !allowed ? list.Contains(x.race) : cache.Contains(x.race.shortHash))
                 .ToList();
 
-            var colonistKind = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault(x => x.defName == "Colonist");
+            var colonistKind = PawnKindDefOf.Colonist;
             var map = Find.CurrentMap;
             var letterString = string.Empty;
             var letter = string.Empty;
@@ -60,6 +76,14 @@ namespace GiddyUpCore.Core.DebugActions
 
                 var colonist = PawnGenerator.GeneratePawn(colonistKind, FactionUtility.DefaultFactionFrom(colonistKind.defaultFactionDef));
                 var animal = PawnGenerator.GeneratePawn(animalKind);
+
+                if (animal.RaceProps.IsMechanoid)
+                    colonist.health.AddHediff(HediffDefOf.MechlinkImplant);
+
+                animal.mechanitor = new Pawn_MechanitorTracker
+                {
+                    pawn = colonist
+                };
 
                 if (colonist == null)
                 {

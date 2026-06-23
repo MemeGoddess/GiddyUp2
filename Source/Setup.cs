@@ -151,33 +151,23 @@ public static class Setup
             if (!usingCustomStats && pawnKindDef.HasModExtension<CustomStats>())
                 usingCustomStats = true;
 
-            //Only process animals that can be mounted
-            if (ModSettings_GiddyUp.MountableCache.Contains(pawnKindDef.race.shortHash))
+            //Determine which life stages are considered mature enough to ride
+            var lifeStages = pawnKindDef.lifeStages;
+            var lifeIndexes = lifeStages?.Count;
+            //Go through each life stage for this animal
+            for (var lifeIndex = 0; lifeIndex < lifeIndexes; lifeIndex++)
             {
-                //Determine which life stages are considered mature enough to ride
-                var lifeStages = pawnKindDef.lifeStages;
-                var lifeIndexes = lifeStages?.Count;
-                AllowedLifeStages? customLifeStages;
-                if (lifeIndexes > 0)
-                    customLifeStages = pawnKindDef.race.GetModExtension<AllowedLifeStages>();
-                else
-                    customLifeStages = null;
+                //Convert the def and age into a key string used for storage between sessions
+                var key = TextureUtility.FormatKey(pawnKindDef, lifeIndex);
 
-                //Go through each life stage for this animal
-                for (var lifeIndex = 0; lifeIndex < lifeIndexes; lifeIndex++)
-                {
-                    //Convert the def and age into a key string used for storage between sessions
-                    var key = TextureUtility.FormatKey(pawnKindDef, lifeIndex);
+                //Skip if already set
+                if (ModSettings_GiddyUp.offsetCache.ContainsKey(key))
+                    continue;
 
-                    //Skip if already set
-                    if (ModSettings_GiddyUp.offsetCache.ContainsKey(key))
-                        continue;
-
-                    //Build out...
-                    var offset = TextureUtility.SetDrawOffset(lifeStages[lifeIndex]);
-                    ModSettings_GiddyUp.offsetCache.Add(key, offset);
-                    newEntries = true;
-                }
+                //Build out...
+                var offset = TextureUtility.SetDrawOffset(lifeStages[lifeIndex]);
+                ModSettings_GiddyUp.offsetCache.Add(key, offset);
+                newEntries = true;
             }
         }
 
