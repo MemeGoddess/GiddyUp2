@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GiddyUp;
 using LudeonTK;
 using RimWorld;
 using Verse;
 using Verse.AI.Group;
+using static RimWorld.MechClusterSketch;
 
 namespace GiddyUpCore.Core.DebugActions
 {
@@ -14,25 +16,40 @@ namespace GiddyUpCore.Core.DebugActions
             actionType = DebugActionType.ToolMap)]
         internal static void SpawnMounted()
         {
-            DoSpawn(true);
+            DoSpawn(true, Setup.AllAnimals);
+        }
+
+        [DebugAction("GiddyUp", "Spawn Rideable Mounted Mechs", allowedGameStates = AllowedGameStates.PlayingOnMap,
+            actionType = DebugActionType.ToolMap)]
+        internal static void SpawnMountedMechs()
+        {
+            DoSpawn(true, Setup.AllMechs);
         }
 
         [DebugAction("GiddyUp", "Spawn All Mounted Animals", allowedGameStates = AllowedGameStates.PlayingOnMap,
             actionType = DebugActionType.ToolMap)]
         internal static void SpawnAll()
         {
-            DoSpawn(false);
+            DoSpawn(false, Setup.AllAnimals);
         }
 
-        private static void DoSpawn(bool allowed)
+        [DebugAction("GiddyUp", "Spawn All Mounted Mechs", allowedGameStates = AllowedGameStates.PlayingOnMap,
+            actionType = DebugActionType.ToolMap)]
+        internal static void SpawnAllMechs()
+        {
+            DoSpawn(false, Setup.AllMechs);
+
+        }
+
+        private static void DoSpawn(bool allowed, List<ThingDef?> list)
         {
             var location = UI.MouseCell();
             var cache = ModSettings_GiddyUp.MountableCache;
             var animalKinds = DefDatabase<PawnKindDef>.AllDefs
-                .Where(x => !allowed ? Setup.AllAnimals.Contains(x.race) : cache.Contains(x.race.shortHash))
+                .Where(x => !allowed ? list.Contains(x.race) : cache.Contains(x.race.shortHash))
                 .ToList();
 
-            var colonistKind = DefDatabase<PawnKindDef>.AllDefs.FirstOrDefault(x => x.defName == "Colonist");
+            var colonistKind = PawnKindDefOf.Colonist;
             var map = Find.CurrentMap;
             var letterString = string.Empty;
             var letter = string.Empty;
@@ -64,7 +81,7 @@ namespace GiddyUpCore.Core.DebugActions
                 if (colonist == null)
                 {
                     Log.Error("Colonist was null when spawning mounts");
-                    return;
+                    continue;
                 }
 
                 if (animal == null)
@@ -76,9 +93,26 @@ namespace GiddyUpCore.Core.DebugActions
                 GenSpawn.Spawn(colonist, closest, map, Rot4.South);
                 GenSpawn.Spawn(animal, closest, map, Rot4.South);
                 PostPawnSpawn(colonist);
-                colonist.drafter.Drafted = true;
+                
 
                 InteractionWorker_RecruitAttempt.DoRecruit(colonist, animal, out letterString, out letter, false, false);
+                colonist.drafter.Drafted = true;
+                if (animal.RaceProps.IsMechanoid && ModsConfig.BiotechActive)
+                {
+                    if (!MechanitorUtility.EverControllable(animal))
+                    {
+                        colonist.DeSpawn();
+                        animal.DeSpawn();
+                        continue;
+                    }
+                    colonist.health.AddHediff(HediffDefOf.MechlinkImplant);
+                    if (animal.GetStatValue(StatDefOf.BandwidthCost) > colonist.mechanitor.TotalBandwidth)
+                    {
+                        var item = ThingMaker.MakeThing(MechDefOf.Apparel_MechlordSuit) as Apparel;
+                        colonist.apparel.Wear(item!);
+                    }
+                    colonist.relations.AddDirectRelation(PawnRelationDefOf.Overseer, animal);
+                }
                 colonist.GoMount(animal, MountUtility.GiveJobMethod.Instant);
 
             }
@@ -98,18 +132,18 @@ namespace GiddyUpCore.Core.DebugActions
                 return true;
             }
 
-            int maxOffset = System.Math.Max(origin.x, map.Size.x - 1 - origin.x);
+            var maxOffset = System.Math.Max(origin.x, map.Size.x - 1 - origin.x);
 
-            for (int offset = 1; offset <= maxOffset; offset++)
+            for (var offset = 1; offset <= maxOffset; offset++)
             {
-                IntVec3 east = new IntVec3(origin.x + offset, 0, origin.z);
+                var east = new IntVec3(origin.x + offset, 0, origin.z);
                 if (east.InBounds(map) && east.Standable(map))
                 {
                     result = east;
                     return true;
                 }
 
-                IntVec3 west = new IntVec3(origin.x - offset, 0, origin.z);
+                var west = new IntVec3(origin.x - offset, 0, origin.z);
                 if (west.InBounds(map) && west.Standable(map))
                 {
                     result = west;
@@ -122,13 +156,13 @@ namespace GiddyUpCore.Core.DebugActions
 
         private static void PostPawnSpawn(Pawn pawn)
         {
-            if (pawn.Spawned && pawn.Faction != null && pawn.Faction != Faction.OfPlayer)
+            if (pawn is { Spawned: true, Faction: not null } && pawn.Faction != Faction.OfPlayer)
             {
                 Lord lord = null;
 
                 if (pawn.Map.mapPawns.SpawnedPawnsInFaction(pawn.Faction).Any(p => p != pawn))
                 {
-                    Pawn existingPawn = (Pawn)GenClosest.ClosestThing_Global(
+                    var existingPawn = (Pawn)GenClosest.ClosestThing_Global(
                         pawn.Position,
                         pawn.Map.mapPawns.SpawnedPawnsInFaction(pawn.Faction),
                         validator: thing => thing != pawn && ((Pawn)thing).GetLord() != null
@@ -154,5 +188,11 @@ namespace GiddyUpCore.Core.DebugActions
 
             pawn.Rotation = Rot4.South;
         }
+    }
+
+    [DefOf]
+    public static class MechDefOf
+    {
+        [MayRequireBiotech] public static ThingDef Apparel_MechlordSuit;
     }
 }

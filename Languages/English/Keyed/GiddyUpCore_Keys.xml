@@ -70,5 +70,11 @@
 	<GU_CannotRide>Rider incapable</GU_CannotRide>
 	<GUC_TooHeavy>Too heavy</GUC_TooHeavy>
 	<GUC_DisAgeCap>Disregard Age Limit</GUC_DisAgeCap>
+	<GU_DrawOffsetEditor_Gizmo_Label>Edit draw offsets</GU_DrawOffsetEditor_Gizmo_Label>
+	<GU_DrawOffsetEditor_Gizmo_Description>Open the drawing offset editor for {0}.</GU_DrawOffsetEditor_Gizmo_Description>
+	<GU_DrawOffsetEditor_Title>{0} :: {1} :: {2}</GU_DrawOffsetEditor_Title>
+	<GU_DrawOffsetEditor_SavePatch>Export Patches</GU_DrawOffsetEditor_SavePatch>
+	<GU_DrawOffsetEditor_Reset>Reset</GU_DrawOffsetEditor_Reset>
+	<GU_DrawOffsetEditor_SaveFailed>Failed to save the drawing offset patch for {0}. Check the log for details.</GU_DrawOffsetEditor_SaveFailed>
 
 </LanguageData>

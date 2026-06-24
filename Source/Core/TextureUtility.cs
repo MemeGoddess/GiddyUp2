@@ -17,7 +17,7 @@ public static class TextureUtility
     public static float FetchCache(Pawn animal)
     {
         var age = animal.ageTracker?.CurLifeStageIndex ?? 0;
-        Settings.offsetCache.TryGetValue(FormatKey(animal.def, age), out var offset);
+        Settings.offsetCache.TryGetValue(FormatKey(animal.kindDef, age), out var offset);
         return offset;
     }
 

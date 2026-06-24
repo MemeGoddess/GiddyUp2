@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -8,6 +8,11 @@ namespace GiddyUpCore.Core;
 internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
 {
     private const float RiderLayer = 33f;
+    private const PawnRenderFlags ForwardedRenderFlags = PawnRenderFlags.Portrait |
+                                                        PawnRenderFlags.DrawNow |
+                                                        PawnRenderFlags.Cache |
+                                                        PawnRenderFlags.NeverAimWeapon |
+                                                        PawnRenderFlags.StylingStation;
 
     public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
     {
@@ -50,8 +55,61 @@ internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
         if (mountedNode.AnimalData.Rider == null)
             return;
 
-        var drawLoc = matrix.MultiplyPoint3x4(Vector3.zero);
-        using var _ = MountedRiderRenderLayerCompression.Push(mountedNode.AnimalData.Rider, LayerFor(node, parms));
-        mountedNode.AnimalData.Rider.Drawer.renderer.RenderPawnAt(drawLoc, parms.facing);
+        RenderRider(node, mountedNode.AnimalData.Rider, parms, matrix);
+    }
+
+    private static void RenderRider(PawnRenderNode node, Pawn rider, PawnDrawParms parentParms, Matrix4x4 matrix)
+    {
+        var renderer = rider.Drawer.renderer;
+        var flags = BuildFlags(rider, parentParms.flags);
+        var posture = rider.GetPosture();
+        var facing = posture == PawnPosture.Standing || rider.Crawling
+            ? parentParms.facing
+            : renderer.LayingFacing();
+        var angle = posture == PawnPosture.Standing ? 0f : renderer.BodyAngle(flags);
+
+        var rootMatrix = matrix;
+        var bodyDrawOffset = rider.ageTracker.CurLifeStage.bodyDrawOffset;
+        if (bodyDrawOffset != Vector3.zero)
+            rootMatrix *= Matrix4x4.Translate(bodyDrawOffset);
+
+        if (angle != 0f)
+            rootMatrix *= Matrix4x4.Rotate(Quaternion.AngleAxis(angle, Vector3.up));
+
+        var riderParms = new PawnDrawParms
+        {
+            pawn = rider,
+            matrix = rootMatrix,
+            facing = facing,
+            rotDrawMode = renderer.CurRotDrawMode,
+            posture = posture,
+            flags = flags,
+            tint = parentParms.tint * renderer.flasher.CurColor.ToTransparent(InvisibilityUtility.GetAlpha(rider)) * (node.tree.debugTint ?? Color.white),
+            bed = rider.CurrentBed(),
+            carriedThing = rider.carryTracker?.CarriedThing,
+            dead = rider.Dead,
+            crawling = rider.Crawling,
+            swimming = rider.Swimming
+        };
+
+        renderer.renderTree.EnsureInitialized(flags);
+        renderer.renderTree.ParallelPreDraw(riderParms);
+        renderer.renderTree.Draw(riderParms);
+    }
+
+    private static PawnRenderFlags BuildFlags(Pawn rider, PawnRenderFlags parentFlags)
+    {
+        var flags = parentFlags & ForwardedRenderFlags;
+
+        if (!rider.health.hediffSet.HasHead)
+            flags |= PawnRenderFlags.HeadStump;
+
+        if (rider.IsPsychologicallyInvisible())
+            flags |= PawnRenderFlags.Invisible;
+
+        if (rider.Swimming)
+            return flags | PawnRenderFlags.NoBody;
+
+        return flags | PawnRenderFlags.Headgear | PawnRenderFlags.Clothes;
     }
 }

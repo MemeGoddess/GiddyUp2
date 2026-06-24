@@ -1,3 +1,4 @@
+using System;
 using GiddyUp;
 using GiddyUpCore.Compatibility;
 using UnityEngine;
@@ -19,13 +20,19 @@ internal static class MountedRiderRenderNodeUtility
         if (customOffsets == null)
             return offset;
 
-        if (rotation == Rot4.North)
-            return offset + customOffsets.northOffset;
-        if (rotation == Rot4.South)
-            return offset + customOffsets.southOffset;
-        if (rotation == Rot4.East)
-            return offset + customOffsets.eastOffset;
-        return offset + customOffsets.westOffset;
+        return offset + customOffsets.GetOffsetByRotation(rotation);
+    }
+
+    public static Vector3 GetOffsetByRotation(this DrawingOffset offset, Rot4 rotation)
+    {
+        return rotation.AsInt switch
+        {
+            Rot4.NorthInt => offset.northOffset,
+            Rot4.SouthInt => offset.southOffset,
+            Rot4.EastInt => offset.eastOffset,
+            Rot4.WestInt => offset.westOffset,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     public static void RefreshMountedAnimalGraphics(Pawn? animal)

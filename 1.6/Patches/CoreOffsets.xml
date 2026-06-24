@@ -1,186 +1,201 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Iguana"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.15)</northOffset>
-					<southOffset>(0.00, 0.00, -0.15)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.15)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.15)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Fox_Arctic</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.20)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.30)</southOffset>
+	            <eastOffset>(0.30, 0.00, 0.00)</eastOffset>
+	            <westOffset>(-0.30, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Fox_Fennec"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.15)</northOffset>
-					<southOffset>(0.00, 0.00, -0.15)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.15)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.15)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Bison</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.30)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.30)</southOffset>
+	            <eastOffset>(0.00, 0.00, -0.30)</eastOffset>
+	            <westOffset>(0.00, 0.00, -0.30)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Fox_Arctic"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.30)</northOffset>
-					<southOffset>(0.00, 0.00, -0.30)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.30)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.30)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Boomrat</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+	            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+	            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Cow"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.15)</northOffset>
-					<southOffset>(0.00, 0.00, -0.15)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.15)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.15)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Chicken</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, 0.00)</northOffset>
+	            <southOffset>(0.00, 0.00, 0.00)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.10)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.10)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Donkey"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.15)</northOffset>
-					<southOffset>(0.00, 0.00, -0.15)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.15)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.15)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Cow</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, 0.00)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Thrumbo"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.50)</northOffset>
-					<southOffset>(0.00, 0.00, -0.50)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.50)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.50)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Donkey</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+	            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+	            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Pig"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.25)</northOffset>
-					<southOffset>(0.00, 0.00, -0.25)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.25)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.25)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Dromedary</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, 0.20)</northOffset>
+	            <southOffset>(0.00, 0.00, 0.20)</southOffset>
+	            <eastOffset>(-0.40, 0.00, 0.20)</eastOffset>
+	            <westOffset>(0.40, 0.00, 0.20)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Bison"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.30)</northOffset>
-					<southOffset>(0.00, 0.00, -0.30)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.30)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.30)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Fox_Fennec</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+	            <eastOffset>(0.15, 0.00, -0.15)</eastOffset>
+	            <westOffset>(-0.15, 0.00, -0.15)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Yak"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.65)</northOffset>
-					<southOffset>(0.00, 0.00, -0.65)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.65)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.65)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>GuineaPig</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.25)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.25)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Megasloth"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.30)</northOffset>
-					<southOffset>(0.00, 0.00, -0.30)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.30)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.30)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Iguana</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+	            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+	            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Warg"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.40)</northOffset>
-					<southOffset>(0.00, 0.00, -0.40)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.40)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.40)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Megasloth</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.30)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.30)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.10)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Fox_Red"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.30)</northOffset>
-					<southOffset>(0.00, 0.00, -0.30)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.30)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.30)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Pig</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.25)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.25)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[defName="Boomrat"]</xpath>
-		<value>
-			<modExtensions>
-				<li Class="GiddyUp.DrawingOffset">
-					<northOffset>(0.00, 0.00, -0.15)</northOffset>
-					<southOffset>(0.00, 0.00, -0.15)</southOffset>
-					<eastOffset>(0.00, 0.00, -0.15)</eastOffset>
-					<westOffset>(0.00, 0.00, -0.15)</westOffset>
-				</li>
-			</modExtensions>
-		</value>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Rat</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.20)</southOffset>
+	            <eastOffset>(0.25, 0.00, 0.00)</eastOffset>
+	            <westOffset>(-0.25, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
 	</Operation>
-
-	
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Fox_Red</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.30)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.30)</southOffset>
+	            <eastOffset>(0.20, 0.00, 0.00)</eastOffset>
+	            <westOffset>(-0.20, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
+	</Operation>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Thrumbo</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.50)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.50)</southOffset>
+	            <eastOffset>(0.00, 0.00, -0.50)</eastOffset>
+	            <westOffset>(0.00, 0.00, -0.50)</westOffset>
+	        </li>
+	    </value>
+	</Operation>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Turkey</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.30)</northOffset>
+	            <southOffset>(0.00, 0.00, 0.00)</southOffset>
+	            <eastOffset>(0.20, 0.00, 0.00)</eastOffset>
+	            <westOffset>(-0.20, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
+	</Operation>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Warg</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.40)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.40)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
+	</Operation>
+	<Operation Class="GiddyUp.PatchOperationDrawingOffset">
+	    <def>Yak</def>
+	    <value>
+	        <li Class="GiddyUp.DrawingOffset">
+	            <northOffset>(0.00, 0.00, -0.65)</northOffset>
+	            <southOffset>(0.00, 0.00, -0.65)</southOffset>
+	            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+	            <westOffset>(0.00, 0.00, 0.00)</westOffset>
+	        </li>
+	    </value>
+	</Operation>
 </Patch>
