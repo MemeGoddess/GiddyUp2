@@ -5,6 +5,7 @@ using LudeonTK;
 using RimWorld;
 using Verse;
 using Verse.AI.Group;
+using static RimWorld.MechClusterSketch;
 
 namespace GiddyUpCore.Core.DebugActions
 {
@@ -77,14 +78,6 @@ namespace GiddyUpCore.Core.DebugActions
                 var colonist = PawnGenerator.GeneratePawn(colonistKind, FactionUtility.DefaultFactionFrom(colonistKind.defaultFactionDef));
                 var animal = PawnGenerator.GeneratePawn(animalKind);
 
-                if (animal.RaceProps.IsMechanoid)
-                    colonist.health.AddHediff(HediffDefOf.MechlinkImplant);
-
-                animal.mechanitor = new Pawn_MechanitorTracker
-                {
-                    pawn = colonist
-                };
-
                 if (colonist == null)
                 {
                     Log.Error("Colonist was null when spawning mounts");
@@ -100,9 +93,26 @@ namespace GiddyUpCore.Core.DebugActions
                 GenSpawn.Spawn(colonist, closest, map, Rot4.South);
                 GenSpawn.Spawn(animal, closest, map, Rot4.South);
                 PostPawnSpawn(colonist);
-                colonist.drafter.Drafted = true;
+                
 
                 InteractionWorker_RecruitAttempt.DoRecruit(colonist, animal, out letterString, out letter, false, false);
+                colonist.drafter.Drafted = true;
+                if (animal.RaceProps.IsMechanoid && ModsConfig.BiotechActive)
+                {
+                    if (!MechanitorUtility.EverControllable(animal))
+                    {
+                        colonist.DeSpawn();
+                        animal.DeSpawn();
+                        continue;
+                    }
+                    colonist.health.AddHediff(HediffDefOf.MechlinkImplant);
+                    if (animal.GetStatValue(StatDefOf.BandwidthCost) > colonist.mechanitor.TotalBandwidth)
+                    {
+                        var item = ThingMaker.MakeThing(MechDefOf.Apparel_MechlordSuit) as Apparel;
+                        colonist.apparel.Wear(item!);
+                    }
+                    colonist.relations.AddDirectRelation(PawnRelationDefOf.Overseer, animal);
+                }
                 colonist.GoMount(animal, MountUtility.GiveJobMethod.Instant);
 
             }
@@ -178,5 +188,11 @@ namespace GiddyUpCore.Core.DebugActions
 
             pawn.Rotation = Rot4.South;
         }
+    }
+
+    [DefOf]
+    public static class MechDefOf
+    {
+        [MayRequireBiotech] public static ThingDef Apparel_MechlordSuit;
     }
 }
