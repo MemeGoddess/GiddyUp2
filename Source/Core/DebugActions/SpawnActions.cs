@@ -81,7 +81,7 @@ namespace GiddyUpCore.Core.DebugActions
                 if (colonist == null)
                 {
                     Log.Error("Colonist was null when spawning mounts");
-                    return;
+                    continue;
                 }
 
                 if (animal == null)
@@ -132,18 +132,18 @@ namespace GiddyUpCore.Core.DebugActions
                 return true;
             }
 
-            int maxOffset = System.Math.Max(origin.x, map.Size.x - 1 - origin.x);
+            var maxOffset = System.Math.Max(origin.x, map.Size.x - 1 - origin.x);
 
-            for (int offset = 1; offset <= maxOffset; offset++)
+            for (var offset = 1; offset <= maxOffset; offset++)
             {
-                IntVec3 east = new IntVec3(origin.x + offset, 0, origin.z);
+                var east = new IntVec3(origin.x + offset, 0, origin.z);
                 if (east.InBounds(map) && east.Standable(map))
                 {
                     result = east;
                     return true;
                 }
 
-                IntVec3 west = new IntVec3(origin.x - offset, 0, origin.z);
+                var west = new IntVec3(origin.x - offset, 0, origin.z);
                 if (west.InBounds(map) && west.Standable(map))
                 {
                     result = west;
@@ -156,13 +156,13 @@ namespace GiddyUpCore.Core.DebugActions
 
         private static void PostPawnSpawn(Pawn pawn)
         {
-            if (pawn.Spawned && pawn.Faction != null && pawn.Faction != Faction.OfPlayer)
+            if (pawn is { Spawned: true, Faction: not null } && pawn.Faction != Faction.OfPlayer)
             {
                 Lord lord = null;
 
                 if (pawn.Map.mapPawns.SpawnedPawnsInFaction(pawn.Faction).Any(p => p != pawn))
                 {
-                    Pawn existingPawn = (Pawn)GenClosest.ClosestThing_Global(
+                    var existingPawn = (Pawn)GenClosest.ClosestThing_Global(
                         pawn.Position,
                         pawn.Map.mapPawns.SpawnedPawnsInFaction(pawn.Faction),
                         validator: thing => thing != pawn && ((Pawn)thing).GetLord() != null
