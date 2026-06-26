@@ -21,8 +21,11 @@ public static class TextureUtility
         return offset;
     }
 
-    public static float SetDrawOffset(PawnKindLifeStage age)
+    public static float? SetDrawOffset(PawnKindLifeStage age)
     {
+        if (age?.bodyGraphicData?.Graphic?.MatEast?.mainTexture as Texture2D == null)
+            return null;
+
         var unreadableTexture = age.bodyGraphicData.Graphic.MatEast.mainTexture as Texture2D;
         var t = GetReadableTexture(unreadableTexture);
         var backHeight = GetBackHeight(t);

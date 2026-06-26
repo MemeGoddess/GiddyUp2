@@ -165,8 +165,19 @@ public static class Setup
                     continue;
 
                 //Build out...
-                var offset = TextureUtility.SetDrawOffset(lifeStages[lifeIndex]);
-                ModSettings_GiddyUp.offsetCache.SetOrAdd(key, offset);
+                var age = lifeStages[lifeIndex];
+                if (age == null)
+                {
+                    Log.Error($"Age[{lifeIndex}] for '{pawnKindDef.defName}:{pawnKindDef.modContentPack.Name}' is null");
+                    continue;
+                }
+                var offset = TextureUtility.SetDrawOffset(age);
+                if (offset == null)
+                {
+                    Log.Error($"Texture for '{pawnKindDef.defName}:{pawnKindDef.modContentPack.Name}' is null");
+                    continue;
+                }
+                ModSettings_GiddyUp.offsetCache.SetOrAdd(key, offset.Value);
                 newEntries = true;
             }
         }
