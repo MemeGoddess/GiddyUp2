@@ -212,8 +212,13 @@ public static class IsMountableUtility
             out List<Pawn> claimants)
         {
             claimants = new List<Pawn>();
+            reservations ??= animal.Map.FetchReservedAnimals();
             if (reservations == null)
-                reservations = animal.Map.FetchReservedAnimals();
+            {
+                Log.WarningOnce($"Unable to check reservations for '{animal?.LabelShortCap ?? "Unknown"}'", animal?.thingIDNumber ?? 4320546);
+                return false;
+            }
+            
             for (var i = reservations.Count; i-- > 0;)
             {
                 var item = reservations[i];
@@ -312,9 +317,11 @@ public static class IsMountableUtility
         return false;
     }
 
-    public static List<ReservationManager.Reservation> FetchReservedAnimals(this Map map)
+    public static List<ReservationManager.Reservation>? FetchReservedAnimals(this Map map)
     {
         var workingList = new List<ReservationManager.Reservation>();
+        if (map?.reservationManager?.reservations == null)
+            return null;
         var list = map.reservationManager.reservations;
         for (var i = list.Count; i-- > 0;)
         {
