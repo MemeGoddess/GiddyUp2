@@ -12,17 +12,17 @@
     <stages>
       <li>
         <label>missing the saddle</label>
-        <description>My boots have touched the dirt for too long. A rider belongs on horseback, feeling the wind of the Mark.</description>
+        <description>My boots have touched the dirt for too long. A rider belongs on horseback, feeling the cold breeze of the steppe.</description>
         <baseMoodEffect>-3</baseMoodEffect>
       </li>
       <li>
         <label>frustrated by not riding</label>
-        <description>Walking is for peasants and orcs. My legs ache for the flanks of a proper steed. This is an insult to my heritage.</description>
+        <description>Walking is for peasants. My legs ache for the flanks of a proper steed. This is an insult to my heritage.</description>
         <baseMoodEffect>-6</baseMoodEffect>
       </li>
       <li>
         <label>grounded rider</label>
-        <description>I am a Rider of the Mark reduced to crawling in the mud! Have we forgotten who we are? Get me a horse before I lose my mind!</description>
+        <description>I am a mounted warrior reduced to crawling in the mud! Have we forgotten who we are? Get me a horse before I lose my mind!</description>
         <baseMoodEffect>-10</baseMoodEffect>
       </li>
     </stages>
