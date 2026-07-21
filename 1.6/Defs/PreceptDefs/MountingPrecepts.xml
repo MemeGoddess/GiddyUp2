@@ -31,7 +31,8 @@
   <PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
     <defName>GU_Mounting_Essential</defName>
     <issue>GU_Mounting</issue>
-    <label>lifeblood</label>
+    <label>essential</label>
+    <description>Riders are a proud breed, and they are not meant to walk. A horse is a companion, a friend, and a tool of war. To be without one is to be without purpose.</description>
     <impact>Medium</impact>
     <displayOrderInIssue>1</displayOrderInIssue>
     <selectionWeight>1</selectionWeight>
