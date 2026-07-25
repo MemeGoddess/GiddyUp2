@@ -2,7 +2,8 @@
 <Defs>
   <IssueDef MayRequire="Ludeon.RimWorld.Ideology">
     <defName>GU_Mounting</defName>
-    <label>mounts</label>
+    <label>horsemanship</label>
+    <iconPath>UI/GU_Precept_Mounted</iconPath>
   </IssueDef>
 
   <ThoughtDef MayRequire="Ludeon.RimWorld.Ideology">
@@ -10,18 +11,18 @@
     <workerClass>GiddyUp.ThoughtWorker_Precept_NoRecentMount</workerClass>
     <stages>
       <li>
-        <label>itching to ride</label>
-        <description>No Recent Mount</description>
+        <label>missing the saddle</label>
+        <description>My boots have touched the dirt for too long. A rider belongs on horseback, feeling the cold breeze of the steppe.</description>
         <baseMoodEffect>-3</baseMoodEffect>
       </li>
       <li>
         <label>frustrated by not riding</label>
-        <description>No Recent Mount</description>
+        <description>Walking is for peasants. My legs ache for the flanks of a proper steed. This is an insult to my heritage.</description>
         <baseMoodEffect>-6</baseMoodEffect>
       </li>
       <li>
-        <label>miserable without a mount</label>
-        <description>No Recent Mount</description>
+        <label>grounded rider</label>
+        <description>I am a mounted warrior reduced to crawling in the mud! Have we forgotten who we are? Get me a horse before I lose my mind!</description>
         <baseMoodEffect>-10</baseMoodEffect>
       </li>
     </stages>
@@ -31,6 +32,7 @@
     <defName>GU_Mounting_Essential</defName>
     <issue>GU_Mounting</issue>
     <label>essential</label>
+    <description>Riders are a proud breed, and they are not meant to walk. A horse is a companion, a friend, and a tool of war. To be without one is to be without purpose.</description>
     <impact>Medium</impact>
     <displayOrderInIssue>1</displayOrderInIssue>
     <selectionWeight>1</selectionWeight>
