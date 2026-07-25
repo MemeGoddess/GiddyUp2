@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System.Collections.Generic;
+using Verse;
 using Settings = GiddyUp.ModSettings_GiddyUp;
 
 
@@ -21,6 +22,7 @@ public class ExtendedPawnData : IExposable
     public bool selectedForCaravan = false, canRide = true;
     public float drawOffset;
     public int lastMountedTick = 0;
+    private Dictionary<ThingDef, int>? _lastMountedTickByMountDef;
     public Automount automount = Automount.Anyone;
 
     public enum Automount
@@ -85,6 +87,7 @@ public class ExtendedPawnData : IExposable
         Scribe_Values.Look(ref automount, "automount", Automount.Anyone);
         Scribe_Values.Look(ref drawOffset, "drawOffset");
         Scribe_Values.Look(ref lastMountedTick, "lastMountedTick", 0);
+        Scribe_Collections.Look(ref _lastMountedTickByMountDef, "lastMountedTickByMountDef", LookMode.Def, LookMode.Value);
 
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
@@ -96,5 +99,33 @@ public class ExtendedPawnData : IExposable
             //Remove any invalid entries that somehow slipped into the store.
             ExtendedDataStorage.Singleton.CleanupExtendedPawnDataFromStore(this);
         }
+    }
+
+    public void NotifyMountedAt(int tick, ThingDef? mountDef = null)
+    {
+        lastMountedTick = tick;
+        if (mountDef == null)
+            return;
+
+        _lastMountedTickByMountDef ??= new();
+        _lastMountedTickByMountDef[mountDef] = tick;
+    }
+
+    public int GetLastMountedTick(IReadOnlyList<ThingDef>? acceptedMountDefs)
+    {
+        if (acceptedMountDefs == null || acceptedMountDefs.Count == 0)
+            return lastMountedTick;
+
+        if (_lastMountedTickByMountDef == null || _lastMountedTickByMountDef.Count == 0)
+            return 0;
+
+        var bestTick = 0;
+        foreach (var mountDef in acceptedMountDefs)
+        {
+            if (mountDef != null && _lastMountedTickByMountDef.TryGetValue(mountDef, out var tick) && tick > bestTick)
+                bestTick = tick;
+        }
+
+        return bestTick;
     }
 }

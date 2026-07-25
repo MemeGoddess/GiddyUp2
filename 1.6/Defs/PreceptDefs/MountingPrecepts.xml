@@ -2,7 +2,7 @@
 <Defs>
   <IssueDef MayRequire="Ludeon.RimWorld.Ideology">
     <defName>GU_Mounting</defName>
-    <label>horsemanship</label>
+    <label>mounting</label>
     <iconPath>UI/GU_Precept_Mounted</iconPath>
   </IssueDef>
 

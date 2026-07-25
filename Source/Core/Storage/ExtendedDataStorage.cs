@@ -10,6 +10,8 @@ namespace GiddyUp;
 
 public class ExtendedDataStorage(World world) : WorldComponent(world)
 {
+    private static HashSet<int> _caravansShuffled = new();
+    
     public static ExtendedDataStorage Singleton { get; private set; } = null!; //Singleton instance created on world init
     public static HashSet<int> isMounted = []; //This just serves as a cached logic gate
     public static HashSet<Thing>? noFleeingAnimals;
@@ -134,6 +136,7 @@ public class ExtendedDataStorage(World world) : WorldComponent(world)
             LessonAutoActivator.TeachOpportunity(ResourceBank.ConceptDefOf.BM_Mounting, OpportunityType.GoodToKnow);
             LessonAutoActivator.TeachOpportunity(ResourceBank.ConceptDefOf.BM_Enemy_Mounting, OpportunityType.GoodToKnow);
         }
+        _caravansShuffled.Clear();
     }
 
     public override void ExposeData()
@@ -164,26 +167,60 @@ public class ExtendedDataStorage(World world) : WorldComponent(world)
     public override void WorldComponentTick()
     {
         var tick = Find.TickManager.TicksGame;
-        if (ModsConfig.IdeologyActive && Settings.ideoEnabled && tick % 100 == 0)
+        if (!ModsConfig.IdeologyActive || !Settings.ideoEnabled || tick % 100 != 0) 
+            return;
+        
+        var ridingPawns = PawnsFinder.AllMaps_Spawned
+            .Where(x => x.IsMounted())
+            .Select(x => x.GetExtendedPawnData())
+            .ToList();
+        foreach (var pawn in ridingPawns)
         {
-            var pawns = PawnsFinder.AllMaps_Spawned
-                .Where(x => x.IsMounted())
-                .Select(x => x.GetExtendedPawnData())
+            pawn.NotifyMountedAt(tick, pawn.Mount?.def);
+        }
+
+        foreach (var caravan in Find.WorldObjects.Caravans)
+        {
+            if(!caravan.PawnsListForReading.Any(x => x.IsEverMountable()))
+                continue;
+                
+            var caravanRidingPawns = caravan.PawnsListForReading
+                .Where(pawn => pawn.RaceProps.Humanlike)
+                .Select(pawn => pawn.GetExtendedPawnData())
                 .ToList();
 
-            foreach (var caravan in Find.WorldObjects.Caravans)
+            if (_caravansShuffled.Add(caravan.uniqueId))
             {
-                var caravanPawns = caravan.PawnsListForReading.ToHashSet();
-                if(!caravanPawns.Any(x => x.IsEverMountable()))
-                   continue;
-                pawns.AddRange(caravan.PawnsListForReading
-                    .Where(pawn => !pawn.RaceProps.Animal)
-                    .Select(pawn => pawn.GetExtendedPawnData()));
+                var unmountedPawns = caravanRidingPawns
+                    .Where(x => x.ReservedMount == null)
+                    .ToList();
+
+                var unmountedAnimals = caravan.PawnsListForReading
+                    .Where(x => x.IsEverMountable() && x.GetExtendedPawnData() is {ReservedBy: null})
+                    .ToList();
+
+                foreach (var unmountedPawn in unmountedPawns)
+                {
+                    if(unmountedAnimals.Count == 0)
+                        continue;
+                        
+                    var selectedMount = unmountedAnimals.FirstOrDefault();
+                        
+                    if(selectedMount == null)
+                        continue;
+
+                    var animalData = selectedMount.GetExtendedPawnData();
+                    unmountedPawn.ReservedMount = selectedMount;
+                    animalData.ReservedBy = unmountedPawn.Pawn;
+                    animalData.selectedForCaravan = true;
+                        
+                    unmountedAnimals.Remove(selectedMount);
+                }
             }
 
-            foreach (var pawn in pawns)
+            foreach (var pawn in caravanRidingPawns)
             {
-                pawn.lastMountedTick = tick;
+                pawn.NotifyMountedAt(tick, pawn.Mount?.def ?? pawn.ReservedMount?.def);
             }
         }
     }
