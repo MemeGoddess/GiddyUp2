@@ -59,17 +59,17 @@ internal static class Patch_DetermineNextJob
             return;
         if (pawn.def.race.intelligence == Intelligence.Humanlike)
         {
-           //Sanity check, make sure the mount driver is still valid
-        if (pawn.IsMounted())
-        {
-            var pawnData = pawn.GetExtendedPawnData();
-            var mount = pawnData.Mount;
-            var hasValidMountedDriver = mount != null && mount.CurJobDef == ResourceBank.JobDefOf.Mounted && mount.jobs?.curDriver is JobDriver_Mounted driver &&  driver.Rider == pawn;
-            var allowedTemporaryJob = mount != null &&  mount.CurJobDef == JobDefOf.RemoveApparel;
+            //Sanity check, make sure the mount driver is still valid
+            if (pawn.IsMounted())
+            {
+                var pawnData = pawn.GetExtendedPawnData();
+                var mount = pawnData.Mount;
+                var hasValidMountedDriver = mount != null && mount.CurJobDef == ResourceBank.JobDefOf.Mounted && mount.jobs?.curDriver is JobDriver_Mounted driver &&  driver.Rider == pawn;
+                var allowedTemporaryJob = mount != null &&  mount.CurJobDef == JobDefOf.RemoveApparel;
 
-            if (!hasValidMountedDriver && !allowedTemporaryJob)
-                pawn.Dismount(mount, pawnData, true);
-        }
+                if (!hasValidMountedDriver && !allowedTemporaryJob)
+                    pawn.Dismount(mount, pawnData, true);
+            }
             //If a hostile pawn owns an animal, make sure it mounts it whenever possible
             else if (pawn.Faction.HostileTo(Current.gameInt.worldInt.factionManager.ofPlayer) &&
                      !pawn.Downed && !pawn.IsPrisoner && !pawn.HasAttachment(ThingDefOf.Fire))
