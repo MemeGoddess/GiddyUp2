@@ -53,12 +53,18 @@ internal static class Patch_TransferableOneWayWidget
 
         var buttonRect = new Rect(num - buttonWidth, 0f, buttonWidth, rect.height);
         var cachedTransferables = new List<TransferableOneWay>();
+        var animalTransferables = new List<TransferableOneWay>();
         foreach (var section in widget.sections)
         {
             var title = section.title;
             //This is mainly for mods that add new sections such as Colony Groups
-            if (title != "Capture" && title != "Prisoners" && title != "Animals" && title != "Mechanoids")
-                cachedTransferables.AddRange(section.cachedTransferables);
+            if (title != "Capture" && title != "Prisoners")
+            {
+                if(title != "Animals" && title != "Mechanoids")
+                    cachedTransferables.AddRange(section.cachedTransferables);
+                else
+                    animalTransferables.AddRange(section.cachedTransferables);
+            }
         }
 
         var pawns = new List<Pawn>();
@@ -69,8 +75,15 @@ internal static class Patch_TransferableOneWayWidget
                 pawns.Add(towPawn);
         }
 
+        var allPawns = new List<Pawn>(pawns);
+        foreach (var tow in animalTransferables)
+        {
+            if(tow.AnyThing is Pawn animal)
+                allPawns.Add(animal);
+        }
+
         //It quacks like a duck, so it is one!
-        SetSelectedForCaravan(pawn, trad);
+        SetSelectedForCaravan(pawn, trad, allPawns);
         if (pawn.RaceProps.Animal && pawns.Count > 0)
             HandleAnimal(num, buttonRect, pawn, pawns, trad);
         else
@@ -79,7 +92,7 @@ internal static class Patch_TransferableOneWayWidget
         return num - (buttonWidth - 25f);
     }
 
-    private static void SetSelectedForCaravan(Pawn pawn, TransferableOneWay trad)
+    private static void SetSelectedForCaravan(Pawn pawn, TransferableOneWay trad, List<Pawn> pawns)
     {
         var pawnData = pawn.GetExtendedPawnData();
         var reservedMount = pawnData.ReservedMount;
@@ -96,9 +109,35 @@ internal static class Patch_TransferableOneWayWidget
         if (reservedMount != null && (reservedMount.Dead || reservedMount.Downed))
             UnsetDataForRider(pawnData);
 
+        if (trad.CountToTransfer > 0 && !pawnData.selectedForCaravan)
+        {
+            if (pawn.IsEverMountable())
+            {
+                var selectedPawn = GetFirstValidRider(pawn, pawns);
+                if (selectedPawn != null)
+                    SelectMountRider(pawnData, selectedPawn.GetExtendedPawnData(), pawn, selectedPawn);
+            }
+            else if (pawn.IsCapableOfRiding(out _))
+            {
+                var selectedMount = GetFirstValidMount(pawn, pawns);
+                if (selectedMount != null)
+                    SelectMountRider(selectedMount.GetExtendedPawnData(), pawnData, selectedMount, pawn);
+            }
+        }
+        
         if (trad.CountToTransfer > 0)
             pawnData.selectedForCaravan = true;
     }
+
+    private static Pawn? GetFirstValidRider(Pawn animal, List<Pawn> pawns) =>
+        pawns.FirstOrDefault(x => x.IsCapableOfRiding(out _) && !x.IsTooHeavy(animal) && x.GetExtendedPawnData().selectedForCaravan);
+
+    private static Pawn? GetFirstValidMount(Pawn rider, List<Pawn> pawns) =>
+        pawns.FirstOrDefault(x =>
+        {
+            var mountData = x.GetExtendedPawnData();
+            return x.IsMountable(out _, rider) && mountData is { selectedForCaravan: true, ReservedBy: null };
+        });
 
     private static void UnsetDataForRider(ExtendedPawnData pawnData)
     {
