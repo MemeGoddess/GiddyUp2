@@ -27,13 +27,8 @@ public class ExtendedDataStorage(World world) : WorldComponent(world)
 
     public void UpdateAreaCache(Map map, bool reset = false)
     {
-        if (reset)
-        {
-            if (Settings.logging)
-                Log.Message("[Giddy-Up] Registering area for map ID " + map.uniqueID.ToString());
-            _areaNoMount.Add(map.uniqueID, null);
-            _areaDropAnimal.Add(map.uniqueID, null);
-        }
+        if (reset && Settings.logging)
+            Log.Message("[Giddy-Up] Registering area for map ID " + map.uniqueID.ToString());
 
         var list = map.areaManager.areas;
         var length = list.Count;
@@ -58,6 +53,23 @@ public class ExtendedDataStorage(World world) : WorldComponent(world)
         _areaDropAnimal[map.uniqueID] = areaDropAnimal;
     }
     
+    public void RemoveAreaCache(Map map)
+    {
+        _areaNoMount.Remove(map.uniqueID);
+        _areaDropAnimal.Remove(map.uniqueID);
+    }
+
+    /// <summary>
+    /// Read-only lookup that doesn't create an entry for pawns Giddy-Up has never dealt with.
+    /// </summary>
+    public bool TryGetExtendedPawnData(Pawn? pawn, out ExtendedPawnData data)
+    {
+        if (pawn != null)
+            return _extendedPawnDataStore.TryGetValue(pawn.thingIDNumber, out data);
+        data = null!;
+        return false;
+    }
+
     public ExtendedPawnData GetExtendedPawnData(Pawn? pawn)
     {
         var pawnID = pawn?.thingIDNumber ?? -1;

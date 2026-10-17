@@ -14,11 +14,11 @@ internal class Patch_TrySpawnHatchedOrBornPawn
         {
             pawn.GetExtendedPawnData().automount = ExtendedPawnData.Automount.False;
         }
-        else if (motherOrEgg is Pawn mother)
+        else if (motherOrEgg is Pawn mother && mother.TryGetExtendedPawnData(out var motherData) &&
+                 motherData.automount != ExtendedPawnData.Automount.Anyone)
         {
-            var pawnData = pawn.GetExtendedPawnData();
-            var motherData = mother.GetExtendedPawnData();
-            pawnData.automount = motherData.automount;
+            //Only inherit a non-default setting; otherwise no entry is needed for either of them
+            pawn.GetExtendedPawnData().automount = motherData.automount;
         }
     }
 }

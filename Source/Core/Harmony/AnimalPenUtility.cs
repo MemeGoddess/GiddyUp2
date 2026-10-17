@@ -23,9 +23,9 @@ internal class Patch_NeedsToBeManagedByRope
             {
                 return false;
             }
-            else
+            else if (pawn.TryGetExtendedPawnData(out var pawnData)) //Don't create entries for every roamer checked
             {
-                var reservedBy = pawn.GetExtendedPawnData().ReservedBy;
+                var reservedBy = pawnData.ReservedBy;
                 if (reservedBy != null && reservedBy.IsFormingCaravan())
                     return false;
             }

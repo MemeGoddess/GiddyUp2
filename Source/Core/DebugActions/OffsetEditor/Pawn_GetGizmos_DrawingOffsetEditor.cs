@@ -6,9 +6,15 @@ using Verse;
 
 namespace GiddyUpCore.Core.DebugActions.OffsetEditor;
 
+//Dev-only editor. The patch itself is only applied in Debug builds; before, Release still ran the postfix for every
+//selected pawn each frame just to return early.
 [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
 internal static class Pawn_GetGizmos_DrawingOffsetEditor
 {
+#if !DEBUG
+    private static bool Prepare() => false;
+#endif
+
     private static void Postfix(ref IEnumerable<Gizmo> __result, Pawn __instance)
     {
         if (!ShouldShowFor(__instance))

@@ -24,7 +24,7 @@ public class Pawn_GetGizmos
             {
                 defaultLabel = label,
                 defaultDesc = desc,
-                icon = ContentFinder<Texture2D>.Get("UI/" + "LeaveRider", true),
+                icon = GiddyUp.ResourceBank.iconGizmoLeaveRider,
                 action = () => PawnEndCurrentJob(__instance)
             });
     }

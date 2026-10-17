@@ -13,7 +13,8 @@ internal static class Patch_MakeDowned
         if (pawn.Faction == null || ExtendedDataStorage.Singleton == null)
             return; //Null checking the singleton 'cause this could happen before the world sets up.
 
-        var pawnData = pawn.GetExtendedPawnData();
+        if (!pawn.TryGetExtendedPawnData(out var pawnData))
+            return; //Never involved with Giddy-Up, nothing to clean up
         if (pawn.RaceProps.Humanlike)
             pawn.InvoluntaryDismount(pawnData.ReservedMount, pawnData);
         else if (pawnData.ReservedBy != null)
@@ -32,7 +33,9 @@ internal static class Patch_SetDead
     private static void Postfix(Pawn_HealthTracker __instance)
     {
         var pawn = __instance.pawn;
-        var pawnData = pawn.GetExtendedPawnData();
+        //Every death (insects, wild animals) created a store entry here; also the singleton may not exist yet
+        if (ExtendedDataStorage.Singleton == null || !pawn.TryGetExtendedPawnData(out var pawnData))
+            return;
         if (pawn.IsMounted())
         {
             pawn.Dismount(pawnData.Mount ?? pawnData.ReservedMount, pawnData, clearReservation: true);

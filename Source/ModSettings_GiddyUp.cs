@@ -15,7 +15,7 @@ public class ModSettings_GiddyUp : ModSettings
     public static int accuracyPenalty = 10;
     public static bool disregardAnimalCarryingCapacity = false;
     public static bool disregardAnimalAge = false;
-    public static Dictionary<string, float>? offsetCache;
+    public static Dictionary<string, float> offsetCache = new(); //Filled lazily per animal kind and life stage, not saved
     public static HashSet<string>? invertMountingRules; //These are only used on game start to setup the below, fast cache collections
     public static HashSet<string>? invertDrawRules; //These are only used on game start to setup the below, fast cache collections
     public static readonly HashSet<ushort> MountableCache = [];

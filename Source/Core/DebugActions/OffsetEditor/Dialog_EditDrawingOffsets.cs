@@ -126,7 +126,6 @@ internal sealed class Dialog_EditDrawingOffsets : Window
 
             if (previousX != newX || previousZ != newZ)
             {
-                Log.Message("Updating");
                 switch (rotation.AsInt)
                 {
                     case Rot4.NorthInt:

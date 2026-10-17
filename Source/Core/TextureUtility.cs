@@ -14,12 +14,32 @@ public static class TextureUtility
         return def.defName + "/" + age.ToString();
     }
 
+    //Computed on first use per kind and life stage; Setup used to read back every animal texture on every launch
     public static float FetchCache(Pawn animal)
     {
         var age = animal.ageTracker?.CurLifeStageIndex ?? 0;
-        Settings.offsetCache.TryGetValue(FormatKey(animal.kindDef, age), out var offset);
+        var key = FormatKey(animal.kindDef, age);
+        if (Settings.offsetCache.TryGetValue(key, out var offset))
+            return offset;
+
+        var lifeStages = animal.kindDef.lifeStages;
+        var stage = lifeStages != null && age < lifeStages.Count ? lifeStages[age] : null;
+        offset = 0f;
+        //This now runs inside the mount job rather than at startup, so a broken texture must not throw there
+        try
+        {
+            if (stage != null)
+                offset = SetDrawOffset(stage) ?? 0f;
+        }
+        catch (System.Exception ex)
+        {
+            Log.ErrorOnce($"[Giddy-Up] Could not compute the draw offset for {key}: {ex}", key.GetHashCode());
+        }
+        Settings.offsetCache[key] = offset;
         return offset;
     }
+
+    public static void ClearOffsetCache() => Settings.offsetCache.Clear();
 
     public static float? SetDrawOffset(PawnKindLifeStage age)
     {
@@ -30,6 +50,7 @@ public static class TextureUtility
         var t = GetReadableTexture(unreadableTexture);
         var backHeight = GetBackHeight(t);
         var backHeightRelative = (float)backHeight / (float)t.height;
+        UnityEngine.Object.Destroy(t); //The readable copy was never released
 
         var textureHeight = age.bodyGraphicData.drawSize.y;
         //If animal texture does not fit in a tile, take this into account

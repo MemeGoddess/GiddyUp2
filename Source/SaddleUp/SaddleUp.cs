@@ -46,7 +46,7 @@ namespace SaddleUp
                 hotKey = KeyBindingDefOf.Misc5,
                 Disabled = flag,
                 Order = 11.5f,
-                icon = ContentFinder<Texture2D>.Get("UI/QM_horseshoe_icon"),
+                icon = ResourceBank.iconGizmoSaddleUp,
                 disabledReason = str,
                 action = () => __instance.Map.GetComponent<Coordinator>().MountPawn(__instance),
             };
@@ -61,7 +61,7 @@ namespace SaddleUp
                 defaultDesc = "QM_Dismount_Description".Translate(),
                 hotKey = KeyBindingDefOf.Misc6,
                 Order = 11.5f,
-                icon = ContentFinder<Texture2D>.Get("UI/QM_horseshoe_x_icon"),
+                icon = ResourceBank.iconGizmoDismount,
                 action = () => DismountPawn(__instance)
             };
             return gizmoDismount;

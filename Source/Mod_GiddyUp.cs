@@ -2,7 +2,6 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using GiddyUpCore.RideAndRoll;
 using Verse;
 using UnityEngine;
@@ -18,6 +17,27 @@ public class Mod_GiddyUp : Mod
     private readonly QuickSearchWidget search = new QuickSearchWidget();
 
     private string? drawBehavior;
+
+    //The filtered lists were rebuilt with LINQ every frame the settings window was open
+    private readonly List<ThingDef?> filteredDefs = [];
+    private List<ThingDef?>? filteredSource;
+    private string? filteredText;
+
+    private List<ThingDef?> Filtered(List<ThingDef?> source)
+    {
+        if (!ReferenceEquals(source, filteredSource) || filteredText != search.filter.Text)
+        {
+            filteredSource = source;
+            filteredText = search.filter.Text;
+            filteredDefs.Clear();
+            foreach (var def in source)
+                if (search.filter.Matches(def?.label) || search.filter.Matches(def?.defName) ||
+                    search.filter.Matches(def?.modContentPack?.Name))
+                    filteredDefs.Add(def);
+        }
+        return filteredDefs;
+    }
+
     public Mod_GiddyUp(ModContentPack content) : base(content)
     {
         GetSettings<ModSettings_GiddyUp>();
@@ -50,7 +70,7 @@ public class Mod_GiddyUp : Mod
         new Rect(0f, 0, inRect.width, Text.LineHeight).SplitVerticallyWithMargin(out var tabsHeader,
             out var refreshCache, out _, 4f, rightWidth: Text.LineHeight);
         if (Widgets.ButtonImageWithBG(refreshCache, TexUI.RotRightTex, new Vector2(16, 16)))
-            offsetCache = null;
+            TextureUtility.ClearOffsetCache();
         TooltipHandler.TipRegion(refreshCache, () => "GU_Reset_Cache".Translate(), 427985);
         DrawTabs(tabsHeader, tabs);
         
@@ -166,10 +186,7 @@ public class Mod_GiddyUp : Mod
         }
         //========Search widget=========
         
-        var animalsForViewing = Setup.AllAnimals.Where(animal =>
-            search.filter.Matches(animal?.label)
-            || search.filter.Matches(animal?.defName)
-            || search.filter.Matches(animal?.modContentPack?.Name)).ToList();
+        var animalsForViewing = Filtered(Setup.AllAnimals);
         mountOptions.Gap(4f);
         var previousHeight = mountOptions.CurHeight;
         mountOptions.End();
@@ -352,10 +369,7 @@ public class Mod_GiddyUp : Mod
         var searchRect = options.GetRect(Text.LineHeight);
         searchRect.width -= 20f; // Scroll bar alignment
         search.OnGUI(searchRect);
-        var mechsForViewing = Setup.AllMechs.Where(mech =>
-            search.filter.Matches(mech?.label)
-            || search.filter.Matches(mech?.defName)
-            || search.filter.Matches(mech?.modContentPack?.Name)).ToList();
+        var mechsForViewing = Filtered(Setup.AllMechs);
         var previousControls = options.CurHeight;
         options.End();
         
@@ -431,7 +445,6 @@ public class Mod_GiddyUp : Mod
         try
         {
             Setup.RebuildInversions();
-            Setup.ProcessPawnKinds();
             Setup.RecalculateCaravanSpeeds(); //Also runs when the bonus was turned off, so it is removed without a restart
 
             JobDriver_Mounted.SetAllowedJob(JobDefOf.Hunt, !noMountedHunting);

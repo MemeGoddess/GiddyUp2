@@ -18,7 +18,10 @@ internal static class VerbProperties_AdjustedAccuracy
         if (pawn == null || pawn.stances == null)
             return __result;
 
-        var mount = pawn.GetExtendedPawnData().Mount;
+        //Every shooter on the map used to get a store entry created here; the HashSet check is enough to bail out
+        if (!pawn.IsMounted() || !pawn.TryGetExtendedPawnData(out var pawnData))
+            return __result;
+        var mount = pawnData.Mount;
         if (mount == null)
             return __result;
 

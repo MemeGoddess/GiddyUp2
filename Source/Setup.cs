@@ -64,7 +64,6 @@ public static class Setup
         if(!ModSettings_GiddyUp.mechanoidsEnabled)
             RemoveMechanoids();
 
-        ProcessPawnKinds();
         if (ModSettings_GiddyUp.disableSlavePawnColumn)
             DefDatabase<PawnTableDef>.GetNamed("Animals").columns.RemoveAll(x => x.defName == "MountableBySlaves");
 
@@ -131,55 +130,6 @@ public static class Setup
         ModSettings_GiddyUp.MechSelectedCache.AddRange(Setup.AllMechs
             .Where(x => ModSettings_GiddyUp.mechSelector.TryGetValue(x.defName, out var val) && val)
             .Select(x => x.shortHash));
-    }
-
-    //Responsible for setting up the draw offsets and custom stat overrides
-    public static void ProcessPawnKinds()
-    {
-        var newEntries = false;
-        if (ModSettings_GiddyUp.offsetCache == null)
-            ModSettings_GiddyUp.offsetCache = new Dictionary<string, float>();
-        var list = DefDatabase<PawnKindDef>.AllDefsListForReading;
-        var length = list.Count;
-        for (var i = 0; i < length; i++)
-        {
-            var pawnKindDef = list[i];
-            if (pawnKindDef.race == null)
-                continue;
-            //Determine which life stages are considered mature enough to ride
-            var lifeStages = pawnKindDef.lifeStages;
-            var lifeIndexes = lifeStages?.Count;
-            //Go through each life stage for this animal
-            for (var lifeIndex = 0; lifeIndex < lifeIndexes; lifeIndex++)
-            {
-                //Convert the def and age into a key string used for storage between sessions
-                var key = TextureUtility.FormatKey(pawnKindDef, lifeIndex);
-
-                //Skip if already set
-                if (ModSettings_GiddyUp.offsetCache.ContainsKey(key))
-                    continue;
-
-                //Build out...
-                var age = lifeStages[lifeIndex];
-                if (age == null)
-                {
-                    Log.Error($"Age[{lifeIndex}] for '{pawnKindDef.defName}:{pawnKindDef.modContentPack.Name}' is null");
-                    continue;
-                }
-                var offset = TextureUtility.SetDrawOffset(age);
-                if (offset == null)
-                {
-                    Log.Error($"Texture for '{pawnKindDef.defName}:{pawnKindDef.modContentPack.Name}' is null");
-                    continue;
-                }
-                ModSettings_GiddyUp.offsetCache.SetOrAdd(key, offset.Value);
-                newEntries = true;
-            }
-        }
-
-        //Write to settings file
-        if (newEntries)
-            LoadedModManager.GetMod<Mod_GiddyUp>().modSettings.Write();
     }
 
     //TODO: It may be possible to fold this into th BuildCache method

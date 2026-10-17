@@ -29,7 +29,8 @@ public class Area_GU : Area
 
     public override string GetUniqueLoadID()
     {
-        return _label; //only one such area, so label is sufficient. 
+        //One such area per map, not per save: the label clashed between maps and logged "Id already used" on load
+        return "Area_GU_" + ID;
     }
 
     public override void ExposeData()
@@ -56,5 +57,16 @@ internal static class Patch_MapFinalizeInit
     private static void Postfix(Map __instance)
     {
         __instance.UpdateAreaCache(true);
+    }
+}
+
+//Drop the area cache entries of a removed map; they kept the whole map alive through its areas
+[HarmonyPatch(typeof(Game), nameof(Game.DeinitAndRemoveMap))]
+internal static class Patch_DeinitAndRemoveMap
+{
+    private static void Prefix(Map? map)
+    {
+        if (map != null)
+            ExtendedDataStorage.Singleton?.RemoveAreaCache(map);
     }
 }

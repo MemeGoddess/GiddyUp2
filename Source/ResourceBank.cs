@@ -19,6 +19,10 @@ public static class ResourceBank
     public static Texture2D SliderRailAtlas = ContentFinder<Texture2D>.Get("UI/Buttons/SliderRail");
     public static Texture2D SliderHandle = ContentFinder<Texture2D>.Get("UI/Buttons/SliderHandle");
 
+    //Gizmo icons; these were looked up through ContentFinder on every GetGizmos call
+    public static Texture2D iconGizmoDismount = ContentFinder<Texture2D>.Get("UI/QM_horseshoe_x_icon");
+    public static Texture2D iconGizmoLeaveRider = ContentFinder<Texture2D>.Get("UI/LeaveRider");
+
     public const string VisitorAreaDropMount = "GU_Car_Area_GU_DropAnimal_NPC";
     public const string AreaDropMount = "Gu_Area_DropMount";
     public const string AreaNoMount = "Gu_Area_NoMount";

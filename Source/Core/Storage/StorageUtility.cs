@@ -7,6 +7,10 @@ public static class StorageUtility
     //Needs to be its own class as an extension
     public static ExtendedPawnData GetExtendedPawnData(this Pawn? pawn) => ExtendedDataStorage.Singleton.GetExtendedPawnData(pawn);
 
+    //For reads in hot paths: doesn't allocate a store entry for every pawn that is merely looked at
+    public static bool TryGetExtendedPawnData(this Pawn? pawn, out ExtendedPawnData data) =>
+        ExtendedDataStorage.Singleton.TryGetExtendedPawnData(pawn, out data);
+
     public static bool IsMounted(this Thing pawn)
     {
         return ExtendedDataStorage.isMounted.Contains(pawn.thingIDNumber);
