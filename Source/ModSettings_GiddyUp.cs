@@ -62,10 +62,28 @@ public class ModSettings_GiddyUp : ModSettings
     //Ideo
     public static bool ideoEnabled = true;
 
+    //Take Flight
+    public static bool takeFlightEnabled = true;
+    public static bool flyersIgnoreTerrain = true;
+    public static bool localFlightEnabled = true;
+    public static bool flightRequireOpenSky = true;
+    public static float flightRange = 30f;
+    public static float flightCooldownHours = 2f;
+    public static float takeFlightSpeed = 18f;
+    public static bool worldFlightEnabled = true;
+    public static int worldFlightDefaultRange = 5;
+    public static float worldFlightMaxRangeMultiplier = 3f;
+    public static float worldFlightSpeed = 120f;
+    public static float worldFlightRestHoursPerTile = 1f;
+    public static HashSet<string>? invertFlyingRules; //Only used on game start to set up FlyingCache
+    public static readonly HashSet<ushort> FlyingCache = [];
+
     //UI State
     private static string? _tabsHandler;
     public static Vector2 coreScrollPos;
     public static Vector2 mechScrollPos;
+    public static Vector2 takeFlightScrollPos;
+    public static Vector2 takeFlightSettingsScrollPos;
     public static SelectedTab selectedTab = SelectedTab.BodySize;
 
     public enum SelectedTab
@@ -77,7 +95,8 @@ public class ModSettings_GiddyUp : ModSettings
         BattleMounts,
         Caravans,
         Mechanoids,
-        Ideo
+        Ideo,
+        TakeFlight
     };
 
     public override void ExposeData()
@@ -125,6 +144,21 @@ public class ModSettings_GiddyUp : ModSettings
 
         //SaddleUp
         Scribe_Values.Look(ref saddleUpEnabled, "saddleUpEnabled", true);
+
+        //Take Flight
+        Scribe_Values.Look(ref takeFlightEnabled, "takeFlightEnabled", true);
+        Scribe_Values.Look(ref flyersIgnoreTerrain, "flyersIgnoreTerrain", true);
+        Scribe_Values.Look(ref localFlightEnabled, "localFlightEnabled", true);
+        Scribe_Values.Look(ref flightRequireOpenSky, "flightRequireOpenSky", true);
+        Scribe_Values.Look(ref flightRange, "flightRange", 30f);
+        Scribe_Values.Look(ref flightCooldownHours, "flightCooldownHours", 2f);
+        Scribe_Values.Look(ref takeFlightSpeed, "takeFlightSpeed", 18f);
+        Scribe_Values.Look(ref worldFlightEnabled, "worldFlightEnabled", true);
+        Scribe_Values.Look(ref worldFlightDefaultRange, "worldFlightDefaultRange", 5);
+        Scribe_Values.Look(ref worldFlightMaxRangeMultiplier, "worldFlightMaxRangeMultiplier", 3f);
+        Scribe_Values.Look(ref worldFlightSpeed, "worldFlightSpeed", 120f);
+        Scribe_Values.Look(ref worldFlightRestHoursPerTile, "worldFlightRestHoursPerTile", 1f);
+        Scribe_Collections.Look(ref invertFlyingRules, "invertFlyingRules", LookMode.Value);
 
         //UI State
         Scribe_Values.Look(ref _tabsHandler, "tabsHandler");

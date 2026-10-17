@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<ThingDef ParentName="PawnFlyerBase">
+		<defName>GU_TF_MountedPawnFlyer</defName>
+		<label>flying mount</label>
+		<thingClass>GiddyUpTakeFlight.MountedPawnFlyer</thingClass>
+		<pawnFlyer>
+			<flightDurationMin>0.6</flightDurationMin>
+			<flightSpeed>9</flightSpeed>
+			<heightFactor>1.5</heightFactor>
+		</pawnFlyer>
+	</ThingDef>
+
+	<ThingDef ParentName="EtherealThingBase">
+		<defName>GU_TF_MountedFlyerTransporter</defName>
+		<label>flying mount</label>
+		<thingClass>Thing</thingClass>
+		<dropPodActive>GU_TF_MountedFlyerActive</dropPodActive>
+		<dropPodFaller>GU_TF_MountedFlyerIncoming</dropPodFaller>
+	</ThingDef>
+
+	<ThingDef>
+		<defName>GU_TF_MountedFlyerActive</defName>
+		<label>landing flying mount</label>
+		<category>Item</category>
+		<thingClass>GiddyUpTakeFlight.MountedFlyerActive</thingClass>
+		<drawerType>RealtimeOnly</drawerType>
+		<tickerType>Normal</tickerType>
+		<scatterableOnMapGen>false</scatterableOnMapGen>
+		<useHitPoints>false</useHitPoints>
+		<selectable>false</selectable>
+		<altitudeLayer>Building</altitudeLayer>
+		<graphicData>
+			<texPath>Things/GU_TF_Invisible</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="SkyfallerBase">
+		<defName>GU_TF_MountedFlyerLeaving</defName>
+		<label>flying mount (leaving)</label>
+		<thingClass>GiddyUpTakeFlight.MountedFlyerLeaving</thingClass>
+		<graphicData>
+			<texPath>Things/GU_TF_Invisible</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<skyfaller>
+			<movementType>Decelerate</movementType>
+			<reversed>true</reversed>
+			<hitRoof>false</hitRoof>
+			<shadow>Things/Skyfaller/SkyfallerShadowCircle</shadow>
+			<shadowSize>(2, 2)</shadowSize>
+			<ticksToImpactRange>-120~-90</ticksToImpactRange>
+		</skyfaller>
+	</ThingDef>
+
+	<ThingDef ParentName="SkyfallerBase">
+		<defName>GU_TF_MountedFlyerIncoming</defName>
+		<label>flying mount (incoming)</label>
+		<thingClass>GiddyUpTakeFlight.MountedFlyerIncoming</thingClass>
+		<graphicData>
+			<texPath>Things/GU_TF_Invisible</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<skyfaller>
+			<movementType>Decelerate</movementType>
+			<hitRoof>false</hitRoof>
+			<shadow>Things/Skyfaller/SkyfallerShadowCircle</shadow>
+			<shadowSize>(2, 2)</shadowSize>
+			<ticksToImpactRange>150~180</ticksToImpactRange>
+			<motesPerCell>0</motesPerCell>
+		</skyfaller>
+	</ThingDef>
+
+</Defs>

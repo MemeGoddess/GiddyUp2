@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<WorldObjectDef>
+		<defName>GU_TF_TravellingMountedFlyers</defName>
+		<label>flying mounts</label>
+		<description>Riders on flying mounts, crossing the sky.</description>
+		<worldObjectClass>GiddyUpTakeFlight.TravellingMountedFlyers</worldObjectClass>
+		<texture>World/WorldObjects/GU_TF_FlyingMounts</texture>
+		<useDynamicDrawer>true</useDynamicDrawer>
+		<expandingIcon>true</expandingIcon>
+		<expandingIconTexture>World/WorldObjects/Expanding/GU_TF_FlyingMounts</expandingIconTexture>
+		<expandingIconPriority>60</expandingIconPriority>
+		<expandMore>true</expandMore>
+		<allowCaravanIncidentsWhichGenerateMap>true</allowCaravanIncidentsWhichGenerateMap>
+		<validLaunchTarget>false</validLaunchTarget>
+	</WorldObjectDef>
+
+</Defs>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<!-- Take flight command -->
+	<GU_TF_TakeFlight>Take flight</GU_TF_TakeFlight>
+	<GU_TF_TakeFlightDesc>Fly {MOUNT_labelShort} to a spot up to {RANGE} cells away, straight over walls, water and anything else in the way.</GU_TF_TakeFlightDesc>
+	<GU_TF_TakeFlightCooldown>Afterwards {MOUNT_labelShort} needs {TIME} to rest before flying again.</GU_TF_TakeFlightCooldown>
+	<GU_TF_MountFatigued>{MOUNT_labelShort} is still resting from the last flight ({TIME} left).</GU_TF_MountFatigued>
+	<GU_TF_CarryingSomething>{RIDER_labelShort} can't take flight while carrying something.</GU_TF_CarryingSomething>
+	<GU_TF_Vacuum>{MOUNT_labelShort} can't fly in a vacuum.</GU_TF_Vacuum>
+	<GU_TF_RoofedTakeOff>Needs open sky to take off.</GU_TF_RoofedTakeOff>
+	<GU_TF_RoofedLanding>Needs open sky to land.</GU_TF_RoofedLanding>
+	<GU_TF_OutOfRange>Out of range.</GU_TF_OutOfRange>
+	<GU_TF_CannotLand>Can't land there.</GU_TF_CannotLand>
+	<GU_TF_Overloaded>{MOUNT_labelShort} is carrying too much to fly ({LOAD} of {CAPACITY}).</GU_TF_Overloaded>
+
+	<!-- World flight -->
+	<GU_TF_FlyWorld>Fly to another tile</GU_TF_FlyWorld>
+	<GU_TF_FlyWorldDesc>Fly {MOUNT_labelShort} and its rider to another tile on the world map. Every selected rider on a flying mount comes along, and the group flies as far as its shortest range.</GU_TF_FlyWorldDesc>
+	<GU_TF_FlyCaravan>Fly to another tile</GU_TF_FlyCaravan>
+	<GU_TF_FlyCaravanDesc>Riders on flying mounts fly to another tile on the world map. Everyone else stays behind as a caravan. The group flies as far as its shortest range.</GU_TF_FlyCaravanDesc>
+	<GU_TF_LoadReport>Load {LOAD} of {CAPACITY}: range ×{MULT}, {RANGE} tiles.</GU_TF_LoadReport>
+	<GU_TF_NoWorldRange>{MOUNT_labelShort} can't fly across the world map.</GU_TF_NoWorldRange>
+	<GU_TF_PairDowned>{RIDER_labelShort} or {MOUNT_labelShort} is downed.</GU_TF_PairDowned>
+	<GU_TF_NoRiderForFlyer>Nobody in this caravan can ride its flying mounts.</GU_TF_NoRiderForFlyer>
+	<GU_TF_WouldStrand>The pawns left behind would have nobody to lead the caravan.</GU_TF_WouldStrand>
+	<GU_TF_OtherLayer>Flying mounts can't reach that layer.</GU_TF_OtherLayer>
+
+	<!-- Settings -->
+	<GU_TF_Tab>Take Flight</GU_TF_Tab>
+
+	<GU_Enable_TakeFlight>Enable Take Flight module</GU_Enable_TakeFlight>
+	<GU_Enable_TakeFlight_Description>Disabling this module will remove functionality related to flying mounts: ignoring terrain, taking flight on the map and flying across the world map. Changing this setting requires a restart.</GU_Enable_TakeFlight_Description>
+
+	<GU_TF_IgnoreTerrain_Title>Flying mounts ignore terrain</GU_TF_IgnoreTerrain_Title>
+	<GU_TF_IgnoreTerrain_Description>Riders on a flying mount move over marsh, mud, sand and water at no extra cost, and can cross deep water. Snow still slows them, and walls, buildings and closed doors still block them.</GU_TF_IgnoreTerrain_Description>
+
+	<GU_TF_LocalFlight_Title>Take flight</GU_TF_LocalFlight_Title>
+	<GU_TF_LocalFlight_Description>Gives riders on a flying mount a button to fly to a spot within range.</GU_TF_LocalFlight_Description>
+
+	<GU_TF_OpenSky_Title>Require open sky</GU_TF_OpenSky_Title>
+	<GU_TF_OpenSky_Description>Taking off and landing are only possible from and to unroofed cells.</GU_TF_OpenSky_Description>
+
+	<GU_TF_FlightRange_Title>Take flight range (Min: {0} Max: {1} Default: {2} Current: {3} cells)</GU_TF_FlightRange_Title>
+	<GU_TF_FlightRange_Description>How far a flying mount can carry its rider with Take flight. Animals can multiply this with the rangeFactor of their FlyingMount extension.</GU_TF_FlightRange_Description>
+
+	<GU_TF_FlightSpeed_Title>Take flight speed (Min: {0} Max: {1} Default: {2} Current: {3} cells per second)</GU_TF_FlightSpeed_Title>
+	<GU_TF_FlightSpeed_Description>How fast a flying mount travels with Take flight.</GU_TF_FlightSpeed_Description>
+
+	<GU_TF_Cooldown_Title>Rest after a flight (Min: {0} Max: {1} Default: {2} Current: {3} hours)</GU_TF_Cooldown_Title>
+	<GU_TF_Cooldown_Description>How long a flying mount rests after Take flight before it can fly again. 0 turns resting off.</GU_TF_Cooldown_Description>
+
+	<GU_TF_WorldFlight_Title>World flight</GU_TF_WorldFlight_Title>
+	<GU_TF_WorldFlight_Description>Gives riders on a flying mount, and caravans with them, a button to fly to another tile on the world map. Range depends on how much the mount carries compared to its carrying capacity.</GU_TF_WorldFlight_Description>
+
+	<GU_TF_WorldRange_Title>Default world range (Min: {0} Max: {1} Default: {2} Current: {3} tiles)</GU_TF_WorldRange_Title>
+	<GU_TF_WorldRange_Description>World map range at full load for flying mounts that don't set their own worldFlightRange.</GU_TF_WorldRange_Description>
+
+	<GU_TF_MaxMultiplier_Title>Max range multiplier for light loads (Min: ×{0} Max: ×{1} Default: ×{2} Current: ×{3})</GU_TF_MaxMultiplier_Title>
+	<GU_TF_MaxMultiplier_Description>Lighter loads fly further: at half the mount's carrying capacity the range doubles. This caps that bonus.</GU_TF_MaxMultiplier_Description>
+
+	<GU_TF_WorldSpeed_Title>World flight speed (Min: {0} Max: {1} Default: {2} Current: {3} tiles per day)</GU_TF_WorldSpeed_Title>
+	<GU_TF_WorldSpeed_Description>How fast flying mounts cross the world map. A group flies at the speed of its slowest mount.</GU_TF_WorldSpeed_Description>
+
+	<GU_TF_RestPerTile_Title>Rest per tile flown (Min: {0} Max: {1} Default: {2} Current: {3} hours)</GU_TF_RestPerTile_Title>
+	<GU_TF_RestPerTile_Description>Extra rest after a world flight for every tile flown, on top of the travel time and the normal rest after a flight.</GU_TF_RestPerTile_Description>
+
+	<GU_TF_Flyers>Mountable animals that can fly</GU_TF_Flyers>
+	<GU_TF_Flyers_Description>Animals that fly in vanilla, Vanilla Expanded floating creatures and animals with the FlyingMount extension are checked by default.</GU_TF_Flyers_Description>
+
+</LanguageData>
