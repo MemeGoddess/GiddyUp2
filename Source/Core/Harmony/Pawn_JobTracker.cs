@@ -155,7 +155,9 @@ internal static class Patch_DetermineNextJob
                 if (animal != null && animal.Spawned && pawnData.Mount == null)
                 {
                     if (animal.IsMountable(out var reason, pawn, true, true))
-                        thinkResult = pawn.GoMount(animal, MountUtility.GiveJobMethod.Inject, thinkResult).Value;
+                        //Requeue the job the pawn was about to do instead of dropping it, as the hostile branch does.
+                        //Mods that queue jobs on visitors (e.g. Allies are Helpful) otherwise lose it and re-queue it every tick.
+                        thinkResult = pawn.GoMount(animal, MountUtility.GiveJobMethod.Inject, thinkResult, job).Value;
                     else if (Settings.logging)
                         Log.Message("[Giddy-Up] " + (pawn.Label ?? "NULL") + " could not mount: " + reason.ToString());
                 }
