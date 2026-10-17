@@ -66,7 +66,14 @@ public class JobDriver_Mounted : JobDriver
             AllowedJobs.AddDistinct(JobDefOf.Hunt, false);
     }
 
-    public static void SetAllowedJob(JobDef jobDef, bool allow) => AllowedJobs.AddDistinct(jobDef, allow);
+    //Presence in AllowedJobs means allowed; the value is checkTargets. AddDistinct could never remove a job.
+    public static void SetAllowedJob(JobDef jobDef, bool allow)
+    {
+        if (allow)
+            AllowedJobs.TryAdd(jobDef, false);
+        else
+            AllowedJobs.Remove(jobDef);
+    }
 
     public override IEnumerable<Toil> MakeNewToils()
     {

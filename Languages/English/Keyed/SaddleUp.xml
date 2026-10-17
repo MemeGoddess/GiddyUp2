@@ -2,4 +2,5 @@
 <LanguageData>
 	<QM_Mount_Description>Go and mount the nearest animal.</QM_Mount_Description>
 	<QM_Dismount_Description>Dismount current animal.</QM_Dismount_Description>
+	<QM_Mount_Downed>Downed</QM_Mount_Downed> <!-- was used by SaddleUp.cs but never defined -->
 </LanguageData>

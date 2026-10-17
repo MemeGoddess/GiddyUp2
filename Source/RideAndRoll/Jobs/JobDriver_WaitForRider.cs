@@ -104,11 +104,14 @@ internal class JobDriver_WaitForRider : JobDriver
                 {
                     if (waitingFor.CurJobDef != ResourceBank.JobDefOf.Mount)
                     {
-                        var pen = AnimalPenUtility.GetPenAnimalShouldBeTakenTo(waitingFor, pawn, out var failReason,
-                            true);
+                        var pen = AnimalPenUtility.GetPenAnimalShouldBeTakenTo(waitingFor, pawn, out _, true);
                         if (pen != null)
-                            waitingFor.jobs.jobQueue.EnqueueFirst(new Job(JobDefOf.RopeToPen, pawn,
-                                AnimalPenUtility.FindPlaceInPenToStand(pen, waitingFor)));
+                        {
+                            //JobDriver_RopeToPen needs the pen marker as target C, which the old new Job(...) call didn't set
+                            var ropeJob = WorkGiver_TakeToPen.MakeJob(waitingFor, pawn, pen, false, RopingPriority.Closest, out _);
+                            if (ropeJob != null)
+                                waitingFor.jobs.jobQueue.EnqueueFirst(ropeJob);
+                        }
                     }
 
                     UnsetOwnership();

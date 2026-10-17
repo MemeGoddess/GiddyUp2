@@ -118,7 +118,7 @@ namespace GiddyUpMechanoids
             {
                 var text = riderReason switch
                 {
-                    Reason.TooYoung => "GU_TooYoung".Translate(),
+                    Reason.TooYoung => "GU_Car_TooYoung".Translate(), //GU_TooYoung doesn't exist
                     _ => "GU_CannotRide".Translate()
                 };
                 return opts.GenerateFloatMenuOption(text);

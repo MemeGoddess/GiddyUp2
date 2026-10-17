@@ -432,9 +432,7 @@ public class Mod_GiddyUp : Mod
         {
             Setup.RebuildInversions();
             Setup.ProcessPawnKinds();
-            if (giveCaravanSpeed)
-                for (var i = 0; i < Setup.AllAnimals.Count; i++)
-                    Setup.CalculateCaravanSpeed(Setup.AllAnimals[i], true);
+            Setup.RecalculateCaravanSpeeds(); //Also runs when the bonus was turned off, so it is removed without a restart
 
             JobDriver_Mounted.SetAllowedJob(JobDefOf.Hunt, !noMountedHunting);
         }

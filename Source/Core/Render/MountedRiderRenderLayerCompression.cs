@@ -10,14 +10,15 @@ internal static class MountedRiderRenderLayerCompression
     private const float LayerMargin = 0.5f;
     private const float MinSourceLayer = -10f;
     private const float MaxSourceLayer = 90f;
-    private const float DefaultCompressedBand = 12f;
+    public const float DefaultCompressedBand = 12f;
 
     [ThreadStatic] private static Context? current;
 
-    public static IDisposable Push(Pawn rider, float mountedLayer)
+    //band lets the draw-in-front case keep the whole rider below the mount body
+    public static IDisposable Push(Pawn rider, float mountedLayer, float band = DefaultCompressedBand)
     {
         var previous = current;
-        current = new Context(rider, mountedLayer);
+        current = new Context(rider, mountedLayer, band);
         return new Scope(previous);
     }
 
@@ -42,7 +43,7 @@ internal static class MountedRiderRenderLayerCompression
             return true;
         }
 
-        var band = Mathf.Min(DefaultCompressedBand, availableBand);
+        var band = Mathf.Min(context.Band, availableBand);
         var clampedLayer = Mathf.Clamp(sourceLayer, MinSourceLayer, MaxSourceLayer);
         var normalizedLayer = Mathf.InverseLerp(MinSourceLayer, MaxSourceLayer, clampedLayer);
         var compressedLayer = context.MountedLayer + normalizedLayer * band;
@@ -54,11 +55,13 @@ internal static class MountedRiderRenderLayerCompression
     {
         public readonly Pawn Rider;
         public readonly float MountedLayer;
+        public readonly float Band;
 
-        public Context(Pawn rider, float mountedLayer)
+        public Context(Pawn rider, float mountedLayer, float band)
         {
             Rider = rider;
             MountedLayer = mountedLayer;
+            Band = band;
         }
     }
 

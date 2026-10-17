@@ -19,7 +19,6 @@ public static class Setup
     public static readonly List<ThingDef?> AllMechs = [];
 
     private static readonly HashSet<ushort> DefEditLedger = [];
-    private static readonly HashSet<int> PatchLedger = [];
 
     private static readonly SimpleCurve SizeFactor =
     [
@@ -65,7 +64,7 @@ public static class Setup
         if(!ModSettings_GiddyUp.mechanoidsEnabled)
             RemoveMechanoids();
 
-        ProcessPawnKinds(harmony);
+        ProcessPawnKinds();
         if (ModSettings_GiddyUp.disableSlavePawnColumn)
             DefDatabase<PawnTableDef>.GetNamed("Animals").columns.RemoveAll(x => x.defName == "MountableBySlaves");
 
@@ -135,10 +134,9 @@ public static class Setup
     }
 
     //Responsible for setting up the draw offsets and custom stat overrides
-    public static void ProcessPawnKinds(HarmonyLib.Harmony? harmony = null)
+    public static void ProcessPawnKinds()
     {
         var newEntries = false;
-        var usingCustomStats = false;
         if (ModSettings_GiddyUp.offsetCache == null)
             ModSettings_GiddyUp.offsetCache = new Dictionary<string, float>();
         var list = DefDatabase<PawnKindDef>.AllDefsListForReading;
@@ -148,9 +146,6 @@ public static class Setup
             var pawnKindDef = list[i];
             if (pawnKindDef.race == null)
                 continue;
-            if (!usingCustomStats && pawnKindDef.HasModExtension<CustomStats>())
-                usingCustomStats = true;
-
             //Determine which life stages are considered mature enough to ride
             var lifeStages = pawnKindDef.lifeStages;
             var lifeIndexes = lifeStages?.Count;
@@ -294,6 +289,22 @@ public static class Setup
         }
     }
 
+    /// <summary>
+    /// Re-applies or removes the caravan speed bonus after the settings changed, for every animal that is
+    /// mountable now or was given a bonus before. Other animals are skipped so they don't get the stat defined.
+    /// </summary>
+    public static void RecalculateCaravanSpeeds()
+    {
+        for (var i = 0; i < AllAnimals.Count; i++)
+        {
+            var def = AllAnimals[i];
+            if (def == null)
+                continue;
+            if (ModSettings_GiddyUp.MountableCache.Contains(def.shortHash) || DefEditLedger.Contains(def.shortHash))
+                CalculateCaravanSpeed(def, true);
+        }
+    }
+
     public static void CalculateCaravanSpeed(ThingDef def, bool check = false)
     {
         //Horse		2.4 size	5.8 speed	packAnimal	550 value	0.35 wildeness	= 1.6
@@ -331,7 +342,7 @@ public static class Setup
         else
         {
             DefEditLedger.Remove(def.shortHash);
-            speed = speed = 1.00001f;
+            speed = 1.00001f;
         }
 
         StatUtility.SetStatValueInList(ref def.statBases, StatDefOf.CaravanRidingSpeedFactor, speed);

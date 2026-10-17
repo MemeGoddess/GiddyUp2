@@ -214,7 +214,7 @@ internal static class Patch_TransferableOneWayWidget
                     {
                         string cannotRideReason;
                         if (riderReason == Reason.TooYoung)
-                            cannotRideReason = rider.Name.ToStringShort + " (" + "GU_TooYoung".Translate() + ")";
+                            cannotRideReason = rider.Name.ToStringShort + " (" + "GU_Car_TooYoung".Translate() + ")"; //GU_TooYoung doesn't exist
                         else
                             cannotRideReason = rider.Name.ToStringShort + " (" + "GU_CannotRide".Translate() + ")";
 

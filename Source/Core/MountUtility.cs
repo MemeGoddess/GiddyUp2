@@ -70,11 +70,17 @@ public static class MountUtility
         }
     }
     
-    public static ThinkResult? GoMount(this Pawn rider, Pawn animal, GiveJobMethod giveJobMethod = GiveJobMethod.Inject,
+    public static ThinkResult? GoMount(this Pawn rider, Pawn? animal, GiveJobMethod giveJobMethod = GiveJobMethod.Inject,
         ThinkResult? thinkResult = null, Job? currentJob = null)
     {
+        //Instant callers may pass null to mean "the reserved mount". Resolve it here; CancelRopers can't take null.
+        animal ??= rider.GetExtendedPawnData().ReservedMount;
+        if (animal == null)
+            return null;
+
         //Cancel any reservations. The IsMountable method already checked if the reservation was fine to abort
-        animal.CancelRopers();
+        if (animal.Spawned)
+            animal.CancelRopers();
 
         switch (giveJobMethod)
         {
@@ -643,11 +649,12 @@ public static class MountUtility
             return -1;
         }
 
+        //foreignWeight is cumulative (local + foreign), so the first check has to be against localWeight
         ListToUse DetermineList(float localWeight, float foreignWeight, int random)
         {
-            if (random < foreignWeight)
+            if (random < localWeight)
                 return ListToUse.Local;
-            else if (random >= localWeight && random < foreignWeight)
+            if (random < foreignWeight)
                 return ListToUse.Foreign;
             return ListToUse.Domestic;
         }
@@ -679,7 +686,7 @@ public static class MountUtility
                 if (domesticAnimals.Length == 0)
                     domesticWeight = 0;
                 else if (factionRules.nonWildAnimalWeight >= 0)
-                    foreignWeight = factionRules.nonWildAnimalWeight;
+                    domesticWeight = factionRules.nonWildAnimalWeight; //Was written to foreignWeight
             }
             else
             {

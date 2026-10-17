@@ -1,22 +1,22 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using HarmonyLib;
 using Verse;
 
 namespace GiddyUp.Harmony;
 
+//The armor rating is already scaled by StatPart_Armor, so scaling it again here applied armorModifier twice. This only
+//marks the mount's hide as metal if its kind asks for it, and is only patched in when some PawnKind uses that option.
 [HarmonyPatch(typeof(ArmorUtility), nameof(ArmorUtility.ApplyArmor))]
-internal class Patch_ApplyArmor
+internal static class Patch_ApplyArmor
 {
-    public static void Postfix(ref float armorRating, ref float damAmount, ref bool metalArmor, Pawn pawn)
+    private static bool Prepare() =>
+        DefDatabase<PawnKindDef>.AllDefsListForReading.Any(x => x.GetModExtension<CustomStats>()?.useMetalArmor == true);
+
+    private static void Postfix(Pawn pawn, ref bool metalArmor)
     {
-        if (!pawn.IsMountedAnimal()) 
+        if (metalArmor || pawn == null || !pawn.IsMountedAnimal())
             return;
-        
-        var modExt = pawn.kindDef.GetModExtension<CustomStats>();
-        if (modExt == null) 
-            return;
-        
-        armorRating *= modExt.armorModifier;
-        damAmount /= modExt.armorModifier;
-        metalArmor = modExt.useMetalArmor;
+        if (pawn.kindDef.GetModExtension<CustomStats>() is { useMetalArmor: true })
+            metalArmor = true;
     }
 }
