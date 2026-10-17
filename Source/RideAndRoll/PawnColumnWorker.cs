@@ -53,7 +53,6 @@ internal class PawnColumnWorker_Mountable_Slaves : PawnColumnWorker_Checkbox
         return isChecked == Automount.Anyone || isChecked == Automount.Slaves;
     }
 
-    //[SyncMethod]
     public override void SetValue(Pawn pawn, bool value, PawnTable table)
     {
         var pawnData = pawn.GetExtendedPawnData();

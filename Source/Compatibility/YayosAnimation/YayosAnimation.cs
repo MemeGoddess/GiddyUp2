@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Verse;
 
-namespace GiddyUpCore.Temporary
+// Moved from Source/Temporary into Compatibility; namespace updated to match, unused usings dropped
+namespace GiddyUpCore.Compatibility.YayosAnimation
 {
     [StaticConstructorOnStartup]
     public class YayosAnimation_YesItsMe

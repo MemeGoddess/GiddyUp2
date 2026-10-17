@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using GiddyUp;
 using Verse;
-//using Multiplayer.API;
 using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace BattleMounts.Harmony;
@@ -38,10 +37,8 @@ internal static class Patch_IncidentWorker_Ambush
 
     public static void MountAnimals(ref List<Pawn> list, IncidentParms parms)
     {
-        //Only allow raids tha are edge walk ins, except sieges
-        if (list.Count == 0 ||
-            !(parms.raidArrivalMode == null || parms.raidArrivalMode == PawnsArrivalModeDefOf.EdgeWalkIn) ||
-            (parms.raidStrategy != null && parms.raidStrategy.workerClass == ResourceBank.RaidStrategyWorker_Siege))
+        //Only allow raids that are edge walk ins, except sieges (filter shared with the raid patch)
+        if (list.Count == 0 || !BattleMountsUtility.ShouldGenerateMountsFor(parms))
             return;
         MountUtility.GenerateMounts(ref list, parms);
     }

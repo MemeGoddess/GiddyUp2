@@ -16,7 +16,7 @@ public static class DistanceUtility
 
     public static IntVec3 GetClosestAreaLoc(this Area area, IntVec3 sourceLocation)
     {
-        var targetLoc = new IntVec3();
+        var targetLoc = IntVec3.Invalid; // Was default (0,0,0), a real cell; an empty area now yields Invalid so callers' CanReach checks fail cleanly
         var minDistance = float.MaxValue;
         foreach (var loc in area.ActiveCells)
         {
@@ -29,49 +29,6 @@ public static class DistanceUtility
         }
 
         return targetLoc;
-    }
-
-    public static IntVec3 GetClosestPen(ref float workingNum, Map map, Pawn animal, Pawn rider, IntVec3 firstTarget,
-        IntVec3 secondTarget)
-    {
-        var cell = IntVec3.Invalid;
-        foreach (var pen in map.listerBuildings.allBuildingsAnimalPenMarkers)
-        {
-            var penMarker = pen.TryGetComp<CompAnimalPenMarker>();
-            if (penMarker == null || !penMarker.AcceptsToPen(animal) || penMarker.parent.IsForbidden(rider))
-                continue;
-            if (!animal.Map.reachability.CanReach(secondTarget, penMarker.parent, PathEndMode.OnCell,
-                    TraverseParms.For(rider).WithFenceblockedOf(animal)))
-                continue;
-
-            var tmp = firstTarget.DistanceTo(penMarker.parent.Position) +
-                      penMarker.parent.Position.DistanceTo(secondTarget);
-            if (tmp < workingNum)
-            {
-                workingNum = tmp;
-                cell = penMarker.parent.Position;
-            }
-        }
-
-        return cell;
-    }
-
-    public static IntVec3 GetClosestDropoffPoint(ref float workingNum, IntVec3[] areas, IntVec3 animalPos,
-        IntVec3 target)
-    {
-        var dropOffCell = IntVec3.Invalid;
-        for (var j = 0; j < areas.Length; j++)
-        {
-            var cell = areas[j];
-            var tmp = animalPos.DistanceTo(cell) + cell.DistanceTo(target);
-            if (tmp < workingNum)
-            {
-                workingNum = tmp;
-                dropOffCell = cell;
-            }
-        }
-
-        return dropOffCell;
     }
 
     public static bool DetermineTargets(this Job job, out IntVec3 firstTarget, out IntVec3 secondTarget)

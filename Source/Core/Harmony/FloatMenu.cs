@@ -70,6 +70,9 @@ public static class FloatMenuUtility
             }
             else
             {
+                // The animal is fine (CanMount) but the rider is not: show the rider-side reason instead of silently returning false
+                if (reason == Reason.CanMount)
+                    reason = riderReason;
                 if (Settings.logging)
                     Log.Message("[Giddy-Up] " + pawn.Name.ToString() + " could not mount " +
                                 animal.thingIDNumber.ToString() + " because: " + reason.ToString());

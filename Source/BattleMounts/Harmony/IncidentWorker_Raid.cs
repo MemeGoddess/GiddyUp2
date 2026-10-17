@@ -2,7 +2,6 @@
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 using Settings = GiddyUp.ModSettings_GiddyUp;
 
@@ -28,11 +27,9 @@ internal static class Patch_TryGenerateRaidInfo
         if (pawns.Count == 0)
             return;
 
-        parms.raidArrivalMode.Worker.Arrive(pawns, parms);
-        if (!(parms.raidArrivalMode == null ||
-              parms.raidArrivalMode == PawnsArrivalModeDefOf.EdgeWalkIn) ||
-            (parms.raidStrategy != null &&
-             parms.raidStrategy.workerClass == ResourceBank.RaidStrategyWorker_Siege))
+        //Call the replaced worker directly instead of re-dereferencing parms.raidArrivalMode; filter shared with the ambush patch
+        instance.Arrive(pawns, parms);
+        if (!BattleMountsUtility.ShouldGenerateMountsFor(parms))
             return;
         MountUtility.GenerateMounts(ref pawns, parms);
     }

@@ -45,3 +45,44 @@ public class Designator_GU : Designator
         Map.areaManager.areas.Add(SelectedArea);
     }
 }
+
+// Shared bases for the Clear/Expand designator pairs; derived classes only set label, description and icon
+public abstract class Designator_GU_Clear : Designator_GU
+{
+    protected Designator_GU_Clear(string areaLabel) : base(areaLabel)
+    {
+    }
+
+    public override void DesignateSingleCell(IntVec3 c)
+    {
+        if (SelectedArea != null)
+            SelectedArea[c] = false;
+    }
+
+    public override AcceptanceReport CanDesignateCell(IntVec3 c)
+    {
+        return c.InBounds(Map) && SelectedArea != null && SelectedArea[c];
+    }
+
+    public override DrawStyleCategoryDef DrawStyleCategory => DrawStyleCategoryDefOf.FilledRectangle;
+
+    public override bool DragDrawMeasurements => true;
+}
+
+public abstract class Designator_GU_Expand : Designator_GU
+{
+    protected Designator_GU_Expand(string areaLabel) : base(areaLabel)
+    {
+    }
+
+    public override void DesignateSingleCell(IntVec3 c)
+    {
+        if (SelectedArea != null)
+            SelectedArea[c] = true;
+    }
+
+    public override AcceptanceReport CanDesignateCell(IntVec3 c)
+    {
+        return c.InBounds(Map) && SelectedArea != null && !SelectedArea[c];
+    }
+}
