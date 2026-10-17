@@ -13,7 +13,7 @@ using Settings = GiddyUp.ModSettings_GiddyUp;
 
 namespace GiddyUp;
 
-internal static class MountUtility
+public static class MountUtility
 {
     private static readonly HashSet<PawnKindDef> AllWildAnimals = [];
     private static readonly HashSet<PawnKindDef> AllDomesticAnimals = [];
@@ -848,6 +848,9 @@ internal static class MountUtility
     public static void CancelRopers(this Pawn animal)
     {
         var workingList = new HashSet<Pawn>();
+        if (animal?.Map?.reservationManager == null)
+            return;
+        
         animal.Map.reservationManager.ReserversOf(animal, workingList);
         foreach (var pawn in workingList)
             if (pawn.CurJobDef == JobDefOf.RopeToPen)

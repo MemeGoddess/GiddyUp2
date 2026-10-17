@@ -152,7 +152,7 @@ internal static class Patch_DetermineNextJob
                 curLordToil is LordToil_ExitMap || curLordToil is LordToil_ExitMapTraderFighting)
             {
                 var animal = pawnData.ReservedMount;
-                if (animal != null && pawnData.Mount == null)
+                if (animal != null && animal.Spawned && pawnData.Mount == null)
                 {
                     if (animal.IsMountable(out var reason, pawn, true, true))
                         thinkResult = pawn.GoMount(animal, MountUtility.GiveJobMethod.Inject, thinkResult).Value;

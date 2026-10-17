@@ -89,6 +89,6 @@ internal class PawnColumnWorker_AllowedToRide : PawnColumnWorker_Checkbox
 
     public override void SetValue(Pawn pawn, bool value, PawnTable table)
     {
-        pawn.GetExtendedPawnData().canRide = !pawn.CanRide();
+        pawn.GetExtendedPawnData().canRide = value;
     }
 }

@@ -34,7 +34,6 @@ namespace GiddyUpMechanoids
                 return false;
 
             return true;
-          
         }
 
         public override IEnumerable<FloatMenuOption> GetOptionsFor(Pawn target, FloatMenuContext context)

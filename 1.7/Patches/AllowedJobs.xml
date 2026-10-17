@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RemoveApparel" or
+            defName="CastAbilityOnThing" or
+            defName="CastAbilityOnThingMelee"]</xpath>
+        <value>
+            <li Class="GiddyUp.CanDoMounted" />
+        </value>
+    </Operation>
+</Patch>

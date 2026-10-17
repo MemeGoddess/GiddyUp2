@@ -6,7 +6,7 @@ using Verse;
 
 namespace GiddyUpCore.Core;
 
-internal static class MountedRiderRenderNodeUtility
+public static class MountedRiderRenderNodeUtility
 {
 
     public static Vector3 GetMountedRiderOffset(Pawn rider, Pawn mount, Rot4 rotation)

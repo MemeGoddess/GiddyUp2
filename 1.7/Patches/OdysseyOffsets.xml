@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+            <li>Odyssey</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Always</success>
+			<operations>
+                <li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Alligator</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.10)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.40)</southOffset>
+				            <eastOffset>(0.00, 0.00, 0.00)</eastOffset>
+				            <westOffset>(0.00, 0.00, 0.00)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>AlphaThrumbo</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.55)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.55)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.55)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.55)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Armadillo</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>BogHound</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.30)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.30)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.30)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.30)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Gorilla</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.40)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.40)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.40)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.40)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Wolf_Great</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.55)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.55)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Hippo</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.25)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.25)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.25)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.25)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Otter</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Penguin</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.50)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.50)</southOffset>
+				            <eastOffset>(-0.20, 0.00, -0.50)</eastOffset>
+				            <westOffset>(0.20, 0.00, -0.50)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>SeaTurtle</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Seal</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.10)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.10)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.10)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.10)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Vulture</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.25)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.25)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.25)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.25)</westOffset>
+				        </li>
+				    </value>
+				</li>
+				<li Class="GiddyUp.PatchOperationDrawingOffset">
+				    <def>Wolverine</def>
+				    <value>
+				        <li Class="GiddyUp.DrawingOffset">
+				            <northOffset>(0.00, 0.00, -0.15)</northOffset>
+				            <southOffset>(0.00, 0.00, -0.15)</southOffset>
+				            <eastOffset>(0.00, 0.00, -0.15)</eastOffset>
+				            <westOffset>(0.00, 0.00, -0.15)</westOffset>
+				        </li>
+				    </value>
+				</li>
+            </operations>
+		</match>
+	</Operation>
+</Patch>

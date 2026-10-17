@@ -6,7 +6,7 @@ using Verse;
 namespace GiddyUp;
 
 //For PawnKindDef
-internal class CustomMounts : DefModExtension
+public class CustomMounts : DefModExtension
 {
     public int mountChance = 0;
     public Dictionary<PawnKindDef, int> possibleMounts = new();
@@ -29,7 +29,7 @@ internal class CustomMounts : DefModExtension
     }
 }
 
-internal class CustomMountApparel
+public class CustomMountApparel
 {
     public ThingDef ThingDef;
     public ThingDef? Stuff;

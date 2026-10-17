@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Odyssey</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Always</success>
+			<operations>
+				<li Class="PatchOperationAdd">
+					<success>Always</success>
+					<xpath>Defs/ThingDef[defName="Mastodon" or 
+						defName="AlphaThrumbo" or 
+						defName="Quail" or 
+						defName="Flamingo" or 
+						defName="Heron" or 
+						defName="Gorilla" or 
+						defName="Peacock" or 
+						defName="Swan" or 
+						defName="Vulture" or 
+						defName="Penguin" or 
+						defName="SeaLion" or 
+						defName="Wolf_Great"][not(comps)]</xpath>
+					<value>
+						<comps />
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Mastodon"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Mastodon_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>4.5</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="AlphaThrumbo"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/AlphaThrumbo_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>5.2</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Quail"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataMale>
+									<texPath>Things/Pawn/QuailMale_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>0.8</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataMale>
+                                <graphicDataFemale>
+                                    <texPath>Things/Pawn/QuailFemale_south</texPath>
+                                    <graphicClass>Graphic_Single</graphicClass>
+                                    <drawSize>0.8</drawSize>
+                                    <drawRotated>false</drawRotated>
+                                </graphicDataFemale>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Flamingo"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Flamingo_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.4</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Heron"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Heron_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.4</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Gorilla"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Gorilla_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>2.2</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Peacock"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataMale>
+									<texPath>Things/Pawn/PeacockMale_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.4</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataMale>
+                                <graphicDataFemale>
+                                    <texPath>Things/Pawn/PeacockFemale_south</texPath>
+                                    <graphicClass>Graphic_Single</graphicClass>
+                                    <drawSize>1.4</drawSize>
+                                    <drawRotated>false</drawRotated>
+                                </graphicDataFemale>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Swan"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Swan_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.1</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Vulture"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Vulture_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.4</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Penguin"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataDefault>
+									<texPath>Things/Pawn/Penguin_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.4</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataDefault>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="SeaLion"]/comps</xpath>
+					<value>
+						<li Class="GiddyUp.CompProperties_Overlay">
+							<overlayFront>
+								<graphicDataMale>
+									<texPath>Things/Pawn/SeaLionMale_south</texPath>
+									<graphicClass>Graphic_Single</graphicClass>
+									<drawSize>1.7</drawSize>
+									<drawRotated>false</drawRotated>
+								</graphicDataMale>
+                                <graphicDataFemale>
+                                    <texPath>Things/Pawn/SeaLionFemale_south</texPath>
+                                    <graphicClass>Graphic_Single</graphicClass>
+                                    <drawSize>1.7</drawSize>
+                                    <drawRotated>false</drawRotated>
+                                </graphicDataFemale>
+							</overlayFront>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+</Patch>

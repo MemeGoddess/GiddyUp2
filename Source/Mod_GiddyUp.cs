@@ -13,9 +13,7 @@ namespace GiddyUp;
 
 public class Mod_GiddyUp : Mod
 {
-#if DEBUG
     public static Mod_GiddyUp Instance;
-#endif
     private static int coreLineNumber, mechLineNumber;
     private readonly QuickSearchWidget search = new QuickSearchWidget();
 
@@ -23,9 +21,7 @@ public class Mod_GiddyUp : Mod
     public Mod_GiddyUp(ModContentPack content) : base(content)
     {
         GetSettings<ModSettings_GiddyUp>();
-#if DEBUG
         Instance = this;
-#endif
     }
 
     public override void DoSettingsWindowContents(Rect inRect)

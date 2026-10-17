@@ -2,7 +2,7 @@
 
 namespace GiddyUp;
 
-internal static class StorageUtility
+public static class StorageUtility
 {
     //Needs to be its own class as an extension
     public static ExtendedPawnData GetExtendedPawnData(this Pawn? pawn) => ExtendedDataStorage.Singleton.GetExtendedPawnData(pawn);

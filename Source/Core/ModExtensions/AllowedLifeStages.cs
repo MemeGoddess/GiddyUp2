@@ -3,9 +3,9 @@
 namespace GiddyUp;
 
 //For ThingDef (races)
-internal class AllowedLifeStages : DefModExtension
+public class AllowedLifeStages : DefModExtension
 {
-    private string allowedLifeStagesCSV = "";
+    public string allowedLifeStagesCSV = "";
 
     public bool IsAllowedAge(int currentAgeIndex)
     {

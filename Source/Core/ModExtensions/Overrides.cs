@@ -2,15 +2,15 @@
 
 namespace GiddyUp;
 
-internal class DrawInFront : DefModExtension
+public class DrawInFront : DefModExtension
 {
 }
 
-internal class NotMountable : DefModExtension
+public class NotMountable : DefModExtension
 {
 }
 
-internal class Mountable : DefModExtension
+public class Mountable : DefModExtension
 {
 }
 

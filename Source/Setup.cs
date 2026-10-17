@@ -78,7 +78,7 @@ public static class Setup
     }
 
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
-    private static void BuildMountCache()
+    public static void BuildMountCache()
     {
         //Setup collections
         ModSettings_GiddyUp.invertMountingRules ??= [];
@@ -185,12 +185,6 @@ public static class Setup
         //Write to settings file
         if (newEntries)
             LoadedModManager.GetMod<Mod_GiddyUp>().modSettings.Write();
-
-        //Only bother applying this harmony patch if using a mod that utilizes this extension
-        if (usingCustomStats && harmony != null && !PatchLedger.Add(1))
-            harmony.Patch(HarmonyLib.AccessTools.Method(typeof(ArmorUtility), nameof(ArmorUtility.ApplyArmor)),
-                postfix: new HarmonyLib.HarmonyMethod(typeof(Harmony.Patch_ApplyArmor),
-                    nameof(Harmony.Patch_ApplyArmor.Postfix)));
     }
 
     //TODO: It may be possible to fold this into th BuildCache method
