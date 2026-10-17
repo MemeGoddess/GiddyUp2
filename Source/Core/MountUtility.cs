@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using GiddyUpCore.Compatibility;
 using GiddyUpCore.Compatibility.AnimalApparel;
+using GiddyUpCore.Core;
 using GiddyUpCore.Core.Extensions;
 //using Multiplayer.API;
 using Verse;
@@ -136,6 +137,8 @@ public static class MountUtility
 
         //Set the offset
         pawnData.drawOffset = TextureUtility.FetchCache(animal);
+        //The saddle overlay only redraws when the render tree recaches; only the Mount job used to ask for it
+        MountedRiderRenderNodeUtility.RefreshMountedAnimalGraphics(animal);
 
         //Set the animal job and state
         if (animal.CurJobDef == ResourceBank.JobDefOf.Mounted)
@@ -289,6 +292,7 @@ public static class MountUtility
             return; //We're done here
         animal.Drawer.tweener = new PawnTweener(animal);
         animal.pather.ResetToCurrentPosition();
+        MountedRiderRenderNodeUtility.RefreshMountedAnimalGraphics(animal); //Otherwise the saddle stays until the animal turns
         
 
         //========Post-dismount behavior======

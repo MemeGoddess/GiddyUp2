@@ -9,10 +9,9 @@ using Verse;
 
 namespace GiddyUpCore.Core.Render
 {
+    //Workers are shared per type, so nothing about a specific node or species may be cached in fields here
     internal class OverlayRenderNodeWorker : PawnRenderNodeWorker
     {
-        private OverlayRenderNode? renderNode;
-        private CompProperties_Overlay? overlayProperties;
         public override bool CanDrawNow(PawnRenderNode node, PawnDrawParms parms)
         {
             var enabled =
@@ -46,9 +45,8 @@ namespace GiddyUpCore.Core.Render
         public override Vector3 OffsetFor(PawnRenderNode node, PawnDrawParms parms, out Vector3 pivot)
         {
             pivot = default;
-            renderNode ??= node as OverlayRenderNode;
-            overlayProperties ??= renderNode?.Properties;
-            var overlay = overlayProperties?.GetOverlay(parms.facing);
+            //Resolved per call: the worker is shared by every species and this runs from the parallel pre-draw
+            var overlay = (node as OverlayRenderNode)?.Properties?.GetOverlay(parms.facing);
             if (overlay == null)
                 return Vector3.zero;
 
@@ -58,7 +56,8 @@ namespace GiddyUpCore.Core.Render
             if (offset == Vector3.zero)
                 offset = overlay.offsetDefault;
 
-            if (parms.pawn.Rotation == Rot4.West)
+            //Mirror on the facing being drawn, not the pawn's current rotation (portraits, laying down)
+            if (parms.facing == Rot4.West)
                 offset.x = -offset.x;
 
             offset += node.debugOffset;

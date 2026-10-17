@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GiddyUp;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -38,33 +39,32 @@ namespace GiddyUpCore.Core.Render
                         ? overlay.graphicDataFemale
                         : overlay.graphicDataMale)
                     ?? overlay.graphicDataDefault;
+                if (graphicData?.graphicClass == null)
+                {
+                    yield return null;
+                    continue;
+                }
 
+                var bodyGraphic = pawn.drawer?.renderer?.BodyGraphic;
+                var texPath = graphicData.texPath;
                 if (overlay.allVariants?.Any() ?? false)
                 {
-                    var pawnVariant = pawn.drawer.renderer.BodyGraphic.path
-                        .Split('/').Last();
-
+                    var pawnVariant = bodyGraphic?.path.Split('/').Last();
                     var variantGraphicData = overlay.allVariants.FirstOrDefault(x =>
                         x.texPath.Split('/').Last().Split(overlay.stringDelimiter.ToCharArray())[0] == pawnVariant);
-
-                    var textPath = variantGraphicData?.texPath ?? graphicData?.texPath;
-                    
-                    if (variantGraphicData != null)
-                    {
-                        variantGraphicData.CopyFrom(graphicData);
-                        variantGraphicData.texPath = textPath;
-                    }
-                    graphicData = variantGraphicData;
+                    texPath = variantGraphicData?.texPath ?? texPath;
                 }
-
-                if(graphicData != null)
+                if (texPath.NullOrEmpty())
                 {
-                    var bodyGraphic = pawn.drawer?.renderer?.BodyGraphic;
-                    graphicData.color = bodyGraphic?.color ?? Color.white;
-                    graphicData.colorTwo = bodyGraphic?.colorTwo ?? Color.white;
+                    yield return null;
+                    continue;
                 }
 
-                yield return graphicData?.Graphic;
+                //Build the graphic directly; writing into the def's GraphicData made the first pawn's colour stick for the species
+                var shader = (graphicData.shaderType ?? ShaderTypeDefOf.Cutout).Shader;
+                yield return GraphicDatabase.Get(graphicData.graphicClass, texPath, shader, graphicData.drawSize,
+                    bodyGraphic?.color ?? Color.white, bodyGraphic?.colorTwo ?? Color.white, graphicData,
+                    graphicData.shaderParameters, graphicData.maskPath);
             }
         }
     }

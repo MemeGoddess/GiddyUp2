@@ -43,6 +43,9 @@ internal sealed class MountedRiderRenderNodeWorker : PawnRenderNodeWorker
     {
         base.PostDraw(node, parms, mesh, matrix);
 
+        //Portraits and the render cache draw the mount at a fake position; an invisible mount shouldn't show its rider
+        if (parms.Portrait || parms.flags.FlagSet(PawnRenderFlags.Cache) || parms.flags.FlagSet(PawnRenderFlags.Invisible))
+            return;
         if (!node.DebugEnabled)
             return;
 
