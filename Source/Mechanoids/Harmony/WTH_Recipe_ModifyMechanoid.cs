@@ -9,10 +9,13 @@ namespace GiddyUpMechanoids
     [HarmonyPatch]
     static class WTH_Recipe_ModifyMechanoid_CanApplyOn
     {
-        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && Extensions.WhatTheHackEnabled;
+        private const string TargetName = "WhatTheHack.Recipes.Recipe_ModifyMechanoid:CanApplyOn";
 
-        public static MethodBase[] TargetMethods() =>
-            [AccessTools.Method("WhatTheHack.Recipes.Recipe_ModifyMechanoid:CanApplyOn")];
+        //Resolve the target here: a null entry from TargetMethods makes Harmony throw and abort the rest of PatchAll
+        public static bool Prepare() => ModSettings_GiddyUp.mechanoidsEnabled && Extensions.WhatTheHackEnabled &&
+                                        AccessTools.Method(TargetName) != null;
+
+        public static MethodBase[] TargetMethods() => [AccessTools.Method(TargetName)];
 
         static void Postfix(RecipeWorker __instance, Pawn pawn, ref string reason, ref bool __result)
         {

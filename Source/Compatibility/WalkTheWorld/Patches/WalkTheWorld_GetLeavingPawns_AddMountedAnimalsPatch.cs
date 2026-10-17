@@ -8,12 +8,11 @@ namespace GiddyUpCore.Compatibility.WalkTheWorld.Patches;
 [HarmonyPatch]
 internal static class WalkTheWorld_GetLeavingPawns_AddMountedAnimalsPatch
 {
-    private static bool Prepare() => CompatibilityLoader.WalkTheWorldInstalled;
+    private const string TargetName = "WalkTheWorld.WalkTheWorld:GetLeavingPawns";
 
-    private static System.Reflection.MethodBase? TargetMethod()
-    {
-        return AccessTools.Method("WalkTheWorld.WalkTheWorld:GetLeavingPawns");
-    }
+    private static bool Prepare() => CompatibilityLoader.WalkTheWorldInstalled && AccessTools.Method(TargetName) != null;
+
+    private static System.Reflection.MethodBase? TargetMethod() => AccessTools.Method(TargetName);
 
     private static void Postfix(ref List<Pawn> __result)
     {

@@ -10,7 +10,8 @@ namespace GiddyUpMechanoids;
 class WTH_Recipe_ModifyMechanoid_IsValidPawn
 {
     public static bool Prepare() =>
-        ModSettings_GiddyUp.mechanoidsEnabled && GiddyUpCore.Compatibility.WhatTheHack.Extensions.WhatTheHackEnabled;
+        ModSettings_GiddyUp.mechanoidsEnabled && GiddyUpCore.Compatibility.WhatTheHack.Extensions.WhatTheHackEnabled &&
+        AccessTools.Method("WhatTheHack.Recipes.Recipe_ModifyMechanoid:IsValidPawn") != null; //Don't abort PatchAll if WTH renames it
 
     static bool Prefix(RecipeWorker __instance, Pawn pawn, ref bool __result)
     { 

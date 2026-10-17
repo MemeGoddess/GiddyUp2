@@ -53,7 +53,18 @@ public static class Setup
     static Setup()
     {
         var harmony = new HarmonyLib.Harmony("GiddyUp");
-        harmony.PatchAll();
+        //Same as PatchAll, but one failing patch class no longer takes every later patch and the rest of Setup down
+        foreach (var patchType in HarmonyLib.AccessTools.GetTypesFromAssembly(typeof(Setup).Assembly))
+        {
+            try
+            {
+                harmony.CreateClassProcessor(patchType).Patch();
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error("[Giddy-Up] Failed to apply patch class " + patchType.FullName + ": " + ex);
+            }
+        }
 
         JobDriver_Mounted.BuildAllowedJobsCache(ModSettings_GiddyUp.noMountedHunting);
         BuildMountCache();

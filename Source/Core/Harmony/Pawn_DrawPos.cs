@@ -14,12 +14,13 @@ internal static class Pawn_DrawTracker_DrawPos
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
         ILGenerator generator)
     {
+        var codes = instructions.ToList(); //Was enumerated four times
         var firstLdArg0Label = generator.DefineLabel();
-        var firstLdArg0 = instructions.First(i => i.opcode == OpCodes.Ldarg_0);
+        var firstLdArg0 = codes.First(i => i.opcode == OpCodes.Ldarg_0);
         firstLdArg0.labels.Add(firstLdArg0Label);
 
         var returnInstructionLabel = generator.DefineLabel();
-        var returnInstruction = instructions.ToList()[instructions.Count() - 1];
+        var returnInstruction = codes[codes.Count - 1];
         returnInstruction.labels.Add(returnInstructionLabel);
 
         yield return new CodeInstruction(OpCodes.Ldsfld,
@@ -35,7 +36,7 @@ internal static class Pawn_DrawTracker_DrawPos
         yield return new CodeInstruction(OpCodes.Call, typeof(Pawn_DrawTracker_DrawPos).GetMethod(nameof(DrawOffset)));
         yield return new CodeInstruction(OpCodes.Br_S, returnInstructionLabel);
 
-        foreach (var code in instructions)
+        foreach (var code in codes)
             yield return code;
     }
 

@@ -34,7 +34,7 @@ public static class PawnCollisionTweenerUtility_RemoveMountedRider
             .ThrowIfInvalid(_featureFailString + ": Unable to find injection point");
 
         matcher.InsertAfter(new CodeInstruction(OpCodes.Ldloc_S, matcher.InstructionAt(-1).operand),
-                new CodeInstruction(OpCodes.Callvirt, isMounted),
+                new CodeInstruction(OpCodes.Call, isMounted), //IsMounted is static; callvirt only worked because Mono tolerates it
                 new CodeInstruction(OpCodes.Brtrue_S, label))
             .ThrowIfInvalid(
                 _featureFailString + ": Unable to skip collision check on mounted pawns");

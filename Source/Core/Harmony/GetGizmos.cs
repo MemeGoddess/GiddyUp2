@@ -15,7 +15,8 @@ internal static class Patch_PawnGetGizmos
     {
         foreach (var item in values)
         {
-            if (item is Command_Toggle toggle && toggle.defaultDesc == "CommandReleaseAnimalsDesc".Translate())
+            //Match on the icon, not the translated description (no per-frame string allocation, survives text patches)
+            if (item is Command_Toggle toggle && toggle.icon == TexCommand.ReleaseAnimals)
                 toggle.toggleAction = () => UpdateAnimalRelease(__instance.pawn, ref __instance.animalsReleased);
             yield return item;
         }

@@ -50,8 +50,8 @@ public static class IsMountableUtility
             return false;
         }
 
-        rider = animal.jobs.curDriver.job.targetA.Thing;
-        return rider.IsMounted();
+        rider = animal.jobs?.curDriver?.job?.targetA.Thing;
+        return rider != null && rider.IsMounted(); //The target can be null right after a load
     }
 
     public static bool IsEverMountable(this Pawn pawn)

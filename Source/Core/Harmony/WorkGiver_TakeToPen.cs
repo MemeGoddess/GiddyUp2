@@ -8,7 +8,7 @@ namespace GiddyUp.Harmony;
 [HarmonyPatch(typeof(WorkGiver_TakeToPen), nameof(WorkGiver_TakeToPen.JobOnThing))]
 internal class Patch_TakeToPen
 {
-    private static bool Prefix(Thing t, Job __result)
+    private static bool Prefix(Thing t, ref Job? __result) //Without ref the null assignment was silently discarded
     {
         if (t is Pawn animal && (animal.CurJobDef == ResourceBank.JobDefOf.Mounted ||
                                  animal.CurJobDef == ResourceBank.JobDefOf.WaitForRider))

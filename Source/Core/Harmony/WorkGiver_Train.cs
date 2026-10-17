@@ -9,7 +9,7 @@ namespace GiddyUp.Harmony;
 [HarmonyPatch(typeof(WorkGiver_Train), nameof(WorkGiver_Train.JobOnThing))]
 internal class WorkGiver_Train_JobOnThing
 {
-    private static bool Prefix(Thing t, Job __result)
+    private static bool Prefix(Thing t, ref Job? __result) //Without ref the null assignment was silently discarded
     {
         if (t is Pawn animal && (animal.IsMountedAnimal() || animal.CurJobDef == ResourceBank.JobDefOf.WaitForRider))
         {
