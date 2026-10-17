@@ -486,3 +486,6 @@ fabric.properties
 Workshop/
 /.github/agents
 1.6/
+
+# Local debug launch profiles
+Source/Properties/launchSettings.json
