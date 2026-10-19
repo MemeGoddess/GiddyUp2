@@ -14,7 +14,8 @@ namespace GiddyUp;
 public class Mod_GiddyUp : Mod
 {
     public static Mod_GiddyUp Instance;
-    private static int coreLineNumber, mechLineNumber;
+    private static int coreLineNumber, mechLineNumber, takeFlightLineNumber;
+    private static float takeFlightSettingsHeight = 600f;
     private readonly QuickSearchWidget search = new QuickSearchWidget();
 
     private string? drawBehavior;
@@ -40,6 +41,8 @@ public class Mod_GiddyUp : Mod
                 selectedTab == SelectedTab.Caravans),
             new("GU_Mechanoids_Tab".Translate(), delegate { selectedTab = SelectedTab.Mechanoids; search.Reset(); },
                 selectedTab == SelectedTab.Mechanoids),
+            new("GU_TF_Tab".Translate(), delegate { selectedTab = SelectedTab.TakeFlight; search.Reset(); },
+                selectedTab == SelectedTab.TakeFlight),
             //new("GUC_Ideology_Tab".Translate(), delegate { selectedTab = SelectedTab.Ideo;},
             //        selectedTab == SelectedTab.Ideo)
         };
@@ -76,6 +79,9 @@ public class Mod_GiddyUp : Mod
                 break;
             case SelectedTab.Ideo:
                 DrawIdeo(currentTabRect);
+                break;
+            case SelectedTab.TakeFlight:
+                DrawTakeFlight(currentTabRect);
                 break;
         }
 
@@ -373,6 +379,107 @@ public class Mod_GiddyUp : Mod
         Widgets.BeginScrollView(scrollView, ref mechScrollPos, innerRect);
         options.Begin(innerRect);
         options.DrawList(mechsForViewing, MechSelectedCache, viewRange, out mechLineNumber);
+        options.End();
+        Widgets.EndScrollView();
+    }
+
+    private void DrawTakeFlight(Rect rect)
+    {
+        var display = rect.ContractedBy(15f);
+        var options = new Listing_Standard();
+        options.Begin(display);
+
+        options.CheckboxLabeled("GU_Enable_TakeFlight".Translate(), ref takeFlightEnabled,
+            "GU_Enable_TakeFlight_Description".Translate());
+        if (!takeFlightEnabled)
+        {
+            options.End();
+            return;
+        }
+
+        options.Gap();
+        options.GapLine(); //=============================
+        var headerHeight = options.CurHeight;
+        options.End();
+
+        var body = display.BottomPartPixels(display.height - headerHeight);
+        body.SplitVerticallyWithMargin(out var settingsRect, out var flyersRect, 20f);
+
+        //========Settings column=========
+        var settingsView = new Rect(0f, 0f, settingsRect.width - 20f, takeFlightSettingsHeight);
+        Widgets.BeginScrollView(settingsRect, ref takeFlightSettingsScrollPos, settingsView);
+        options.Begin(settingsView);
+        options.CheckboxLabeled("GU_TF_IgnoreTerrain_Title".Translate(), ref flyersIgnoreTerrain,
+            "GU_TF_IgnoreTerrain_Description".Translate());
+        options.CheckboxLabeled("GU_TF_LocalFlight_Title".Translate(), ref localFlightEnabled,
+            "GU_TF_LocalFlight_Description".Translate());
+        options.CheckboxLabeled("GU_TF_OpenSky_Title".Translate(), ref flightRequireOpenSky,
+            "GU_TF_OpenSky_Description".Translate());
+
+        options.Label("GU_TF_FlightRange_Title".Translate("10", "50", "30", flightRange.ToString()), -1f,
+            "GU_TF_FlightRange_Description".Translate());
+        flightRange = Mathf.Round(options.Slider(flightRange, 10f, 50f));
+
+        options.Label("GU_TF_FlightSpeed_Title".Translate("5", "40", "18", takeFlightSpeed.ToString()), -1f,
+            "GU_TF_FlightSpeed_Description".Translate());
+        takeFlightSpeed = Mathf.Round(options.Slider(takeFlightSpeed, 5f, 40f));
+
+        options.Label("GU_TF_Cooldown_Title".Translate("0", "24", "2", flightCooldownHours.ToString("0.#")), -1f,
+            "GU_TF_Cooldown_Description".Translate());
+        flightCooldownHours = Mathf.Round(options.Slider(flightCooldownHours, 0f, 24f) * 2f) / 2f;
+
+        options.GapLine();
+        options.CheckboxLabeled("GU_TF_WorldFlight_Title".Translate(), ref worldFlightEnabled,
+            "GU_TF_WorldFlight_Description".Translate());
+
+        options.Label("GU_TF_WorldRange_Title".Translate("0", "40", "5", worldFlightDefaultRange.ToString()), -1f,
+            "GU_TF_WorldRange_Description".Translate());
+        worldFlightDefaultRange = Mathf.RoundToInt(options.Slider(worldFlightDefaultRange, 0f, 40f));
+
+        options.Label("GU_TF_MaxMultiplier_Title".Translate("1", "5", "3", worldFlightMaxRangeMultiplier.ToString("0.#")),
+            -1f, "GU_TF_MaxMultiplier_Description".Translate());
+        worldFlightMaxRangeMultiplier = Mathf.Round(options.Slider(worldFlightMaxRangeMultiplier, 1f, 5f) * 10f) / 10f;
+
+        options.Label("GU_TF_WorldSpeed_Title".Translate("10", "400", "120", worldFlightSpeed.ToString()), -1f,
+            "GU_TF_WorldSpeed_Description".Translate());
+        worldFlightSpeed = Mathf.Round(options.Slider(worldFlightSpeed, 10f, 400f) / 5f) * 5f;
+
+        options.Label("GU_TF_RestPerTile_Title".Translate("0", "6", "1", worldFlightRestHoursPerTile.ToString("0.##")),
+            -1f, "GU_TF_RestPerTile_Description".Translate());
+        worldFlightRestHoursPerTile = Mathf.Round(options.Slider(worldFlightRestHoursPerTile, 0f, 6f) * 4f) / 4f;
+        takeFlightSettingsHeight = options.CurHeight;
+        options.End();
+        Widgets.EndScrollView();
+
+        //========Flyer list column=========
+        options.Begin(flyersRect);
+        options.Label("GU_TF_Flyers".Translate(), -1f, "GU_TF_Flyers_Description".Translate());
+        var searchRect = options.GetRect(Text.LineHeight);
+        searchRect.width -= 20f; // Scroll bar alignment
+        search.OnGUI(searchRect);
+        var flyersForViewing = Setup.AllAnimals.Where(animal =>
+            animal != null && MountableCache.Contains(animal.shortHash) &&
+            (search.filter.Matches(animal.label)
+             || search.filter.Matches(animal.defName)
+             || search.filter.Matches(animal.modContentPack?.Name))).ToList();
+        options.Gap(4f);
+        var previousControls = options.CurHeight;
+        options.End();
+
+        var scrollView = flyersRect.BottomPartPixels(flyersRect.height - previousControls);
+        var innerRect = scrollView with
+        {
+            width = scrollView.width - 20f,
+            height = takeFlightLineNumber * OptionsDrawUtility.LineHeight
+        };
+
+        var min = takeFlightScrollPos.y == 0 ? 0 : (int)Mathf.Floor(takeFlightScrollPos.y / OptionsDrawUtility.LineHeight) - 1;
+        var max = (int)Mathf.Ceil(scrollView.height / OptionsDrawUtility.LineHeight) + min + 2;
+        var viewRange = new IntRange(min - 1, max + 1);
+
+        Widgets.BeginScrollView(scrollView, ref takeFlightScrollPos, innerRect);
+        options.Begin(innerRect);
+        options.DrawList(flyersForViewing, FlyingCache, viewRange, out takeFlightLineNumber);
         options.End();
         Widgets.EndScrollView();
     }

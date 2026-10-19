@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<!-- Flying mounts from other mods. Each operation only loads when its mod is active. -->
+	<Operation Class="PatchOperationSequence">
+		<success>Always</success>
+		<operations>
+
+			<!-- Dragons Descent: the drake has no wings and is left out -->
+			<li Class="PatchOperationAddModExtension" MayRequire="onyxae.dragonsdescent">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="Black_Dragon" or defName="Blue_Dragon" or defName="Green_Dragon" or defName="Purple_Dragon" or defName="DD_Orange_Dragon" or defName="Red_Dragon" or defName="White_Dragon" or defName="Yellow_Dragon"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount">
+						<worldFlightRange>10</worldFlightRange>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAddModExtension" MayRequire="onyxae.dragonsdescent">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="Gold_Dragon" or defName="Silver_Dragon" or defName="Jade_Dragon"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount">
+						<worldFlightRange>14</worldFlightRange>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAddModExtension" MayRequire="onyxae.dragonsdescent">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="True_Dragon"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount">
+						<worldFlightRange>20</worldFlightRange>
+					</li>
+				</value>
+			</li>
+
+			<!-- Dragon Genetics: the Dracarachnid's wings are vestigial and it is left out -->
+			<li Class="PatchOperationAddModExtension" MayRequire="Hol.DragonGenetics">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="GR_Aviagon"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount">
+						<worldFlightRange>10</worldFlightRange>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAddModExtension" MayRequire="Hol.DragonGenetics">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="GR_Dracowolf"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount">
+						<worldFlightRange>6</worldFlightRange>
+					</li>
+				</value>
+			</li>
+			<li Class="PatchOperationAddModExtension" MayRequire="Hol.DragonGenetics">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="GR_Dragonrat"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount" />
+				</value>
+			</li>
+
+			<!-- Mythic Ages: Megafauna Bestiary: the Raptorkhan is a flightless terror bird and is left out -->
+			<li Class="PatchOperationAddModExtension" MayRequire="veterano.mythicages.megafaunabestiary">
+				<success>Always</success>
+				<xpath>Defs/ThingDef[defName="MA_Harpeagle"]</xpath>
+				<value>
+					<li Class="GiddyUpTakeFlight.FlyingMount">
+						<worldFlightRange>8</worldFlightRange>
+					</li>
+				</value>
+			</li>
+
+		</operations>
+	</Operation>
+</Patch>
