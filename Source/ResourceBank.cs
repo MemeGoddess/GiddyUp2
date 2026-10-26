@@ -15,6 +15,8 @@ public static class ResourceBank
     public static Texture2D iconNoMountClear = ContentFinder<Texture2D>.Get("UI/GU_RR_Designator_GU_NoMount_Clear");
     public static Texture2D iconNoMountExpand = ContentFinder<Texture2D>.Get("UI/GU_RR_Designator_GU_NoMount_Expand");
     public static Texture2D iconGizmoSaddleUp = ContentFinder<Texture2D>.Get("UI/QM_horseshoe_icon");
+    public static Texture2D iconTakeFlight = ContentFinder<Texture2D>.Get("UI/GU_TF_TakeFlight");
+    public static Texture2D iconFlyWorld = ContentFinder<Texture2D>.Get("UI/GU_TF_FlyWorld");
 
     public static Texture2D SliderRailAtlas = ContentFinder<Texture2D>.Get("UI/Buttons/SliderRail");
     public static Texture2D SliderHandle = ContentFinder<Texture2D>.Get("UI/Buttons/SliderHandle");

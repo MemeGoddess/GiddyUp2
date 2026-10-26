@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
 	<name>Giddy-Up 2 - Continued</name>
-	<author>Roolo, Owlchemist, dav9670, Meme Goddess</author>
+	<author>Roolo, Owlchemist, dav9670, Meme Goddess, Phonicmas</author>
 	<supportedVersions>
 		<li>1.4</li>
 		<li>1.5</li>
@@ -11,7 +11,7 @@
 	<modVersion>2.2.5</modVersion>
 	<packageId>MemeGoddess.GiddyUp</packageId>
 	<url>https://github.com/MemeGoddess/GiddyUp2</url>
-	<description>This is a renovated, overhauled fork of Giddy-Up, developed with permission from the original author Roolo. It's an all-in-one, containing all the modules in a single mod, internally modularized within the mod options. Giddy-Up allows pawns to ride animals around on the map, or even use them as battle mounts.
+	<description>This is a renovated, overhauled fork of Giddy-Up, developed with permission from the original author Roolo. It's an all-in-one, containing all the modules in a single mod, internally modularized within the mod options. Giddy-Up allows pawns to ride animals around on the map, or even use them as battle mounts. Flying mounts can take flight, carrying their riders over walls and water or across the world map.
 	</description>	
 	<modDependencies>
 		<li>
@@ -34,5 +34,6 @@
 		<li>roolo.giddyupbattlemounts</li>
 		<li>Owlchemist.GiddyUp</li>
 		<li>PJerri.GiddyUpPatchLoadingSaves</li>
+		<li>Phonicmas.GiddyUp.TakeFlight</li>
 	</incompatibleWith>
 </ModMetaData>

@@ -7,6 +7,7 @@ using GiddyUpCore.Compatibility;
 using GiddyUpCore.Compatibility.WhatTheHack;
 using GiddyUpMechanoids;
 using GiddyUpRideAndRoll;
+using GiddyUpTakeFlight;
 using RimWorld;
 using Verse;
 
@@ -76,6 +77,7 @@ public static class Setup
             ExtendedDataStorage.noFleeingAnimals = HarmonyLib.Traverse.Create(type).Field("nofleeing_animals")
                 ?.GetValue<HashSet<Thing>>();
         CompatibilityLoader.Setup();
+        TakeFlightBackCompatibility.Register();
     }
 
     //Responsible for caching which animals are mounted, draw layering behavior, and calling caravan speed bonuses
@@ -119,6 +121,7 @@ public static class Setup
 
         animalDefs.SortBy(x => x.label);
         AllAnimals.AddRange(animalDefs);
+        FlyerUtility.BuildCache(AllAnimals);
 
         AllMechs.AddRange(DefDatabase<ThingDef>.AllDefs.Where(x => x.race is { IsMechanoid: true } && !x.IsCorpse));
 
@@ -235,6 +238,8 @@ public static class Setup
             ModSettings_GiddyUp.mechSelector[mech.defName] =
                 ModSettings_GiddyUp.MechSelectedCache.Contains(mech.shortHash);
         }
+
+        FlyerUtility.RebuildInversions(AllAnimals);
     }
 
     private static void RemoveRideAndRoll()
