@@ -298,9 +298,9 @@ public static class IsMountableUtility
 
         if (animal.health != null && injuredThreshold > 0)
         {
-            if(animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold ||
-               animal.health.hediffSet.hediffs.Any(x => x.CurStage is not null && animal.health.HasHediffsNeedingTend()))
-            return true;
+            if (animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold ||
+                animal.health.hediffSet.hediffs.Any(x => x.CurStage is not null) && animal.health.HasHediffsNeedingTend())
+                return true;
         }
 
         if (animal.HasAttachment(ThingDefOf.Fire))
