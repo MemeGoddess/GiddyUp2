@@ -193,41 +193,24 @@ public static class IsMountableUtility
         }
 
         //Can reserve? Null check as this may be a non-specific check like the UI
-        if (!ReserversOfFast(animal, reservationsToCheck, out var claimants))
-            return true;
-        
-        for (var i = claimants.Count; i-- > 0;)
+        reservationsToCheck ??= animal.Map.FetchReservedAnimals();
+        if (reservationsToCheck == null)
         {
-            var claimant = claimants[i];
-            if (claimant.CurJobDef == JobDefOf.RopeToPen)
-                continue;
-                
-            reason = Reason.IsReserved;
-            return false;
+            Log.WarningOnce($"Unable to check reservations for '{animal?.LabelShortCap ?? "Unknown"}'", animal?.thingIDNumber ?? 4320546);
+            return true;
         }
         
-        return true;
-
-        static bool ReserversOfFast(Pawn animal, List<ReservationManager.Reservation>? reservations,
-            out List<Pawn> claimants)
+        for (var i = 0; i < reservationsToCheck.Count; i++)
         {
-            claimants = new List<Pawn>();
-            reservations ??= animal.Map.FetchReservedAnimals();
-            if (reservations == null)
+            var item = reservationsToCheck[i];
+            if (item.Target == animal && item.Claimant.CurJobDef != JobDefOf.RopeToPen)
             {
-                Log.WarningOnce($"Unable to check reservations for '{animal?.LabelShortCap ?? "Unknown"}'", animal?.thingIDNumber ?? 4320546);
+                reason = Reason.IsReserved;
                 return false;
             }
-            
-            for (var i = reservations.Count; i-- > 0;)
-            {
-                var item = reservations[i];
-                if (item.Target == animal)
-                    claimants.Add(item.Claimant);
-            }
-
-            return claimants.Count > 0;
         }
+
+        return true;
     }
 
     public static bool IsStillMountable(this Pawn animal, Pawn rider, out Reason reason)
@@ -298,9 +281,9 @@ public static class IsMountableUtility
 
         if (animal.health != null && injuredThreshold > 0)
         {
-            if(animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold ||
-               animal.health.hediffSet.hediffs.Any(x => x.CurStage is not null && animal.health.HasHediffsNeedingTend()))
-            return true;
+            if (animal.health.summaryHealth.SummaryHealthPercent < injuredThreshold ||
+                animal.health.hediffSet.hediffs.Any(x => x.CurStage is not null) && animal.health.HasHediffsNeedingTend())
+                return true;
         }
 
         if (animal.HasAttachment(ThingDefOf.Fire))
