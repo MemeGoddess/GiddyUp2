@@ -4,6 +4,7 @@ using HarmonyLib;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using Verse;
 using Settings = GiddyUp.ModSettings_GiddyUp;
@@ -24,20 +25,24 @@ internal class Patch_CaravanEnterMapUtility
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var done = false;
-        foreach (var instruction in instructions)
+        var code = instructions.ToList();
+        var removePawns = AccessTools.DeclaredMethod(typeof(Caravan), nameof(Caravan.RemoveAllPawns), Type.EmptyTypes);
+        var pawns = AccessTools.DeclaredField(typeof(CaravanEnterMapUtility), nameof(CaravanEnterMapUtility.tmpPawns));
+        var mount = typeof(Patch_CaravanEnterMapUtility).GetMethod(nameof(MountCaravanMounts));
+        if (removePawns != null && pawns != null && pawns.IsStatic && pawns.FieldType == typeof(List<Pawn>) && mount != null)
         {
-            yield return instruction;
-            if (!done && instruction.opcode == OpCodes.Call &&
-                instruction.OperandIs(AccessTools.Method(typeof(Caravan), nameof(Caravan.RemoveAllPawns))))
+            var matches = code.FindAll(instruction =>
+                (instruction.opcode == OpCodes.Call || instruction.opcode == OpCodes.Callvirt) && instruction.OperandIs(removePawns));
+            if (matches.Count == 1)
             {
-                yield return new CodeInstruction(OpCodes.Ldsfld,
-                    AccessTools.Field(typeof(CaravanEnterMapUtility), nameof(CaravanEnterMapUtility.tmpPawns)));
-                yield return new CodeInstruction(OpCodes.Call,
-                    typeof(Patch_CaravanEnterMapUtility).GetMethod(nameof(MountCaravanMounts)));
-                done = true;
+                var index = code.IndexOf(matches[0]);
+                code.Insert(index + 1, new CodeInstruction(OpCodes.Ldsfld, pawns));
+                code.Insert(index + 2, new CodeInstruction(OpCodes.Call, mount));
+                return code;
             }
         }
+        Log.Warning("[Giddy-Up] Caravan riders could not mount automatically. Other riding features are still available.");
+        return code;
     }
 
     //[SyncMethod]
