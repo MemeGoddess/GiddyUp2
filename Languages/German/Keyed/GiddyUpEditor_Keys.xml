@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <GUE_Gizmo>Reittier-Editor</GUE_Gizmo>
+  <GUE_GizmoDesc>Reiterposition, Überlagerung und Maske für {0} und alle Tiere dieser Art bearbeiten.</GUE_GizmoDesc>
+  <GUE_Title>Giddy-Up-Editor · {0} ({1})</GUE_Title>
+  <GUE_Step>Schrittweite</GUE_Step>
+  <GUE_Zoom>Vorschau</GUE_Zoom>
+  <GUE_ZoomFar>weit</GUE_ZoomFar>
+  <GUE_ZoomMid>mittel</GUE_ZoomMid>
+  <GUE_ZoomNear>nah</GUE_ZoomNear>
+  <GUE_MirrorEastWest>Osten auf Westen spiegeln</GUE_MirrorEastWest>
+  <GUE_MirrorWestEast>Westen auf Osten spiegeln</GUE_MirrorWestEast>
+  <GUE_North>Norden</GUE_North>
+  <GUE_South>Süden</GUE_South>
+  <GUE_East>Osten</GUE_East>
+  <GUE_West>Westen</GUE_West>
+  <GUE_RiderHead>Reiter</GUE_RiderHead>
+  <GUE_Rider>Reitet gerade</GUE_Rider>
+  <GUE_Dismount>Absitzen</GUE_Dismount>
+  <GUE_PickRider>Kolonist aufsetzen …</GUE_PickRider>
+  <GUE_NoRiderInfo>Ohne Reiter zeigt die Vorschau nur das Tier. Ein Kolonist erscheint nur in der Vorschau und sitzt nicht wirklich auf. Eine Pawn-Art erscheint nur in der Vorschau, etwa um andere Rassen oder Körperformen zu prüfen.</GUE_NoRiderInfo>
+  <GUE_RulesHead>Giddy-Up</GUE_RulesHead>
+  <GUE_Mountable>Reitbar</GUE_Mountable>
+  <GUE_DrawInFront>Tier vor dem Reiter</GUE_DrawInFront>
+  <GUE_DrawInFrontTip>Schaut das Tier nach Süden, wird es vor dem Reiter gezeichnet. Für Tiere ohne Maske, deren Körper den Reiter verdecken soll.</GUE_DrawInFrontTip>
+  <GUE_OverlayHead>Überlagerung</GUE_OverlayHead>
+  <GUE_SlotFront>Vorne</GUE_SlotFront>
+  <GUE_SlotSide>Seite</GUE_SlotSide>
+  <GUE_SlotBack>Hinten</GUE_SlotBack>
+  <GUE_NoOverlay>Für diese Richtung hat das Tier keine Überlagerung.</GUE_NoOverlay>
+  <GUE_Show>Anzeigen</GUE_Show>
+  <GUE_SplitGender>Nach Geschlecht getrennt</GUE_SplitGender>
+  <GUE_Male>Männlich</GUE_Male>
+  <GUE_Female>Weiblich</GUE_Female>
+  <GUE_Scale>Größe</GUE_Scale>
+  <GUE_OffsetX>Versatz X</GUE_OffsetX>
+  <GUE_OffsetZ>Versatz Z</GUE_OffsetZ>
+  <GUE_DrawMask>Maske zeichnen …</GUE_DrawMask>
+  <GUE_EditMask>Maske bearbeiten …</GUE_EditMask>
+  <GUE_MaskHint>Die Maske ist der Teil des Tiers, der beim Blick nach Süden vor dem Reiter liegt, etwa Kopf, Hals und Vorderbeine. Eine eigene Maske ersetzt die von Giddy-Up.</GUE_MaskHint>
+  <GUE_SlotHint>Vorne gilt für den Blick nach Süden, Seite für Osten und Westen, Hinten für Norden.</GUE_SlotHint>
+  <GUE_NoColonist>Kein freier Kolonist auf der Karte</GUE_NoColonist>
+  <GUE_Reset>Zurücksetzen</GUE_Reset>
+  <GUE_Export>Als Patch exportieren</GUE_Export>
+  <GUE_Close>Schließen</GUE_Close>
+  <GUE_SavedWhere>Änderungen wirken sofort und werden im RimWorld-Config-Ordner gespeichert.</GUE_SavedWhere>
+  <GUE_Exported>Patch gespeichert: {0}</GUE_Exported>
+  <GUE_MaskTitle>Maske · {0} ({1})</GUE_MaskTitle>
+  <GUE_MaskNoTexture>Diese Ansicht des Tiers lässt sich nicht lesen.</GUE_MaskNoTexture>
+  <GUE_MaskPreview>Vorschau</GUE_MaskPreview>
+  <GUE_MaskNeedsRider>Setze im Editor einen Reiter auf oder wähle eine Pawn-Art, um die Maske über dem Reiter zu sehen.</GUE_MaskNeedsRider>
+  <GUE_MaskTools>Flächen</GUE_MaskTools>
+  <GUE_MaskNewArea>Neue Fläche</GUE_MaskNewArea>
+  <GUE_MaskDeleteArea>Fläche löschen</GUE_MaskDeleteArea>
+  <GUE_MaskClear>Alles löschen</GUE_MaskClear>
+  <GUE_MaskHelp>Linksklick setzt einen Eckpunkt. Ein Klick auf den ersten Punkt schließt die Fläche. Punkte lassen sich ziehen, Rechtsklick löscht einen Punkt, ein Klick auf eine Linie fügt dort einen neuen ein, den du gleich weiterziehen kannst. Rot markiert, was vor dem Reiter liegt. Das Mausrad zoomt, mit der mittleren Maustaste oder Alt und Ziehen verschiebst du das Bild.</GUE_MaskHelp>
+  <GUE_MaskVariant>Die Maske gilt für die Fellvariante „{0}“. Andere Varianten brauchen eine eigene Maske, dafür ein Tier mit dieser Variante auswählen.</GUE_MaskVariant>
+  <GUE_MaskSavedWhere>Jede Änderung wirkt sofort am Tier. Die Maske liegt im RimWorld-Config-Ordner unter GiddyUpEditor.</GUE_MaskSavedWhere>
+  <GUE_PickKind>Pawn-Art als Vorschau …</GUE_PickKind>
+  <GUE_PickKindTitle>Pawn-Art für den Vorschau-Reiter</GUE_PickKindTitle>
+  <GUE_PreviewRider>Vorschau-Reiter</GUE_PreviewRider>
+  <GUE_Remove>Entfernen</GUE_Remove>
+  <GUE_KindFailed>{0} ließ sich nicht erzeugen.</GUE_KindFailed>
+  <GUE_MaskZoom>Zoom</GUE_MaskZoom>
+  <GUE_MaskFit>Einpassen</GUE_MaskFit>
+  <GUE_SizeHead>Größe</GUE_SizeHead>
+  <GUE_BodyScale>Körpergröße</GUE_BodyScale>
+  <GUE_BodyScaleInfo>Zeichengröße {0} statt {1}. Maske und Overlays wachsen mit, die Reiterposition passt du selbst an.</GUE_BodyScaleInfo>
+  <GUE_Overview>Übersicht</GUE_Overview>
+  <GUE_OverviewTitle>Lokal geänderte Reittiere</GUE_OverviewTitle>
+  <GUE_OverviewEmpty>Noch keine Tiere geändert.</GUE_OverviewEmpty>
+  <GUE_OverviewMissing>nicht geladen</GUE_OverviewMissing>
+  <GUE_OverviewEdit>Bearbeiten</GUE_OverviewEdit>
+  <GUE_OverviewEditTip>Zum Bearbeiten muss ein Tier dieser Art auf der aktuellen Karte sein.</GUE_OverviewEditTip>
+  <GUE_OverviewReset>Zurücksetzen</GUE_OverviewReset>
+  <GUE_OverviewConfirm>Wirklich?</GUE_OverviewConfirm>
+  <GUE_OverviewResetAll>Alle zurücksetzen</GUE_OverviewResetAll>
+  <GUE_OverviewHint>Zurücksetzen stellt den Stand von Giddy-Up wieder her und löscht die Masken dieses Tiers aus dem Config-Ordner.</GUE_OverviewHint>
+  <GUE_SumRider>Reiterposition</GUE_SumRider>
+  <GUE_SumMountable>reitbar gemacht</GUE_SumMountable>
+  <GUE_SumNotMountable>nicht reitbar gemacht</GUE_SumNotMountable>
+  <GUE_SumFront>Zeichenreihenfolge</GUE_SumFront>
+  <GUE_SumOverlay>Overlay</GUE_SumOverlay>
+  <GUE_SumMasks>{0} Maske(n)</GUE_SumMasks>
+  <GUE_SumScale>Größe ×{0}</GUE_SumScale>
+  <GUE_SettingsCategory>Giddy-Up Editor</GUE_SettingsCategory>
+  <GUE_SettingsInfo>{0} Tierart(en) lokal geändert.</GUE_SettingsInfo>
+  <GUE_MaskUndo>Rückgängig</GUE_MaskUndo>
+  <GUE_MaskRedo>Wiederholen</GUE_MaskRedo>
+  <GUE_MaskHintSide>Die Maske für die Seite ist der Teil des Tiers, der beim Blick nach Osten vor dem Reiter liegt. Für Westen wird sie gespiegelt.</GUE_MaskHintSide>
+  <GUE_MaskHintBack>Die Maske für hinten ist der Teil des Tiers, der beim Blick nach Norden vor dem Reiter liegt, etwa Rücken, Hinterteil oder Schwanz.</GUE_MaskHintBack>
+  <GUE_SaveFailed>Speichern fehlgeschlagen, der vorige Stand bleibt erhalten: {0}</GUE_SaveFailed>
+  <GUE_ExportNothing>Nichts zu exportieren: Der Patch kann Reiterposition, Körpergröße und Versatz vorhandener Overlays enthalten.</GUE_ExportNothing>
+  <GUE_ExportMissing>Nicht im Patch enthalten: {0}</GUE_ExportMissing>
+  <GUE_ExNotMountable>Reitbarkeit</GUE_ExNotMountable>
+  <GUE_ExNotFront>Zeichenreihenfolge</GUE_ExNotFront>
+  <GUE_ExNotHidden>ausgeblendete Overlays</GUE_ExNotHidden>
+  <GUE_ExNotScale>Overlay-Skalierung</GUE_ExNotScale>
+  <GUE_ExNotMasks>Masken</GUE_ExNotMasks>
+  <GUE_ExNotNewOverlay>Versatz neuer Overlays</GUE_ExNotNewOverlay>
+  <GUE_MaskCopyVariants>Auf alle Felle übertragen ({0})</GUE_MaskCopyVariants>
+  <GUE_MaskCopyVariantsTip>Überträgt diese Maske auf die anderen Fellvarianten: {0}. Die Punkte bleiben gleich, ausgeschnitten wird aus der Textur des jeweiligen Fells. Vorhandene Masken dieser Felle für diese Richtung werden ersetzt.</GUE_MaskCopyVariantsTip>
+  <GUE_MaskCopied>Maske auf {0} Fellvariante(n) übertragen.</GUE_MaskCopied>
+  <GUE_MaskCopyFailed>Nicht übertragen, Textur fehlt oder Maske träfe nichts: {0}</GUE_MaskCopyFailed>
+</LanguageData>
